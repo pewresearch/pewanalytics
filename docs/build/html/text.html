@@ -1,0 +1,533 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Home &#8212; pewanalytics 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Home" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="home">
+<h1>Home<a class="headerlink" href="#home" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to pewanalytics! A python package for folks looking to add
+computational social science methods to their toolbox.</p>
+</div>
+<div class="section" id="text">
+<h1>Text<a class="headerlink" href="#text" title="Permalink to this headline">¶</a></h1>
+<p>Some text and stuff</p>
+<div class="section" id="module-pewanalytics.text">
+<span id="text-utilities"></span><h2>Text Utilities<a class="headerlink" href="#module-pewanalytics.text" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pewanalytics.text.SentenceTokenizer">
+<em class="property">class </em><code class="descclassname">pewanalytics.text.</code><code class="descname">SentenceTokenizer</code><span class="sig-paren">(</span><em>base_tokenizer=None</em>, <em>regex_split_trailing=None</em>, <em>regex_split_leading=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#SentenceTokenizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.SentenceTokenizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Initializes a tokenizer that can be be used to break text into tokens using the <cite>tokenize</cite> function
+:param base_tokenizer: The tokenizer to use (default = NLTK’s English Punkt tokenizer)
+:param regex_split_trailing: A compiled regex object used to define the end of sentences
+:param regex_split_leading: A compiled regex object used to define the beginning of sentences</p>
+<dl class="method">
+<dt id="pewanalytics.text.SentenceTokenizer.tokenize">
+<code class="descname">tokenize</code><span class="sig-paren">(</span><em>text</em>, <em>min_length=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#SentenceTokenizer.tokenize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.SentenceTokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> – The text to tokenize</li>
+<li><strong>min_length</strong> – The minimum acceptable length of a sentence (if a token is shorter than this, it will be considered part of the preceding sentence)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pewanalytics.text.TextCleaner">
+<em class="property">class </em><code class="descclassname">pewanalytics.text.</code><code class="descname">TextCleaner</code><span class="sig-paren">(</span><em>lemmatize=True</em>, <em>tokenizer=None</em>, <em>replacers=None</em>, <em>lemmatizer=None</em>, <em>stopwords=None</em>, <em>lowercase=True</em>, <em>remove_urls=True</em>, <em>decode_text=True</em>, <em>strip_html=False</em>, <em>filter_pos=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextCleaner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextCleaner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for cleaning text up, in preparation for NLP, etc.  Attempts to decode the text.  Then lowercases,
+expands contractions, removes punctuation, lemmatizes, removes stopwords and words less than three characters,
+and consolidates whitespace.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>lemmatize</strong> – Whether or not to lemmatize the tokens (default = True)</li>
+<li><strong>tokenizer</strong> – Tokenizer to use (default = nltk.WhitespaceTokenizer())</li>
+<li><strong>replacers</strong> – A list of tuples, each with a regex pattern followed by the string/pattern to replace them with.    Anything passed here will be used in addition to a set of built-in replacement patterns for common contractions.</li>
+<li><strong>lemmatizer</strong> – Lemmatizer to use (default = nltk.WordNetLemmatizer())</li>
+<li><strong>stopwords</strong> – The set of stopwords to remove (default = nltk.corpus.stopwords.words(‘english’))</li>
+<li><strong>lowercase</strong> – Whether or not to lowercase the string (default = True)</li>
+<li><strong>remove_urls</strong> – Whether or not to remove URLs and links from the text (default = True)</li>
+<li><strong>decode_text</strong> – Whether or not to decode the text (default = True)</li>
+<li><strong>strip_html</strong> – Whether or not to remove contents wrapped in HTML tags (default = False)</li>
+<li><strong>filter_pos</strong> – A list of WordNet parts-of-speech tags to keep;     if provided, all other words will be removed (default = None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pewanalytics.text.TextCleaner.clean">
+<code class="descname">clean</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextCleaner.clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextCleaner.clean" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>string</strong> – The string to clean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The cleaned string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pewanalytics.text.TextDataFrame">
+<em class="property">class </em><code class="descclassname">pewanalytics.text.</code><code class="descname">TextDataFrame</code><span class="sig-paren">(</span><em>df</em>, <em>text_col</em>, <em>min_df=1</em>, <em>**vectorizer_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextDataFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextDataFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>df</strong> – A dataframe of documents.  Must contain a column with text.</li>
+<li><strong>text_col</strong> – The name of the column in the dataframe that contains the text</li>
+<li><strong>min_df</strong> – The minimum number of documents a word must be found in for it to be used in     document comparisons (default = 1)</li>
+<li><strong>vectorizer_kwargs</strong> – All remaining keyword arguments are passed to TfidfVectorizer</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pewanalytics.text.TextDataFrame.compute_mutual_info">
+<code class="descname">compute_mutual_info</code><span class="sig-paren">(</span><em>outcome_col</em>, <em>weight_col=None</em>, <em>sample_size=None</em>, <em>sort_by='MI'</em>, <em>top_n=40</em>, <em>l=0</em>, <em>normalize=True</em>, <em>return_raw=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextDataFrame.compute_mutual_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextDataFrame.compute_mutual_info" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>outcome_col</strong> – The name of the column with the binary outcome variable</li>
+<li><strong>top_n</strong> – The number of features for each partition you want to return</li>
+<li><strong>l</strong> – An optional Laplace smoothing parameter</li>
+<li><strong>normalize</strong> – Toggle normalization on or off (to control for feature prevalance), on by default</li>
+<li><strong>return_raw</strong> – Return the raw mutual info dataframe instead of sorting and splitting the results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.TextDataFrame.extract_corpus_fragments">
+<code class="descname">extract_corpus_fragments</code><span class="sig-paren">(</span><em>scan_top_n_matches_per_doc=10</em>, <em>min_fragment_length=15</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextDataFrame.extract_corpus_fragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextDataFrame.extract_corpus_fragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus.         During each comparison, overlapping fragments are identified.  This can be useful for identifying common         boilerplate sentences, repeated paragraphs, etc.
+:param scan_top_n_matches_per_doc: The number of other documents to compare each document against.
+:param min_fragment_length: The minimum character length a fragment must have to be extracted.
+:return: A list of fragments that were found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.TextDataFrame.find_duplicates">
+<code class="descname">find_duplicates</code><span class="sig-paren">(</span><em>tfidf_threshold=0.9</em>, <em>fuzzy_ratio_threshold=90</em>, <em>allow_partial=False</em>, <em>max_partial_difference=40</em>, <em>filter_function=None</em>, <em>partial_ratio_timeout=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextDataFrame.find_duplicates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextDataFrame.find_duplicates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for duplicates by using cosine similarity and Levenshtein ratios.  This will struggle with large         corpora, so we recommend trying to filter down to potential duplicates first.  The corpus will first be         scanned for document pairs with a cosine similarity greater or equal to the <cite>tfidf_threshold</cite>.  Then,         each of these pairs will be compared using the more stringent <cite>fuzzy_ratio_threshold</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tfidf_threshold</strong> – Minimum cosine similarity for two documents to be considered potential dupes.</li>
+<li><strong>fuzzy_ratio_threshold</strong> – The required Levenshtein ratio to consider two documents duplicates.</li>
+<li><strong>allow_partial</strong> – Whether or not to allow partial Levenshtein ratios.</li>
+<li><strong>max_partial_difference</strong> – If allow_partial=True, this specifies the maximum difference between the         partial and full Levenshtein ratios.  For example, if two documents have a partial ratio of 90 but a full         ratio of only 50, the difference between the two is 40.  If max_partial_difference is set lower than that,         these two documents would not be considered duplicates.</li>
+<li><strong>filter_function</strong> – An optional function that allows for more complex filtering.  The function must accept         the following parameters: text1, text2, cosine_similarity, fuzzy_ratio.  Must return True or False, indicating         whether the two documents should be considered duplicates.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of lists, containing groups of duplicate documents         (represented as rows from the corpus dataframe)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.TextDataFrame.get_lsa_components">
+<code class="descname">get_lsa_components</code><span class="sig-paren">(</span><em>k=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextDataFrame.get_lsa_components"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextDataFrame.get_lsa_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the LSA components to self.corpus as new columns (‘lsa_1’, ‘lsa_2’, etc.), saves the top component for
+each document as self.corpus[‘lsa’], and returns the features-component matrix
+:param k: Number of dimensions to extract
+:return: A dataframe of (features x components)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.TextDataFrame.get_pca_components">
+<code class="descname">get_pca_components</code><span class="sig-paren">(</span><em>k=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextDataFrame.get_pca_components"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextDataFrame.get_pca_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the PCA components to self.corpus as new columns (‘pca_1’, ‘pca_2’, etc.), saves the top component for
+each document as self.corpus[‘pca’], and returns the features-component matrix
+:param k: Number of dimensions to extract
+:return: A dataframe of (features x components)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.TextDataFrame.get_top_documents">
+<code class="descname">get_top_documents</code><span class="sig-paren">(</span><em>component_prefix='cluster'</em>, <em>top_n=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextDataFrame.get_top_documents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextDataFrame.get_top_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use after running get_pca_components or get_lsa_components
+:param component_prefix: ‘lsa’ or ‘pca’ (you must first run get_pca_components or get_lsa_components)
+:param top_n: Number of documents to return for each component
+:return: A dictionary where keys are the component, and values are the top_n document indices (or text, if text_col is provided) for each component</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.TextDataFrame.match_text_to_corpus">
+<code class="descname">match_text_to_corpus</code><span class="sig-paren">(</span><em>match_list</em>, <em>allow_multiple=False</em>, <em>min_similarity=0.9</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextDataFrame.match_text_to_corpus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextDataFrame.match_text_to_corpus" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>match_list</strong> – A list of strings (other documents) to be matched to documents in the dataframe</li>
+<li><strong>allow_multiple</strong> – If set to True and your corpus contains duplicates, they will all be matched to         their best match in match_list.  If False (default), only the first row will be matched.</li>
+<li><strong>min_similarity</strong> – Minimum cosine similarity required for any match to be made.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.TextDataFrame.search_corpus">
+<code class="descname">search_corpus</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextDataFrame.search_corpus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextDataFrame.search_corpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares the provided text against the documents in the corpus and returns the most similar documents.         A new column called ‘cosine_similarity’ is generated, which is used to sort and return the dataframe.
+:param text: The text to compare documents against
+:return: The corpus dataframe sorted by cosine similarity</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pewanalytics.text.TextOverlapExtractor">
+<em class="property">class </em><code class="descclassname">pewanalytics.text.</code><code class="descname">TextOverlapExtractor</code><span class="sig-paren">(</span><em>tokenizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextOverlapExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextOverlapExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tokenizer</strong> – The tokenizer to use (default = SentenceTokenizer())</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pewanalytics.text.TextOverlapExtractor.get_text_overlaps">
+<code class="descname">get_text_overlaps</code><span class="sig-paren">(</span><em>text1</em>, <em>text2</em>, <em>min_length=20</em>, <em>tokenize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#TextOverlapExtractor.get_text_overlaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.TextOverlapExtractor.get_text_overlaps" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text1</strong> – A piece of text</li>
+<li><strong>text2</strong> – Another piece of text to compare against the first</li>
+<li><strong>min_length</strong> – Minimum length of overlapping text to identify</li>
+<li><strong>tokenize</strong> – Whether or not to tokenize the results;         if False, a single block of concatenated text will be returned (default = True)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.text.filter_parts_of_speech">
+<code class="descclassname">pewanalytics.text.</code><code class="descname">filter_parts_of_speech</code><span class="sig-paren">(</span><em>text</em>, <em>filter_pos=None</em>, <em>exclude=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#filter_parts_of_speech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.filter_parts_of_speech" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retain words associated with parts of speech in the text if exclude = False.
+If exclude = True, exclude words associated with parts of speech.
+Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> – string</li>
+<li><strong>filter_pos</strong> – array of part of speech tags (default is ‘NN’, ‘NNP’, and ‘JJ’)
+the options here are: CD, VBN, VBG, RB</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">cleaned string</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.text.get_fuzzy_partial_ratio">
+<code class="descclassname">pewanalytics.text.</code><code class="descname">get_fuzzy_partial_ratio</code><span class="sig-paren">(</span><em>text1</em>, <em>text2</em>, <em>timeout=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#get_fuzzy_partial_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.get_fuzzy_partial_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Useful to calculate similarity of two strings that are of noticeably different lengths.  Allows for the possibility     that one text is a subset of the other; finds the largest overlap and computes the Levenshtein ratio on that.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text1</strong> – First string</li>
+<li><strong>text2</strong> – Second string</li>
+<li><strong>timeout</strong> – The number of seconds to wait before giving up</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The partial Levenshtein ratio between the two texts</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Accepts kwarg timeout:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.text.get_fuzzy_ratio">
+<code class="descclassname">pewanalytics.text.</code><code class="descname">get_fuzzy_ratio</code><span class="sig-paren">(</span><em>text1</em>, <em>text2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#get_fuzzy_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.get_fuzzy_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares     to the overall length of the texts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text1</strong> – First string</li>
+<li><strong>text2</strong> – Second string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The Levenshtein ratio between the two texts</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.text.is_probable_stopword">
+<code class="descclassname">pewanalytics.text.</code><code class="descname">is_probable_stopword</code><span class="sig-paren">(</span><em>word</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#is_probable_stopword"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.is_probable_stopword" title="Permalink to this definition">¶</a></dt>
+<dd><p>determine if a word is likely to be a stop word by the following rules:
+1. number of synset (words with similar meaning) is less than 3
+2. the min_depth (number of edges between a word and the top of the hierarchy) is &gt; 5
+3. the number of lemma (similar to term definition in dictionary) is less than 2</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>word</strong> – string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True/False</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pewanalytics.text.fragments">
+<span id="fragments"></span><h2>Fragments<a class="headerlink" href="#module-pewanalytics.text.fragments" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pewanalytics.text.fragments.has_fragment">
+<code class="descclassname">pewanalytics.text.fragments.</code><code class="descname">has_fragment</code><span class="sig-paren">(</span><em>text</em>, <em>fragment</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/fragments.html#has_fragment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.fragments.has_fragment" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> – The text to search</li>
+<li><strong>fragment</strong> – The fragment to search for</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Whether or not the text contains the fragment</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.text.fragments.remove_fragments">
+<code class="descclassname">pewanalytics.text.fragments.</code><code class="descname">remove_fragments</code><span class="sig-paren">(</span><em>text</em>, <em>fragments</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/fragments.html#remove_fragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.fragments.remove_fragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iteratively remove fragments from a string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> – string</li>
+<li><strong>fragments</strong> – A list of string fragments to search for and remove</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The original string, minus any parts that matched the fragments provided</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="named-entity-recognition">
+<h2>Named Entity Recognition<a class="headerlink" href="#named-entity-recognition" title="Permalink to this headline">¶</a></h2>
+<p>A light-weight wrapper using <a class="reference external" href="https://www.nltk.org/book/ch07.html">NLTK’s Named Entity Recognition
+model</a>.</p>
+<span class="target" id="module-pewanalytics.text.ner"></span><dl class="class">
+<dt id="pewanalytics.text.ner.NamedEntityExtractor">
+<em class="property">class </em><code class="descclassname">pewanalytics.text.ner.</code><code class="descname">NamedEntityExtractor</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/ner.html#NamedEntityExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.ner.NamedEntityExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Output:</th><td class="field-body">dictionary of entities</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pewanalytics.text.topics">
+<span id="topics"></span><h2>Topics<a class="headerlink" href="#module-pewanalytics.text.topics" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="indices">
+<h3>Indices<a class="headerlink" href="#indices" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pewanalytics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#text">Text</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-pewanalytics.text">Text Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pewanalytics.text.fragments">Fragments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#named-entity-recognition">Named Entity Recognition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pewanalytics.text.topics">Topics</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Home</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Pew Research Center.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/text.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

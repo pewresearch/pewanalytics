@@ -1,0 +1,18 @@
+.. include:: home.rst
+
+***************************
+Documentation for some code
+***************************
+
+.. toctree::
+   :caption: Navigation
+   :maxdepth: 2
+
+   Text <text>
+
+Indices
+=======
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

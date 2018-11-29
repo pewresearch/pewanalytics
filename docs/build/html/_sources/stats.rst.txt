@@ -1,0 +1,4 @@
+..include ::home.rst
+
+Stats
+*****

@@ -1,0 +1,53 @@
+.. include:: home.rst
+
+****
+Text
+****
+
+Some text and stuff
+
+Text Utilities
+--------------
+
+.. automodule :: pewanalytics.text
+    :members:
+    :show-inheritance:
+
+
+Fragments
+---------
+
+
+
+.. automodule :: pewanalytics.text.fragments
+    :members:
+
+
+Named Entity Recognition
+------------------------
+
+A light-weight wrapper using `NLTK's Named Entity Recognition
+model <https://www.nltk.org/book/ch07.html>`_. 
+
+
+.. automodule :: pewanalytics.text.ner
+    :members:
+
+
+Topics
+------
+
+.. automodule :: pewanalytics.text.topics
+    :members:
+
+
+.. toctree::
+   :caption: Navigation
+   :maxdepth: 2
+
+Indices
+=======
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
