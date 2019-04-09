@@ -136,8 +136,8 @@ def compute_scores(coder_df, coder1, coder2, outcome_column, document_column, co
         row["{}_std".format(labelsetname)] = weighted_stats.std_mean
 
         unweighted_stats = DescrStatsW(labelset, weights=[1.0 for x in labelset])
-        row["{}_mean".format(labelsetname)] = unweighted_stats.mean
-        row["{}_std".format(labelsetname)] = unweighted_stats.std_mean
+        row["{}_mean_unweighted".format(labelsetname)] = unweighted_stats.mean
+        row["{}_std_unweighted".format(labelsetname)] = unweighted_stats.std_mean
 
     alpha = AnnotationTask(data=coder_df[[coder_column, document_column, outcome_column]].as_matrix())
     try:
