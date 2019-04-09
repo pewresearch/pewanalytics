@@ -1,5 +1,12 @@
 import math
 import scipy
+import numpy as np
+from nltk.metrics.agreement import AnnotationTask
+from sklearn.metrics import matthews_corrcoef, accuracy_score, f1_score, \
+    precision_score, recall_score, roc_auc_score, cohen_kappa_score
+from statsmodels.stats.weightstats import DescrStatsW
+from statsmodels.stats.inter_rater import fleiss_kappa
+from pewtils import is_not_null
 
 
 def kappa_sample_size_power(rate1, rate2, k1, k0, alpha=0.05, power=0.8, twosided=False):
@@ -88,3 +95,138 @@ def kappa_sample_size_CI(kappa0, kappaL, props, kappaU=None, alpha=0.05):
         result = CalcIT(kappa0, kappaL, props, n)
         n += 1
     return n
+
+
+def compute_scores(coder_df, coder1, coder2, outcome_column, document_column, coder_column, weight_column, pos_label=None):
+    """
+    Computes a variety of IRR scores, including Cohen's kappa, Krippendorf's alpha, precision, and recall
+    :param coder_df: A dataframe of codes
+    :param coder1: The value in `coder_column` for rows corresponding to the first coder
+    :param coder2: The value in `coder_column` for rows corresponding to the second coder
+    :param outcome_column: The column that contains the codes
+    :param document_column: The column that contains IDs for the documents
+    :param coder_column: The column containing values that indicate which coder assigned the code
+    :param weight_column: The column that contains sampling weights
+    :param pos_label: The value indicating a positive label (optional)
+    :return:
+    """
+
+    coder1_df = coder_df[coder_df[coder_column] == coder1]
+    coder1_df.index = coder1_df[document_column]
+    coder2_df = coder_df[coder_df[coder_column] == coder2]
+    coder2_df.index = coder2_df[document_column]
+    coder1_df = coder1_df[coder1_df.index.isin(coder2_df.index)]
+    coder2_df = coder2_df[coder2_df.index.isin(coder1_df.index)].ix[coder1_df.index]
+
+    row = {
+        "coder1": coder1,
+        "coder2": coder2,
+        "n": len(coder1_df),
+        "outcome_column": outcome_column,
+        "pos_label": pos_label,
+    }
+
+    for labelsetname, labelset in [
+        ("coder1", coder1_df[outcome_column]),
+        ("coder2", coder2_df[outcome_column])
+    ]:
+
+        weighted_stats = DescrStatsW(labelset, weights=coder1_df[weight_column])
+        row["{}_mean".format(labelsetname)] = weighted_stats.mean
+        row["{}_std".format(labelsetname)] = weighted_stats.std_mean
+
+        unweighted_stats = DescrStatsW(labelset, weights=[1.0 for x in labelset])
+        row["{}_mean".format(labelsetname)] = unweighted_stats.mean
+        row["{}_std".format(labelsetname)] = unweighted_stats.std_mean
+
+    alpha = AnnotationTask(data=coder_df[[coder_column, document_column, outcome_column]].as_matrix())
+    try:
+        alpha = alpha.alpha()
+    except (ZeroDivisionError, ValueError):
+        alpha = None
+    row["alpha_unweighted"] = alpha
+
+    if len(np.unique(coder_df[outcome_column])) <= 2:
+
+        row["cohens_kappa"] = cohen_kappa_score(
+            coder1_df[outcome_column],
+            coder2_df[outcome_column],
+            sample_weight=coder1_df[weight_column]
+        )
+
+    try:
+        row["accuracy"] = accuracy_score(coder1_df[outcome_column], coder2_df[outcome_column], sample_weight=coder1_df[weight_column])
+    except ValueError:
+        row["accuracy"] = None
+
+    try:
+        row["f1"] = f1_score(coder1_df[outcome_column], coder2_df[outcome_column], pos_label=pos_label, sample_weight=coder1_df[weight_column])
+    except ValueError:
+        row["f1"] = None
+
+    try:
+        row["precision"] = precision_score(coder1_df[outcome_column], coder2_df[outcome_column], pos_label=pos_label, sample_weight=coder1_df[weight_column])
+    except ValueError:
+        row["precision"] = None
+
+    try:
+        row["recall"] = recall_score(coder1_df[outcome_column], coder2_df[outcome_column], pos_label=pos_label, sample_weight=coder1_df[weight_column]),
+    except ValueError:
+        row["recall"] = None
+
+    if is_not_null(row["precision"]) and is_not_null(row["recall"]):
+        row["precision_recall_min"] = min([row["precision"], row["recall"]])
+    else:
+        row["precision_recall_min"] = None
+
+    try:
+        row["matthews_corrcoef"] = matthews_corrcoef(coder1_df[outcome_column], coder2_df[outcome_column], sample_weight=coder1_df[weight_column])
+    except ValueError:
+        row["matthews_corrcoef"] = None
+
+    try:
+        row["roc_auc"] = roc_auc_score(coder1_df[outcome_column], coder2_df[outcome_column], sample_weight=coder1_df[weight_column]) \
+            if len(np.unique(coder1_df[outcome_column])) > 1 and len(np.unique(coder2_df[outcome_column])) > 1 else None
+    except (ValueError, TypeError):
+        row["roc_auc"] = None
+
+    row["pct_agree_unweighted"] = np.average([1 if c[0] == c[1] else 0 for c in zip(coder1_df[outcome_column], coder2_df[outcome_column])])
+
+    for k, v in row.iteritems():
+        if type(v) == tuple:
+            row[k] = v[0]
+            # For some weird reason, some of the sklearn scorers return 1-tuples sometimes
+
+    return row
+
+
+def compute_overall_scores(coder_df, document_column, outcome_column, coder_column):
+    """
+    Computes overall IRR scores
+    :param coder_df: A dataframe of codes
+    :param document_column: The column that contains IDs for the documents
+    :param outcome_column: The column that contains the codes
+    :param coder_column: The column containing values that indicate which coder assigned the code
+    :return:
+    """
+    alpha = AnnotationTask(data=coder_df[[coder_column, document_column, outcome_column]].as_matrix())
+    try:
+        alpha = alpha.alpha()
+    except (ZeroDivisionError, ValueError):
+        alpha = None
+
+    grouped = coder_df.groupby(document_column).count()
+    complete_docs = grouped[grouped[coder_column]==len(coder_df[coder_column].unique())].index
+    dataset = coder_df[coder_df[document_column].isin(complete_docs)]
+    df = dataset.groupby([outcome_column, document_column]).count()[[coder_column]]
+    df = df.unstack(outcome_column).fillna(0)
+
+    if len(df) > 0:
+        kappa = fleiss_kappa(df)
+    else:
+        kappa = None
+
+    return {
+        "alpha": alpha,
+        "fleiss_kappa": kappa
+    }
