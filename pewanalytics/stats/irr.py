@@ -131,13 +131,30 @@ def compute_scores(coder_df, coder1, coder2, outcome_column, document_column, co
         ("coder2", coder2_df[outcome_column])
     ]:
 
-        weighted_stats = DescrStatsW(labelset, weights=coder1_df[weight_column])
-        row["{}_mean".format(labelsetname)] = weighted_stats.mean
-        row["{}_std".format(labelsetname)] = weighted_stats.std_mean
+        if pos_label:
+            labelset = (labelset == pos_label).astype(int)
 
-        unweighted_stats = DescrStatsW(labelset, weights=[1.0 for x in labelset])
-        row["{}_mean_unweighted".format(labelsetname)] = unweighted_stats.mean
-        row["{}_std_unweighted".format(labelsetname)] = unweighted_stats.std_mean
+        try:
+            weighted_stats = DescrStatsW(labelset, weights=coder1_df[weight_column])
+            unweighted_stats = DescrStatsW(labelset, weights=[1.0 for x in labelset])
+            weighted_stats.mean
+            unweighted_stats.mean
+        except (TypeError, ValueError):
+            try:
+                weighted_stats = DescrStatsW(labelset.astype(int), weights=coder1_df[weight_column])
+                unweighted_stats = DescrStatsW(labelset.astype(int), weights=[1.0 for x in labelset])
+                weighted_stats.mean
+                unweighted_stats.mean
+            except (TypeError, ValueError):
+                weighted_stats = None
+                unweighted_stats = None
+
+        if weighted_stats:
+            row["{}_mean".format(labelsetname)] = weighted_stats.mean
+            row["{}_std".format(labelsetname)] = weighted_stats.std_mean
+        if unweighted_stats:
+            row["{}_mean_unweighted".format(labelsetname)] = unweighted_stats.mean
+            row["{}_std_unweighted".format(labelsetname)] = unweighted_stats.std_mean
 
     alpha = AnnotationTask(data=coder_df[[coder_column, document_column, outcome_column]].as_matrix())
     try:
