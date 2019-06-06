@@ -10,9 +10,6 @@ with open('requirements.txt') as reqs:
         str(line) for line in reqs.read().split('\n') if line and not line.startswith(('--',
 'git+ssh'))
     ]
-    dependency_links = [
-        str(line) for line in reqs.read().split('\n') if line and line.startswith(('--', 'git+ssh'))
-    ]
 
 setup(
     name = 'pewanalytics',
@@ -26,6 +23,7 @@ setup(
     license = 'MIT',
     packages = find_packages(exclude = ['contrib', 'docs', 'tests']),
     include_package_data = True,
+    install_requires = install_requires,
     classifiers = [
         # https://pypi.python.org/pypi?%3Aaction=list_classifiers
         # 'Development Status :: 1 - Planning',
