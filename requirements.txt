@@ -1,6 +1,5 @@
 beautifulsoup4>=4.5.3
 chardet>=2.3.0
-corextopic>=1.0.2
 fuzzywuzzy>=0.15.0
 hdbscan>=0.8.18
 mca>=1.0.3
