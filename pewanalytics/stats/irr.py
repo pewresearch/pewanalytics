@@ -13,6 +13,7 @@ def kappa_sample_size_power(rate1, rate2, k1, k0, alpha=0.05, power=0.8, twoside
 
     """
     Translated from N.cohen.kappa: https://cran.r-project.org/web/packages/irr/irr.pdf
+
     :param rate1: the probability that the first rater will record a positive diagnosis
     :param rate2: the probability that the second rater will record a positive diagnosis
     :param k1: the true Cohen's Kappa statistic
@@ -57,6 +58,7 @@ def kappa_sample_size_CI(kappa0, kappaL, props, kappaU=None, alpha=0.05):
 
     """
     Translated from kappaSize: https://github.com/cran/kappaSize/blob/master/R/CIBinary.R
+
     :param kappa0: The preliminary value of kappa
     :param kappaL: The desired expected lower bound for a two-sided 100(1 - alpha) % confidence interval for kappa. Alternatively, if kappaU is set to NA, the procedure produces the number of required subjects for a one-sided confidence interval
     :param props: The anticipated prevalence of the desired trait
@@ -100,6 +102,7 @@ def kappa_sample_size_CI(kappa0, kappaL, props, kappaU=None, alpha=0.05):
 def compute_scores(coder_df, coder1, coder2, outcome_column, document_column, coder_column, weight_column, pos_label=None):
     """
     Computes a variety of IRR scores, including Cohen's kappa, Krippendorf's alpha, precision, and recall
+
     :param coder_df: A dataframe of codes
     :param coder1: The value in `coder_column` for rows corresponding to the first coder
     :param coder2: The value in `coder_column` for rows corresponding to the second coder
@@ -220,6 +223,7 @@ def compute_scores(coder_df, coder1, coder2, outcome_column, document_column, co
 def compute_overall_scores(coder_df, document_column, outcome_column, coder_column):
     """
     Computes overall IRR scores
+    
     :param coder_df: A dataframe of codes
     :param document_column: The column that contains IDs for the documents
     :param outcome_column: The column that contains the codes
