@@ -12,8 +12,8 @@ def compute_kmeans_clusters(features, k=10, return_score=False):
     Uses KMeans from sklearn
 
     :param features: TF-IDF sparse matrix or pandas DataFrame
-    :param k:
-    :return: Series
+    :param k: int, number of clusters
+    :return: series
     """
 
     km = KMeans(n_clusters=k)

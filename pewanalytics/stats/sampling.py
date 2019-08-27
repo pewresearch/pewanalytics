@@ -176,6 +176,9 @@ class SampleExtractor(object):
         """
         Sample evenly from each group that's stratified by.
         At least one document per group
+
+        :param df:
+        :param sample_size:
         """
         random.seed(self.seed)
         docs_per_strata = int(float(sample_size)/ float(df.groupby('_stratify_by')[self.id_col].count().count()))
@@ -196,6 +199,9 @@ class SampleExtractor(object):
 
             Method sourced from : Kish, Leslie. "Survey sampling." (1965).  Chapter 4.
 
+        :param df: dataframe
+        :param sample_n:  integer (for sample size)
+        :return: list
         """
         print("Kish-style stratification")
         # Subset & copy cols that we care about
@@ -245,6 +251,10 @@ class SampleExtractor(object):
 
                 """
                 Returns percentages (summing to 1) of each group out of total
+
+                :param df: data frame
+                :param groupcols: list of columns
+                :param id_col: string, column name to stratify on
                 """
 
                 if not id_col:
