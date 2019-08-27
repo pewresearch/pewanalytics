@@ -13,6 +13,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
    
@@ -41,9 +42,10 @@
 <span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="k">import</span> <span class="n">linear_kernel</span>
 
 
-<div class="viewcode-block" id="get_kmeans_clusters"><a class="viewcode-back" href="../../../index.html#pewanalytics.stats.clustering.get_kmeans_clusters">[docs]</a><span class="k">def</span> <span class="nf">get_kmeans_clusters</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">return_score</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_kmeans_clusters"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.clustering.compute_kmeans_clusters">[docs]</a><span class="k">def</span> <span class="nf">compute_kmeans_clusters</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">return_score</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses KMeans from sklearn</span>
+
 <span class="sd">    :param features: TF-IDF sparse matrix or pandas DataFrame</span>
 <span class="sd">    :param k:</span>
 <span class="sd">    :return: Series</span>
@@ -57,12 +59,12 @@
     <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="p">(</span><span class="n">km</span><span class="o">.</span><span class="n">labels_</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">silhouette_avg</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_hdbscan_clusters"><a class="viewcode-back" href="../../../index.html#pewanalytics.stats.clustering.get_hdbscan_clusters">[docs]</a><span class="k">def</span> <span class="nf">get_hdbscan_clusters</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_hdbscan_clusters"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.clustering.compute_hdbscan_clusters">[docs]</a><span class="k">def</span> <span class="nf">compute_hdbscan_clusters</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Uses HDBSCAN clustering to automatically identify the best number of clusters and map each unit to one.  \</span>
-<span class="sd">    Rows are the units, and columns are features.  Returns a series with the cluster labels for each row.</span>
+<span class="sd">    Uses HDBSCAN clustering to automatically identify the best number of clusters and map each unit to one. Rows are the units, and columns are features.  Returns a series with the cluster labels for each row.</span>
+
 <span class="sd">    :param features: TF-IDF sparse matrix or a Pandas DataFrame</span>
-<span class="sd">    :param min_cluster_size: Minimum number of documents/units that can exist in a cluster.</span>
+<span class="sd">    :param min_cluster_size: int - minimum number of documents/units that can exist in a cluster.</span>
 <span class="sd">    :param min_samples: Minimum number of samples to draw (see HDBSCAN documentation for more)</span>
 <span class="sd">    :return: Series with the cluster ID that each row belongs to</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -100,6 +102,8 @@
 <ul>
   <li><a href="../../../index.html">Documentation overview</a><ul>
   <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../stats.html">pewanalytics.stats</a><ul>
+  </ul></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -132,7 +136,7 @@
       &copy;2019, Pew Research Center.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

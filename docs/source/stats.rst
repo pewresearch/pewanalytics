@@ -2,7 +2,7 @@
 the pewanalytics stats module
 *****************************
 
-Some text and stuff
+Statistics utilities for weighting, clustering, dimensionality reduction, and inter-rater reliability
 
 Stats Utilities
 ---------------
@@ -11,21 +11,34 @@ Stats Utilities
     :members:
     :show-inheritance:
 
-
 Clustering
 ----------
 
-
 .. automodule :: pewanalytics.stats.clustering
+    :members:
+    :show-inheritance:
+
+Dimensionality Reduction
+------------------------
+
+.. automodule :: pewanalytics.stats.dimensionality_reduction
     :members:
 
 
-Inter-rater Reliability 
+Inter-rater Reliability
 -----------------------
 
 .. automodule :: pewanalytics.stats.irr
-    :members: 
+    :members:
     :show-inheritance:
+
+Mutual Information
+------------------
+
+.. automodule :: pewanalytics.stats.mutual_info
+    :members:
+    :show-inheritance:
+
 
 
 .. toctree::

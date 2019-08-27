@@ -13,6 +13,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
    
@@ -35,7 +36,6 @@
 <span></span><span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">object</span>
 <span class="kn">import</span> <span class="nn">nltk</span>
-
 <span class="kn">from</span> <span class="nn">nltk</span> <span class="k">import</span> <span class="n">word_tokenize</span><span class="p">,</span> <span class="n">pos_tag</span><span class="p">,</span> <span class="n">ne_chunk</span>
 
 <span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">decode_text</span>
@@ -44,8 +44,8 @@
 <div class="viewcode-block" id="NamedEntityExtractor"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.ner.NamedEntityExtractor">[docs]</a><span class="k">class</span> <span class="nc">NamedEntityExtractor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    :param text:</span>
-<span class="sd">    :output: dictionary of entities</span>
+<span class="sd">    :param text: string</span>
+<span class="sd">    :return: dictionary of entities</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
@@ -55,7 +55,12 @@
             <span class="n">text</span> <span class="o">=</span> <span class="n">decode_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">ne_chunk</span><span class="p">(</span><span class="n">pos_tag</span><span class="p">(</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">ne_chunk</span><span class="p">(</span><span class="n">pos_tag</span><span class="p">(</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+        <span class="k">except</span> <span class="ne">LookupError</span><span class="p">:</span>
+            <span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;maxent_ne_chunker&#39;</span><span class="p">)</span>
+            <span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;words&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">ne_chunk</span><span class="p">(</span><span class="n">pos_tag</span><span class="p">(</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
 
     <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span>
@@ -91,8 +96,8 @@
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Navigation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../text.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../text.html#text">Text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../text.html">Text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../stats.html">Stats</a></li>
 </ul>
 
 <div class="relations">
@@ -134,7 +139,7 @@
       &copy;2019, Pew Research Center.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

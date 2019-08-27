@@ -13,6 +13,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
    
@@ -36,7 +37,7 @@
 <span class="kn">import</span> <span class="nn">scipy</span>
 
 
-<div class="viewcode-block" id="kappa_sample_size_power"><a class="viewcode-back" href="../../../index.html#pewanalytics.stats.irr.kappa_sample_size_power">[docs]</a><span class="k">def</span> <span class="nf">kappa_sample_size_power</span><span class="p">(</span><span class="n">rate1</span><span class="p">,</span> <span class="n">rate2</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">twosided</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="kappa_sample_size_power"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.irr.kappa_sample_size_power">[docs]</a><span class="k">def</span> <span class="nf">kappa_sample_size_power</span><span class="p">(</span><span class="n">rate1</span><span class="p">,</span> <span class="n">rate2</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">twosided</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Translated from N.cohen.kappa: https://cran.r-project.org/web/packages/irr/irr.pdf</span>
@@ -80,7 +81,7 @@
     <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">N</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="kappa_sample_size_CI"><a class="viewcode-back" href="../../../index.html#pewanalytics.stats.irr.kappa_sample_size_CI">[docs]</a><span class="k">def</span> <span class="nf">kappa_sample_size_CI</span><span class="p">(</span><span class="n">kappa0</span><span class="p">,</span> <span class="n">kappaL</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">kappaU</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+<div class="viewcode-block" id="kappa_sample_size_CI"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.irr.kappa_sample_size_CI">[docs]</a><span class="k">def</span> <span class="nf">kappa_sample_size_CI</span><span class="p">(</span><span class="n">kappa0</span><span class="p">,</span> <span class="n">kappaL</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">kappaU</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Translated from kappaSize: https://github.com/cran/kappaSize/blob/master/R/CIBinary.R</span>
@@ -151,6 +152,8 @@
 <ul>
   <li><a href="../../../index.html">Documentation overview</a><ul>
   <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../stats.html">pewanalytics.stats</a><ul>
+  </ul></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -183,7 +186,7 @@
       &copy;2019, Pew Research Center.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

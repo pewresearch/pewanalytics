@@ -6,11 +6,16 @@ the pewanalytics text module
 Some simple things you can do
 -----------------------------
 
+Parts of speech ::
+
+    from pewanalytics.text import filter_parts_of_speech
+    df['original_text'].values[0]
+    filter_parts_of_speech(doc, filter_pos=["NN"])
+
 Tokenize sentences ::
 
     from pewanalytics.text import SentenceTokenizer
     SentenceTokenizer
-
 
 Clean text ::
 
@@ -24,17 +29,24 @@ Clean text ::
 Analyze and classify lists of documents ::
 
     from pewanalytics.text import TextDataFrame
-    
+
 
 
 
 Text Utilities
 --------------
 
-.. warning :: 
+.. warning ::
     Running these functions requires text contain no special characters
 
 .. automodule :: pewanalytics.text
+    :members:
+    :show-inheritance:
+
+Dates
+-----
+
+.. automodule :: pewanalytics.text.dates
     :members:
     :show-inheritance:
 
@@ -51,16 +63,8 @@ To use ::
   extractor = NamedEntityExtractor(messy_text)
   roots = extractor.extract()
 
-
 .. automodule :: pewanalytics.text.ner
     :members:
-
-Topics
-------
-
-.. automodule :: pewanalytics.text.topics
-    :members:
-
 
 .. toctree::
    :caption: Navigation
