@@ -418,7 +418,7 @@ class TextDataFrame(object):
         self.corpus["cosine_similarity"] = None
 
         for index, row in tqdm(self.corpus.iterrows(), desc="Matching items to corpus"):
-            row = self.corpus.ix[index]
+            row = self.corpus.loc[index]
             if is_null(row["match_index"]):
                 for i, sim in [s for s in
                                sorted(zip(list(range(0, len(match_list))), similarities[self.corpus.index.get_loc(index)]),
@@ -465,8 +465,8 @@ class TextDataFrame(object):
         fragments = []
         for i,  cos_similarity in tqdm(combos, desc="Extracting fragments"):
             for frag in text_overlap_extractor.get_text_overlaps(
-                    self.corpus.ix[i][self.text_column],
-                    self.corpus.ix[ cos_similarity][self.text_column],
+                    self.corpus.iloc[i][self.text_column],
+                    self.corpus.iloc[cos_similarity][self.text_column],
                     min_length=min_fragment_length
             ):
                 if frag not in fragments:

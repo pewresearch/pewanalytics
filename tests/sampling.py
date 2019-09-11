@@ -64,7 +64,7 @@ class SamplingTests(unittest.TestCase):
         ).extract(self.df, 100)
         self.assertTrue(len(guaranteed) == 100)
         sample_props = (self.df.loc[guaranteed].groupby(['flag', 'flag2']).count() / len(guaranteed))['id'].to_dict()
-        for k, v in frame_props.iteritems():
+        for k, v in frame_props.items():
             self.assertTrue(k in sample_props.keys())
             self.assertTrue(sample_props[k] > 0)
             self.assertTrue(sample_props[k] < frame_props[k] + .03)
@@ -78,7 +78,7 @@ class SamplingTests(unittest.TestCase):
         ).extract(self.df, 4)
         self.assertTrue(len(guaranteed) == 4)
         sample_props = (self.df.loc[guaranteed].groupby(['flag', 'flag2']).count() / len(guaranteed))['id'].to_dict()
-        self.assertTrue(np.average(sample_props.values()) == .25)
+        self.assertTrue(np.average(list(sample_props.values())) == .25)
 
         even = SampleExtractor(
             id_col="id",
@@ -88,7 +88,7 @@ class SamplingTests(unittest.TestCase):
         ).extract(self.df, 20)
         self.assertTrue(len(even) == 20)
         sample_props = (self.df.loc[even].groupby(['flag', 'flag2']).count() / len(even))['id'].to_dict()
-        self.assertTrue(np.average(sample_props.values()) == .25)
+        self.assertTrue(np.average(list(sample_props.values())) == .25)
 
         normal_strat = SampleExtractor(
             id_col="id",
@@ -98,7 +98,7 @@ class SamplingTests(unittest.TestCase):
         ).extract(self.df, 100)
         self.assertTrue(len(normal_strat) == 100)
         sample_props = (self.df.loc[normal_strat].groupby(['flag', 'flag2']).count() / len(normal_strat))['id'].to_dict()
-        for k, v in sample_props.iteritems():
+        for k, v in sample_props.items():
             self.assertTrue(sample_props[k] > 0)
             self.assertTrue(sample_props[k] < frame_props[k] + .01)
             self.assertTrue(sample_props[k] > frame_props[k] - .01)
@@ -111,7 +111,7 @@ class SamplingTests(unittest.TestCase):
         ).extract(self.df, 100)
         self.assertTrue(len(normal_strat) == 100)
         sample_props = (self.df.loc[strat_alt].groupby(['flag', 'flag2']).count() / len(strat_alt))['id'].to_dict()
-        for k, v in sample_props.iteritems():
+        for k, v in sample_props.items():
             self.assertTrue(sample_props[k] > 0)
             self.assertTrue(sample_props[k] < frame_props[k] + .01)
             self.assertTrue(sample_props[k] > frame_props[k] - .01)

@@ -68,7 +68,7 @@ def compute_balanced_sample_weights(sample, weight_vars, weight_column=None):
                 del combo_weights[combo]
 
         balanced_ratio = 1.0 / float(num_valid_combos)
-        combo_weights = {k: float(balanced_ratio) / float(v) for k, v in combo_weights.iteritems()}
+        combo_weights = {k: float(balanced_ratio) / float(v) for k, v in combo_weights.items()}
 
         sample['weight'] = sample.apply(lambda x: combo_weights[tuple([x[v] for v in weight_vars])], axis=1)
 

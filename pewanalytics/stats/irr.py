@@ -209,7 +209,7 @@ def compute_scores(coder_df, coder1, coder2, outcome_column, document_column, co
 
     row["pct_agree_unweighted"] = np.average([1 if c[0] == c[1] else 0 for c in zip(coder1_df[outcome_column], coder2_df[outcome_column])])
 
-    for k, v in row.iteritems():
+    for k, v in row.items():
         if type(v) == tuple:
             row[k] = v[0]
             # For some weird reason, some of the sklearn scorers return 1-tuples sometimes
