@@ -1,20 +1,14 @@
 from __future__ import print_function
 import unittest
+import pandas as pd
+import os
 
 
 class TextTests(unittest.TestCase):
 
     def setUp(self):
 
-        import nltk
-        import pandas as pd
-
-        nltk.download("movie_reviews")
-
-        rows = []
-        for fileid in nltk.corpus.movie_reviews.fileids():
-            rows.append({"text": nltk.corpus.movie_reviews.raw(fileid)})
-        self.df = pd.DataFrame(rows)
+        self.df = pd.read_csv(os.path.join("tests", "test_data.csv"))
         self.doc = self.df['text'].values[0]
 
     def test_filter_parts_of_speech(self):

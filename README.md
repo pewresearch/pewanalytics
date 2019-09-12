@@ -45,3 +45,14 @@ Pew Research Center is a nonpartisan fact tank that informs the public about the
 ## Contact
 
 For all inquiries, please email info@pewresearch.org. Please be sure to specify your deadline, and we will get back to you as soon as possible. This email account is monitored regularly by Pew Research Center Communications staff.
+
+# Test data
+
+Test data was downloaded from NLTK on 9/12/19:
+```
+import nltk
+nltk.download("movie_reviews")
+reviews = [{"fileid": fileid, "text": nltk.corpus.movie_reviews.raw(fileid)} for fileid in nltk.corpus.movie_reviews.fileids()]
+reviews = pd.DataFrame(reviews)
+reviews.to_csv("test_data.csv", encoding="utf8")
+```

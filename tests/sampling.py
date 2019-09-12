@@ -1,19 +1,14 @@
 from __future__ import print_function
 import unittest
+import os
+import pandas as pd
 
 
 class SamplingTests(unittest.TestCase):
 
     def setUp(self):
-        import nltk
-        import pandas as pd
 
-        nltk.download("movie_reviews")
-
-        rows = []
-        for fileid in nltk.corpus.movie_reviews.fileids():
-            rows.append({"text": nltk.corpus.movie_reviews.raw(fileid)})
-        self.df = pd.DataFrame(rows)
+        self.df = pd.read_csv(os.path.join("tests", "test_data.csv"))
         self.df['id'] = self.df.index
         self.df['flag'] = self.df['text'].map(lambda x: "disney" in x).astype(int)
         self.df['flag2'] = self.df['text'].map(lambda x: "princess" in x).astype(int)

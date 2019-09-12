@@ -1,20 +1,14 @@
 from __future__ import print_function
 import unittest
+import pandas as pd
+import os
 
 
 class TopicsTests(unittest.TestCase):
 
     def setUp(self):
 
-        import nltk
-        import pandas as pd
-
-        nltk.download("movie_reviews")
-
-        rows = []
-        for fileid in nltk.corpus.movie_reviews.fileids():
-            rows.append({"text": nltk.corpus.movie_reviews.raw(fileid)})
-        self.df = pd.DataFrame(rows)[:200]
+        self.df = pd.read_csv(os.path.join("tests", "test_data.csv"))[:200]
         self.doc = self.df['text'].values[0]
 
     def test_scikit_lda_topic_model(self):
