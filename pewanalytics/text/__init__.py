@@ -290,18 +290,18 @@ class TextCleaner(object):
         self.tokenizer = tokenizer if tokenizer else nltk.WhitespaceTokenizer()
         self.replacers = replacers if replacers else []
         self.replacers.extend([
-            (r'won\t', 'will_not'),
-            (r'can\t', 'cannot'),
+            (r'won\'t', 'will_not'),
+            (r'can\'t', 'cannot'),
             (r'i\'m', 'i am'),
             (r'ain\'t', 'is not'),
             (r'(\w+)\'ll', '\g<1> will'),
-            (r'(\w+)n\'t', '\g<1> not'),
+            (r'(\w+)n\'t', '\g<1>_not'),
             (r'(\w+)\'ve', '\g<1> have'),
             (r'(\w+)\'re', '\g<1> are'),
             (r'(\w+)\'d', '\g<1> would'),
             (r'it\'s', 'it is')
         ])
-        self.replacers = [(re.compile(r"\b({})\b".format(regex[0])), regex[1]) for regex in self.replacers]
+        self.replacers = [(re.compile(r"\b{}\b".format(regex[0])), regex[1]) for regex in self.replacers]
         if lemmatize:
             self.lemmatizer = lemmatizer if lemmatizer else nltk.WordNetLemmatizer()
         else:
