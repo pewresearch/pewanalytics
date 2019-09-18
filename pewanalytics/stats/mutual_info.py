@@ -5,7 +5,7 @@ import numpy as np
 
 from scipy.sparse import csr_matrix
 
-from pewtils import is_not_null
+from pewtils import is_not_null, scale_range
 
 
 def compute_mutual_info(
@@ -121,3 +121,55 @@ def compute_mutual_info(
     pos_df = pos_df.dropna(subset=[sort_by])
 
     return (pos_df, neg_df)
+
+
+def plot_mutual_info(
+    mutual_info,
+    color="grey",
+    color_col="MI1",
+    x_col="pct_pos_multiplier_rank",
+    y_col="MI_rank",
+    size_col="pct_pos_with_term",
+    title=None,
+    figsize=(10, 10)
+):
+
+    import matplotlib.pyplot as plt
+
+    mutual_info = mutual_info.sort_values("total")
+    mutual_info['total_rank'] = mutual_info.reset_index().index + 1
+    mutual_info = mutual_info.sort_values("MI1")
+    mutual_info['MI_rank'] = mutual_info.reset_index().index + 1
+    mutual_info = mutual_info.sort_values("pct_pos_multiplier")
+    mutual_info['pct_pos_multiplier_rank'] = mutual_info.reset_index().index + 1
+
+    color_maps = {
+        "grey": plt.cm.Greys,
+        "purple": plt.cm.Purples,
+        "blue": plt.cm.Blues,
+        "green": plt.cm.Greens,
+        "orange": plt.cm.Oranges,
+        "red": plt.cm.Reds
+    }
+
+    f, ax = plt.subplots(figsize=figsize)
+    mutual_info["size"] = mutual_info[size_col].map(
+        lambda x: scale_range(x, mutual_info[size_col].min(), mutual_info[size_col].max(), 15, 25))
+    mutual_info["color"] = mutual_info[color_col].map(
+        lambda x: scale_range(x, mutual_info[color_col].min(), mutual_info[color_col].max(), .4, 1))
+    mutual_info["color"] = mutual_info["color"].map(color_maps[color])
+
+    mutual_info["x"] = mutual_info[x_col]
+    mutual_info["y"] = mutual_info[y_col]
+    ax.set_title(title)
+    ax.set_xlim((mutual_info["x"].min() * .9, mutual_info["x"].max() * 1.1))
+    ax.set_ylim((mutual_info["y"].min() * .9, mutual_info["y"].max() * 1.1))
+    ax.set_ylabel("Mutual information")
+    ax.set_xlabel("Likelihood ratio")
+
+    texts = []
+    for index, row in mutual_info.iterrows():
+        texts.append(ax.text(row['x'], row['y'], index, size=row["size"], color=row["color"]))
+
+    return ax
+    # plt.savefig(value + '.pdf')
