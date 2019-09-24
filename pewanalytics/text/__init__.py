@@ -20,10 +20,12 @@ from pewtils.http import strip_html
 from pewtils import decode_text as _decode_text
 from pewtils.regex import URL_REGEX
 
-from pewanalytics.stats.clustering import compute_hdbscan_clusters, compute_kmeans_clusters
+from pewanalytics.stats.clustering import (
+    compute_hdbscan_clusters,
+    compute_kmeans_clusters,
+)
 from pewanalytics.stats.mutual_info import compute_mutual_info
 from pewanalytics.stats.dimensionality_reduction import get_lsa, get_pca
-
 
 
 """
@@ -48,16 +50,13 @@ def has_fragment(text, fragment):
     :param fragment: The fragment to search for
     :return: Whether or not the text contains the fragment
     """
-    if any([
-        (fragment in text),
-        (_decode_text(fragment) in _decode_text(text))
-    ]):
+    if any([(fragment in text), (_decode_text(fragment) in _decode_text(text))]):
         return True
     else:
         return False
 
 
-def remove_fragments(text, fragments, throw_loud_fail = False):
+def remove_fragments(text, fragments, throw_loud_fail=False):
     """
     Iteratively remove fragments from a string
     :param text: string
@@ -66,17 +65,20 @@ def remove_fragments(text, fragments, throw_loud_fail = False):
     """
     for f in fragments:
         new_text = text.replace(f, "")
-        #if the new text is the same as previous, try decoding
+        # if the new text is the same as previous, try decoding
         if new_text == text:
-            new_text = _decode_text(text, throw_loud_fail).replace(_decode_text(f, throw_loud_fail), "")
-        #if the new text is still the same as previous, then new text is None
+            new_text = _decode_text(text, throw_loud_fail).replace(
+                _decode_text(f, throw_loud_fail), ""
+            )
+        # if the new text is still the same as previous, then new text is None
         if new_text == text:
             new_text = None
         if new_text:
             text = new_text
     return text
 
-def filter_parts_of_speech(text, filter_pos=None, exclude = False):
+
+def filter_parts_of_speech(text, filter_pos=None, exclude=False):
     """
     Retain words associated with parts of speech in the text if exclude = False.
     If exclude = True, exclude words associated with parts of speech.
@@ -90,7 +92,7 @@ def filter_parts_of_speech(text, filter_pos=None, exclude = False):
     :return: cleaned string
     """
     if not filter_pos:
-        filter_pos = ('NN','NNP','JJ')
+        filter_pos = ("NN", "NNP", "JJ")
     text = text.split()
     tagged_words = nltk.pos_tag(text)
     if exclude == False:
@@ -100,7 +102,7 @@ def filter_parts_of_speech(text, filter_pos=None, exclude = False):
     return " ".join(valid)
 
 
-def get_fuzzy_ratio(text1, text2, throw_loud_fail = False):
+def get_fuzzy_ratio(text1, text2, throw_loud_fail=False):
     """
     Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares \
     to the overall length of the texts.
@@ -113,10 +115,12 @@ def get_fuzzy_ratio(text1, text2, throw_loud_fail = False):
     try:
         return fuzz.ratio(text1, text2)
     except (UnicodeDecodeError, UnicodeEncodeError):
-        return fuzz.ratio(_decode_text(text1, throw_loud_fail), _decode_text(text2, throw_loud_fail))
+        return fuzz.ratio(
+            _decode_text(text1, throw_loud_fail), _decode_text(text2, throw_loud_fail)
+        )
 
 
-def get_fuzzy_partial_ratio(text1, text2, throw_loud_fail = False, timeout=5):
+def get_fuzzy_partial_ratio(text1, text2, throw_loud_fail=False, timeout=5):
     """
     Useful to calculate similarity of two strings that are of noticeably different lengths.  Allows for the possibility \
     that one text is a subset of the other; finds the largest overlap and computes the Levenshtein ratio on that.
@@ -136,7 +140,10 @@ def get_fuzzy_partial_ratio(text1, text2, throw_loud_fail = False, timeout=5):
         try:
             partial_ratio = fuzz.partial_ratio(text1, text2)
         except (UnicodeDecodeError, UnicodeEncodeError):
-            partial_ratio = fuzz.partial_ratio(_decode_text(text1, throw_loud_fail), _decode_text(text2, throw_loud_fail))
+            partial_ratio = fuzz.partial_ratio(
+                _decode_text(text1, throw_loud_fail),
+                _decode_text(text2, throw_loud_fail),
+            )
         return partial_ratio
 
 
@@ -148,13 +155,20 @@ class SentenceTokenizer(object):
     :param regex_split_trailing: A compiled regex object used to define the end of sentences
     :param regex_split_leading: A compiled regex object used to define the beginning of sentences
     """
-    def __init__(self, base_tokenizer=None, regex_split_trailing=None, regex_split_leading=None):
 
-        self.base_tokenizer = base_tokenizer if base_tokenizer else nltk.data.load("tokenizers/punkt/english.pickle")
+    def __init__(
+        self, base_tokenizer=None, regex_split_trailing=None, regex_split_leading=None
+    ):
+
+        self.base_tokenizer = (
+            base_tokenizer
+            if base_tokenizer
+            else nltk.data.load("tokenizers/punkt/english.pickle")
+        )
         self.regex_split_trailing = regex_split_trailing
         self.regex_split_leading = regex_split_leading
 
-    def tokenize(self, text, throw_loud_fail = False, min_length=None):
+    def tokenize(self, text, throw_loud_fail=False, min_length=None):
         """
         :param text: The text to tokenize
         :param throw_loud_fail: bool; does not remove all remove nonascii characters if false
@@ -174,15 +188,15 @@ class SentenceTokenizer(object):
                 leaders = self.regex_split_leading.findall(t)
                 token_group = []
                 for subt_lead in self.regex_split_leading.split(t):
-                    if subt_lead != '':
+                    if subt_lead != "":
                         token_group.append(subt_lead)
                     if len(leaders) == 0 or subt_lead not in leaders:
                         partial_tokens.append("".join(token_group))
                         token_group = []
                 if len(token_group) > 0:
-                    partial_tokens.append("".join([t for t in token_group if t != '']))
+                    partial_tokens.append("".join([t for t in token_group if t != ""]))
         if len(token_group) > 0:
-            partial_tokens.append("".join([t for t in token_group if t != '']))
+            partial_tokens.append("".join([t for t in token_group if t != ""]))
 
         if not self.regex_split_trailing:
             final_tokens = partial_tokens
@@ -193,15 +207,15 @@ class SentenceTokenizer(object):
                 trailers = self.regex_split_trailing.findall(t)
                 token_group = []
                 for subt_trail in self.regex_split_trailing.split(t):
-                    if subt_trail != '':
+                    if subt_trail != "":
                         token_group.append(subt_trail)
                     if len(trailers) == 0 or subt_trail in trailers:
                         final_tokens.append("".join(token_group))
                         token_group = []
                 if len(token_group) > 0:
-                    final_tokens.append("".join([t for t in token_group if t != '']))
+                    final_tokens.append("".join([t for t in token_group if t != ""]))
             if len(token_group) > 0:
-                final_tokens.append("".join([t for t in token_group if t != '']))
+                final_tokens.append("".join([t for t in token_group if t != ""]))
 
         final_tokens = [t.strip() for t in final_tokens]
 
@@ -215,6 +229,7 @@ class TextOverlapExtractor(object):
     """
     :param tokenizer: The tokenizer to use (default = SentenceTokenizer())
     """
+
     def __init__(self, tokenizer=None):
 
         if not tokenizer:
@@ -233,12 +248,16 @@ class TextOverlapExtractor(object):
         """
 
         if tokenize:
-            valid_tokens = [t.strip() for t in self.tokenizer.tokenize(". ".join([text1, text2]))]
+            valid_tokens = [
+                t.strip() for t in self.tokenizer.tokenize(". ".join([text1, text2]))
+            ]
         fragments = []
         s = SequenceMatcher(None, text1, text2, autojunk=True)
         for block in s.get_matching_blocks():
             if block.size >= min_length:
-                for token in self.tokenizer.tokenize(text1[block.a:(block.a + block.size)], min_length=min_length):
+                for token in self.tokenizer.tokenize(
+                    text1[block.a : (block.a + block.size)], min_length=min_length
+                ):
                     if len(token) >= min_length:
                         token = token.strip()
                         if not tokenize or token in valid_tokens:
@@ -250,7 +269,7 @@ class TextOverlapExtractor(object):
 
         s = SequenceMatcher(None, text1, text2)
         pos_a, pos_b, size = s.find_longest_match(0, len(text1), 0, len(text2))
-        return text1[pos_a:pos_a + size]
+        return text1[pos_a : pos_a + size]
 
 
 class TextCleaner(object):
@@ -289,33 +308,39 @@ class TextCleaner(object):
 
         self.tokenizer = tokenizer if tokenizer else nltk.WhitespaceTokenizer()
         self.replacers = replacers if replacers else []
-        self.replacers.extend([
-            (r'won\'t', 'will_not'),
-            (r'can\'t', 'cannot'),
-            (r'i\'m', 'i am'),
-            (r'ain\'t', 'is not'),
-            (r'(\w+)\'ll', '\g<1> will'),
-            (r'(\w+)n\'t', '\g<1>_not'),
-            (r'(\w+)\'ve', '\g<1> have'),
-            (r'(\w+)\'re', '\g<1> are'),
-            (r'(\w+)\'d', '\g<1> would'),
-            (r'it\'s', 'it is')
-        ])
-        self.replacers = [(re.compile(r"\b{}\b".format(regex[0])), regex[1]) for regex in self.replacers]
+        self.replacers.extend(
+            [
+                (r"won\'t", "will_not"),
+                (r"can\'t", "cannot"),
+                (r"i\'m", "i am"),
+                (r"ain\'t", "is not"),
+                (r"(\w+)\'ll", "\g<1> will"),
+                (r"(\w+)n\'t", "\g<1>_not"),
+                (r"(\w+)\'ve", "\g<1> have"),
+                (r"(\w+)\'re", "\g<1> are"),
+                (r"(\w+)\'d", "\g<1> would"),
+                (r"it\'s", "it is"),
+            ]
+        )
+        self.replacers = [
+            (re.compile(r"\b{}\b".format(regex[0])), regex[1])
+            for regex in self.replacers
+        ]
         if lemmatize:
             self.lemmatizer = lemmatizer if lemmatizer else nltk.WordNetLemmatizer()
         else:
             self.lemmatizer = None
         if not stopwords:
-            stopwords = set(nltk.corpus.stopwords.words('english'))
-        self.stopword_regex = re.compile(r"\b({})\b".format(
-                r"|".join([re.escape(s) for s in stopwords if s])
-            ), re.IGNORECASE)
+            stopwords = set(nltk.corpus.stopwords.words("english"))
+        self.stopword_regex = re.compile(
+            r"\b({})\b".format(r"|".join([re.escape(s) for s in stopwords if s])),
+            re.IGNORECASE,
+        )
         if remove_urls:
             self.url_regex = URL_REGEX
-#            self.url_regex = re.compile(
-#                r"((https?:\/\/(www\.)?)?[-a-zA-Z0-9@:%._\+~#=]{2,4000}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))"
-#            )
+        #            self.url_regex = re.compile(
+        #                r"((https?:\/\/(www\.)?)?[-a-zA-Z0-9@:%._\+~#=]{2,4000}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))"
+        #            )
         else:
             self.url_regex = None
 
@@ -323,7 +348,7 @@ class TextCleaner(object):
         self.lowercase = lowercase
         self.throw_loud_fail = throw_loud_fail
         self.strip_html = strip_html
-        self.final_regex = re.compile(r'\w*\d\w*')
+        self.final_regex = re.compile(r"\w*\d\w*")
 
     def clean(self, text):
         """
@@ -343,12 +368,12 @@ class TextCleaner(object):
         if self.lowercase:
             text = str(text).lower()
         if self.url_regex:
-            text = self.url_regex.sub(' ', text)
+            text = self.url_regex.sub(" ", text)
 
         for regex, replace in self.replacers:
-            text = regex.sub(replace, text) # expand contractions
-        text = self.stopword_regex.sub('', text)
-        text = re.sub(r'\W+', ' ', text)  # remove punctuation
+            text = regex.sub(replace, text)  # expand contractions
+        text = self.stopword_regex.sub("", text)
+        text = re.sub(r"\W+", " ", text)  # remove punctuation
         text = self.tokenizer.tokenize(text)  # split on whitespace
 
         if self.lemmatizer:
@@ -356,8 +381,8 @@ class TextCleaner(object):
 
         text = " ".join([word for word in text if len(word) > 2])
         if self.lemmatizer:
-            text = self.stopword_regex.sub('', text)
-            text = re.sub(r'\W+', ' ', text)
+            text = self.stopword_regex.sub("", text)
+            text = re.sub(r"\W+", " ", text)
 
         text = self.final_regex.sub("", text)
         return text
@@ -377,12 +402,9 @@ class TextDataFrame(object):
         self.corpus = df
         self.text_column = text_column
         self.vectorizer = TfidfVectorizer(
-            min_df=min_frequency,
-            decode_error='ignore',
-            **vectorizer_kwargs
+            min_df=min_frequency, decode_error="ignore", **vectorizer_kwargs
         )
         self.tfidf = self.vectorizer.fit_transform(df[text_column])
-
 
     def search_corpus(self, text):
         """
@@ -393,14 +415,13 @@ class TextDataFrame(object):
         :return: The corpus dataframe sorted by cosine similarity
         """
 
-        similarities = cosine_similarity(
-            self.vectorizer.transform([text]),
-            self.tfidf
-        )
-        self.corpus['search_cosine_similarity'] = similarities[0]
+        similarities = cosine_similarity(self.vectorizer.transform([text]), self.tfidf)
+        self.corpus["search_cosine_similarity"] = similarities[0]
         return self.corpus.sort_values("search_cosine_similarity", ascending=False)
 
-    def match_text_to_corpus(self, match_list, allow_multiple=False, min_similarity=.9):
+    def match_text_to_corpus(
+        self, match_list, allow_multiple=False, min_similarity=0.9
+    ):
         """
 
         :param match_list: A list of strings (other documents) to be matched to documents in the dataframe
@@ -410,8 +431,7 @@ class TextDataFrame(object):
         :return: Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity
         """
         similarities = cosine_similarity(
-            self.tfidf,
-            self.vectorizer.transform(match_list)
+            self.tfidf, self.vectorizer.transform(match_list)
         )
         self.corpus["match_text"] = None
         self.corpus["match_index"] = None
@@ -420,25 +440,43 @@ class TextDataFrame(object):
         for index, row in tqdm(self.corpus.iterrows(), desc="Matching items to corpus"):
             row = self.corpus.iloc[index]
             if is_null(row["match_index"]):
-                for i, sim in [s for s in
-                               sorted(zip(list(range(0, len(match_list))), similarities[self.corpus.index.get_loc(index)]),
-                                      key=lambda x: x[1], reverse=True) if s[1] >= min_similarity]:
+                for i, sim in [
+                    s
+                    for s in sorted(
+                        zip(
+                            list(range(0, len(match_list))),
+                            similarities[self.corpus.index.get_loc(index)],
+                        ),
+                        key=lambda x: x[1],
+                        reverse=True,
+                    )
+                    if s[1] >= min_similarity
+                ]:
                     if i not in self.corpus["match_index"].unique():
                         if allow_multiple:
-                            self.corpus.loc[self.corpus[self.text_column] == row[self.text_column], 'match_index'] = i
-                            self.corpus.loc[self.corpus[self.text_column] == row[self.text_column], 'match_text'] = \
-                            match_list[i]
-                            self.corpus.loc[self.corpus[self.text_column] == row[self.text_column], "cosine_similarity"] = sim
+                            self.corpus.loc[
+                                self.corpus[self.text_column] == row[self.text_column],
+                                "match_index",
+                            ] = i
+                            self.corpus.loc[
+                                self.corpus[self.text_column] == row[self.text_column],
+                                "match_text",
+                            ] = match_list[i]
+                            self.corpus.loc[
+                                self.corpus[self.text_column] == row[self.text_column],
+                                "cosine_similarity",
+                            ] = sim
                         else:
-                            self.corpus.loc[index, 'match_index'] = i
-                            self.corpus.loc[index, 'match_text'] = match_list[i]
+                            self.corpus.loc[index, "match_index"] = i
+                            self.corpus.loc[index, "match_text"] = match_list[i]
                             self.corpus.loc[index, "cosine_similarity"] = sim
                         break
 
         return self.corpus
 
-
-    def extract_corpus_fragments(self, scan_top_n_matches_per_doc=20, min_fragment_length=15):
+    def extract_corpus_fragments(
+        self, scan_top_n_matches_per_doc=20, min_fragment_length=15
+    ):
         """
         Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus. \
         During each comparison, overlapping fragments are identified.  This can be useful for identifying common \
@@ -457,25 +495,40 @@ class TextDataFrame(object):
         combos = []
         for i in range(0, len(self.corpus.index)):
             combos.extend(
-                [(i,  cos_similarity[0]) for cos_similarity in
-                 sorted(zip(list(range(i + 1, len(self.corpus.index))), similarity_matrix[i][i + 1:]), reverse=True)
-                 if  cos_similarity[1] < .997 and  cos_similarity[1] >= min_similarity
-                 ][:scan_top_n_matches_per_doc]
+                [
+                    (i, cos_similarity[0])
+                    for cos_similarity in sorted(
+                        zip(
+                            list(range(i + 1, len(self.corpus.index))),
+                            similarity_matrix[i][i + 1 :],
+                        ),
+                        reverse=True,
+                    )
+                    if cos_similarity[1] < 0.997 and cos_similarity[1] >= min_similarity
+                ][:scan_top_n_matches_per_doc]
             )
         fragments = []
-        for i,  cos_similarity in tqdm(combos, desc="Extracting fragments"):
+        for i, cos_similarity in tqdm(combos, desc="Extracting fragments"):
             for frag in text_overlap_extractor.get_text_overlaps(
-                    self.corpus.iloc[i][self.text_column],
-                    self.corpus.iloc[cos_similarity][self.text_column],
-                    min_length=min_fragment_length
+                self.corpus.iloc[i][self.text_column],
+                self.corpus.iloc[cos_similarity][self.text_column],
+                min_length=min_fragment_length,
             ):
                 if frag not in fragments:
                     fragments.append(frag)
 
         return fragments
 
-    def find_duplicates(self, tfidf_threshold=.9, fuzzy_ratio_threshold=90, allow_partial=False,
-                        max_partial_difference=40, filter_function=None, partial_ratio_timeout=5, decode_text=False):
+    def find_duplicates(
+        self,
+        tfidf_threshold=0.9,
+        fuzzy_ratio_threshold=90,
+        allow_partial=False,
+        max_partial_difference=40,
+        filter_function=None,
+        partial_ratio_timeout=5,
+        decode_text=False,
+    ):
 
         """
         Search for duplicates by using cosine similarity and Levenshtein ratios.  This will struggle with large \
@@ -498,14 +551,14 @@ class TextDataFrame(object):
             text = text.map(_decode_text)
 
         groups = {}
-        #compute cosine similarity between the inputs in tf.idf matrix
+        # compute cosine similarity between the inputs in tf.idf matrix
         similarity_matrix = cosine_similarity(self.tfidf)
         threshold_filter_matrix = similarity_matrix >= tfidf_threshold
 
-        #return the  location of the similarity matrix that satisfies the threshold
+        # return the  location of the similarity matrix that satisfies the threshold
         similarity_matrix = np.where(threshold_filter_matrix, similarity_matrix, None)
 
-        #create pairs in the similarity matrix
+        # create pairs in the similarity matrix
         pairs = np.argwhere(similarity_matrix)
         pairs = sorted(pairs, key=lambda x: similarity_matrix[x[0]][x[1]], reverse=True)
         pairs = [p for p in pairs if p[0] > p[1]]
@@ -515,17 +568,23 @@ class TextDataFrame(object):
             ratio = get_fuzzy_ratio(text.iloc[i], text.iloc[j])
             if ratio < fuzzy_ratio_threshold and allow_partial:
                 try:
-                    partial_ratio = get_fuzzy_partial_ratio(text.iloc[i], text.iloc[j],
-                                                            timeout=partial_ratio_timeout)
+                    partial_ratio = get_fuzzy_partial_ratio(
+                        text.iloc[i], text.iloc[j], timeout=partial_ratio_timeout
+                    )
                 except (MemoryError, TimeoutException):
                     partial_ratio = None
                 except Exception as e:
                     print(e)
                     partial_ratio = None
-                if partial_ratio and abs(ratio - partial_ratio) <= max_partial_difference:
+                if (
+                    partial_ratio
+                    and abs(ratio - partial_ratio) <= max_partial_difference
+                ):
                     ratio = max([ratio, partial_ratio])
             if ratio >= fuzzy_ratio_threshold and (
-                not filter_function or filter_function(self.corpus.iloc[i], self.corpus.iloc[j], sim, ratio)):
+                not filter_function
+                or filter_function(self.corpus.iloc[i], self.corpus.iloc[j], sim, ratio)
+            ):
                 if i not in list(groups.keys()) and j not in list(groups.keys()):
                     new_group = set([i, j])
                     groups[i] = new_group
@@ -548,12 +607,7 @@ class TextDataFrame(object):
         return duplicates
 
     def mutual_info(
-            self,
-            outcome_col,
-            weight_col=None,
-            sample_size=None,
-            l=0,
-            normalize=True
+        self, outcome_col, weight_col=None, sample_size=None, l=0, normalize=True
     ):
         """
         :param outcome_col: The name of the column with the binary outcome variable
@@ -567,7 +621,9 @@ class TextDataFrame(object):
         else:
             df = self.corpus
         if weight_col:
-            df = df.dropna(subset=[self.text_column, outcome_col, weight_col]).reset_index()
+            df = df.dropna(
+                subset=[self.text_column, outcome_col, weight_col]
+            ).reset_index()
         else:
             df = df.dropna(subset=[self.text_column, outcome_col]).reset_index()
         y = df[outcome_col]
@@ -582,17 +638,21 @@ class TextDataFrame(object):
             weights=weights,
             col_names=self.vectorizer.get_feature_names(),
             l=l,
-            normalize=normalize
+            normalize=normalize,
         )
 
     def kmeans_clusters(self, k=10):
 
-        self.corpus["kmeans"] = compute_kmeans_clusters(self.tfidf, k=k, return_score=False)
+        self.corpus["kmeans"] = compute_kmeans_clusters(
+            self.tfidf, k=k, return_score=False
+        )
         print("KMeans clusters saved to self.corpus['kmeans']")
 
     def hdbscan_clusters(self, min_cluster_size=100, min_samples=1):
 
-        self.corpus["hdbscan"] = compute_hdbscan_clusters(self.tfidf, min_cluster_size=min_cluster_size, min_samples=min_samples)
+        self.corpus["hdbscan"] = compute_hdbscan_clusters(
+            self.tfidf, min_cluster_size=min_cluster_size, min_samples=min_samples
+        )
         print("HDBSCAN clusters saved to self.corpus['hdbscan']")
 
     def top_cluster_terms(self, cluster_col, min_size=50, top_n=10):
@@ -602,18 +662,27 @@ class TextDataFrame(object):
 
         terms = {}
         for cluster in cluster_df[cluster_col].unique():
-            if is_not_null(cluster) and len(cluster_df[cluster_df[cluster_col] == cluster]) >= min_size:
-                self.corpus["{}_{}".format(cluster_col, cluster)] = cluster_df["{}_{}".format(cluster_col, cluster)]
+            if (
+                is_not_null(cluster)
+                and len(cluster_df[cluster_df[cluster_col] == cluster]) >= min_size
+            ):
+                self.corpus["{}_{}".format(cluster_col, cluster)] = cluster_df[
+                    "{}_{}".format(cluster_col, cluster)
+                ]
                 minfo = self.mutual_info("{}_{}".format(cluster_col, cluster))
                 minfo = minfo.sort_values("MI1", ascending=False)[:top_n]
                 del self.corpus["{}_{}".format(cluster_col, cluster)]
-                minfo = minfo[minfo["MI1"] > 0].sort_values("MI1", ascending=False)[:top_n]
+                minfo = minfo[minfo["MI1"] > 0].sort_values("MI1", ascending=False)[
+                    :top_n
+                ]
                 terms[cluster] = minfo.index.values
-                print("Cluster #{}, {} documents: {}".format(
-                    cluster,
-                    len(cluster_df[cluster_df[cluster_col] == cluster]),
-                    minfo.index.values
-                ))
+                print(
+                    "Cluster #{}, {} documents: {}".format(
+                        cluster,
+                        len(cluster_df[cluster_df[cluster_col] == cluster]),
+                        minfo.index.values,
+                    )
+                )
         return terms
 
     def pca_components(self, k=20):
@@ -627,7 +696,9 @@ class TextDataFrame(object):
         :return: A dataframe of (features x components)
         """
 
-        components, documents = get_pca(self.tfidf, feature_names=self.vectorizer.get_feature_names(), k=k)
+        components, documents = get_pca(
+            self.tfidf, feature_names=self.vectorizer.get_feature_names(), k=k
+        )
         for col in documents.columns:
             self.corpus[col] = documents[col]
         print("Top PCA dimensions saved as clusters to self.corpus['pca']")
@@ -644,13 +715,15 @@ class TextDataFrame(object):
         :return: A dataframe of (features x components)
         """
 
-        components, documents = get_lsa(self.tfidf, feature_names=self.vectorizer.get_feature_names(), k=k)
+        components, documents = get_lsa(
+            self.tfidf, feature_names=self.vectorizer.get_feature_names(), k=k
+        )
         for col in documents.columns:
             self.corpus[col] = documents[col]
         print("Top LSA dimensions saved as clusters to self.corpus['lsa']")
         return components
 
-    def get_top_documents(self, component_prefix='cluster', top_n=5):
+    def get_top_documents(self, component_prefix="cluster", top_n=5):
 
         """
         Use after running get_pca_components or get_lsa_components
@@ -661,16 +734,19 @@ class TextDataFrame(object):
         """
 
         top_docs = {}
-        for col in [c for c in self.corpus.columns if c.startswith("{}_".format(component_prefix))]:
-            docs = self.corpus[self.corpus[component_prefix] == col].sort_values(col, ascending=False)[:top_n]
+        for col in [
+            c
+            for c in self.corpus.columns
+            if c.startswith("{}_".format(component_prefix))
+        ]:
+            docs = self.corpus[self.corpus[component_prefix] == col].sort_values(
+                col, ascending=False
+            )[:top_n]
             top_docs[col] = docs[self.text_column].values
         return top_docs
 
     def make_word_cooccurrence_matrix(
-            self,
-            normalize=False,
-            min_frequency=10,
-            max_frequency=.5
+        self, normalize=False, min_frequency=10, max_frequency=0.5
     ):
 
         """
@@ -684,16 +760,20 @@ class TextDataFrame(object):
 
         text = self.corpus[self.text_column]
         cv = CountVectorizer(
-            ngram_range=(1,1),
-            stop_words = 'english',
+            ngram_range=(1, 1),
+            stop_words="english",
             min_df=min_frequency,
-            max_df=max_frequency
+            max_df=max_frequency,
         )
         mat = cv.fit_transform(text)
-        mat[mat > 0] = 1  # this makes sure that we're counting number of documents words have in common \
+        mat[
+            mat > 0
+        ] = (
+            1
+        )  # this makes sure that we're counting number of documents words have in common \
         # and not weighting by the frequency of one of the words in a single document, which can lead to spurious links
         names = cv.get_feature_names()
-        mat = (mat.T * mat)  # compute the document-document matrix
+        mat = mat.T * mat  # compute the document-document matrix
         if normalize:
             diag = sp.diags(1.0 / mat.diagonal())
             mat = diag * mat
@@ -712,12 +792,16 @@ class TextDataFrame(object):
         """
 
         text = self.corpus[self.text_column]
-        cv = CountVectorizer(ngram_range=(1, 1), stop_words='english')
+        cv = CountVectorizer(ngram_range=(1, 1), stop_words="english")
         mat = cv.fit_transform(text)
-        mat[mat > 0] = 1  # this makes sure that we're counting number of words documents have in common \
+        mat[
+            mat > 0
+        ] = (
+            1
+        )  # this makes sure that we're counting number of words documents have in common \
         # and not weighting by the frequency of one of the words in a single document, which can lead to spurious links
         names = text.index
-        mat = (mat * mat.T)  # compute the word-word matrix
+        mat = mat * mat.T  # compute the word-word matrix
         if normalize:
             diag = sp.diags(1.0 / mat.diagonal())
             mat = diag * mat

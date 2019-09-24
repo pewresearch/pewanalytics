@@ -20,8 +20,10 @@ def compute_kmeans_clusters(features, k=10, return_score=False):
     labels = km.fit_predict(features)
     silhouette_avg = silhouette_score(features, labels)
     print("KMeans: n_clusters {}, score is {}".format(k, silhouette_avg))
-    if not return_score: return km.labels_.tolist()
-    else: return (km.labels_.tolist(), silhouette_avg)
+    if not return_score:
+        return km.labels_.tolist()
+    else:
+        return (km.labels_.tolist(), silhouette_avg)
 
 
 def compute_hdbscan_clusters(features, min_cluster_size=100, min_samples=1):
@@ -34,7 +36,9 @@ def compute_hdbscan_clusters(features, min_cluster_size=100, min_samples=1):
     :return: Series with the cluster ID that each row belongs to
     """
 
-    clusterer = hdbscan.HDBSCAN(min_cluster_size=min_cluster_size, min_samples=min_samples)
+    clusterer = hdbscan.HDBSCAN(
+        min_cluster_size=min_cluster_size, min_samples=min_samples
+    )
     clusterer.fit(features)
-    print("HDBSCAN: n_clusters {}".format(clusterer.labels_.max()+1))
+    print("HDBSCAN: n_clusters {}".format(clusterer.labels_.max() + 1))
     return clusterer.labels_

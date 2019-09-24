@@ -3,13 +3,13 @@ import unittest
 
 
 class DatesTests(unittest.TestCase):
-
     def setUp(self):
         pass
 
     def test_datefinder(self):
         import datetime
         from pewanalytics.text.dates import DateFinder
+
         finder = DateFinder()
         text = "January 1, 2018 and 02/01/2019 and Mar. 1st 2020"
         low_bound = datetime.datetime(2017, 1, 1)

@@ -22,8 +22,8 @@ class NamedEntityExtractor(object):
         try:
             self.tree = ne_chunk(pos_tag(word_tokenize(text)))
         except LookupError:
-            nltk.download('maxent_ne_chunker')
-            nltk.download('words')
+            nltk.download("maxent_ne_chunker")
+            nltk.download("words")
             self.tree = ne_chunk(pos_tag(word_tokenize(text)))
 
     def extract(self):
@@ -32,7 +32,7 @@ class NamedEntityExtractor(object):
         for branch in tree:
             if type(branch) is nltk.Tree:
                 try:
-                    leaf = [' '.join(x[0] for x in branch.leaves())]
+                    leaf = [" ".join(x[0] for x in branch.leaves())]
                     if branch.label() in list(roots.keys()):
                         roots[branch.label()] += leaf
                     else:

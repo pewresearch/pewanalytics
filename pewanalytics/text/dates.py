@@ -8,7 +8,8 @@ from calendar import IllegalMonthError
 
 
 class DateFinder(object):
-    """Search bodies of text for dates""" 
+    """Search bodies of text for dates"""
+
     def __init__(self):
 
         # A generally permissive date regex, also fairly prone to false positives
@@ -28,10 +29,10 @@ class DateFinder(object):
             (?:(?:part|pt\.|pt|p\.)[a-z]*)
              [\s]+                 # followed by whitespace
              \d+                   # Then a number,
-            \b """)
+            \b """
+        )
 
         return part_regex
-
 
     def _compile_permissive_date_regex(self):
         """:output: regex looking for dates """
@@ -47,16 +48,15 @@ class DateFinder(object):
              )
              [\s./-]*             # followed by a date separator or whitespace (optional)
             ){3}                  # do this three times
-            \b)) """)
+            \b)) """
+        )
 
         return general_date_regex
-
 
     def _compile_time_regex(self):
         """Return a regex that searches for times"""
         standard_time_regex = re.compile("((?:\d\d|\d):[0-9][0-9])")
         return standard_time_regex
-
 
     def _remove_part_and_time_references(self, text):
         """Return the text without any references to "parts" or specific times.
@@ -73,7 +73,6 @@ class DateFinder(object):
             text = text.replace(reference, "")
 
         return text
-
 
     def find_dates(self, text, cutoff_date_start, cutoff_date_end):
         """Return all of the dates (in text form and as datetime) in the text variable,
@@ -105,13 +104,16 @@ class DateFinder(object):
 
             # The contents of these dates don't matter much. However, they cannot have a month, day OR year in common, otherwise
             # this won't work.
-            default_date_1 = datetime.datetime(day=1, year = 2020, month = 9)
-            default_date_2 = datetime.datetime(day=2, year = 1999, month = 6)
+            default_date_1 = datetime.datetime(day=1, year=2020, month=9)
+            default_date_2 = datetime.datetime(day=2, year=1999, month=6)
 
             try:
                 datetime_1 = parse(date_raw_text, fuzzy=True, default=default_date_1)
                 datetime_2 = parse(date_raw_text, fuzzy=True, default=default_date_2)
-                if datetime_1 == datetime_2 and  cutoff_date_start < datetime_1 < cutoff_date_end:
+                if (
+                    datetime_1 == datetime_2
+                    and cutoff_date_start < datetime_1 < cutoff_date_end
+                ):
                     date = (datetime_1, date_raw_text)
                     final_dates.append(date)
             except (ValueError, IllegalMonthError):

@@ -19,27 +19,32 @@ def compute_sample_weights_from_frame(frame, sample, weight_vars):
 
     if len(weight_vars) > 0:
 
-        frame['count'] = 1
-        sample['count'] = 1
+        frame["count"] = 1
+        sample["count"] = 1
         sample_grouped = sample.groupby(weight_vars).count()
         sample_grouped /= len(sample)
         frame_grouped = frame.groupby(weight_vars).count()
         frame_grouped /= len(frame)
         weights = frame_grouped / sample_grouped
-        weights["weight"] = weights['count']
+        weights["weight"] = weights["count"]
         for c in weights.columns:
             if c not in weight_vars and c != "weight":
                 del weights[c]
-        try: sample = sample.merge(weights, how="left", left_on=weight_vars, right_index=True)
+        try:
+            sample = sample.merge(
+                weights, how="left", left_on=weight_vars, right_index=True
+            )
         except ValueError:
             weights = weights.reset_index()
             index = sample.index
-            sample = sample.merge(weights, how="left", left_on=weight_vars, right_on=weight_vars)
+            sample = sample.merge(
+                weights, how="left", left_on=weight_vars, right_on=weight_vars
+            )
             sample.index = index
     else:
-        sample['weight'] = 1.0
+        sample["weight"] = 1.0
 
-    return sample['weight']
+    return sample["weight"]
 
 
 def compute_balanced_sample_weights(sample, weight_vars, weight_column=None):
@@ -55,32 +60,73 @@ def compute_balanced_sample_weights(sample, weight_vars, weight_column=None):
         num_valid_combos = 0
         weight_vars = list(set(weight_vars))
         combo_weights = {}
-        combos = list(set([tuple(row[weight_vars].values.astype(bool)) for index, row in sample.iterrows()]))
+        combos = list(
+            set(
+                [
+                    tuple(row[weight_vars].values.astype(bool))
+                    for index, row in sample.iterrows()
+                ]
+            )
+        )
         # for combo in itertools.product([True, False], repeat=len(weight_vars)):
         for combo in combos:
             if weight_column:
-                combo_weights[combo] = float(sample[eval(" & ".join(["(sample['{}']=={})".format(col, c) for col, c in zip(weight_vars, combo)]))][weight_column].sum()) / float(sample[weight_column].sum())
+                combo_weights[combo] = float(
+                    sample[
+                        eval(
+                            " & ".join(
+                                [
+                                    "(sample['{}']=={})".format(col, c)
+                                    for col, c in zip(weight_vars, combo)
+                                ]
+                            )
+                        )
+                    ][weight_column].sum()
+                ) / float(sample[weight_column].sum())
             else:
-                combo_weights[combo] = float(len(sample[eval(" & ".join(["(sample['{}']=={})".format(col, c) for col, c in zip(weight_vars, combo)]))])) / float(len(sample))
+                combo_weights[combo] = float(
+                    len(
+                        sample[
+                            eval(
+                                " & ".join(
+                                    [
+                                        "(sample['{}']=={})".format(col, c)
+                                        for col, c in zip(weight_vars, combo)
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                ) / float(len(sample))
             if combo_weights[combo] > 0:
                 num_valid_combos += 1
             else:
                 del combo_weights[combo]
 
         balanced_ratio = 1.0 / float(num_valid_combos)
-        combo_weights = {k: float(balanced_ratio) / float(v) for k, v in combo_weights.items()}
+        combo_weights = {
+            k: float(balanced_ratio) / float(v) for k, v in combo_weights.items()
+        }
 
-        sample['weight'] = sample.apply(lambda x: combo_weights[tuple([x[v] for v in weight_vars])], axis=1)
+        sample["weight"] = sample.apply(
+            lambda x: combo_weights[tuple([x[v] for v in weight_vars])], axis=1
+        )
 
     else:
-        sample['weight'] = 1.0
+        sample["weight"] = 1.0
 
-    return sample['weight']
+    return sample["weight"]
 
 
 class SampleExtractor(object):
-
-    def __init__(self, sampling_strategy='random', stratify_by=None, id_col=None, logger=None, seed=None):
+    def __init__(
+        self,
+        sampling_strategy="random",
+        stratify_by=None,
+        id_col=None,
+        logger=None,
+        seed=None,
+    ):
 
         """
         :param df: dataframe
@@ -92,9 +138,20 @@ class SampleExtractor(object):
         :return:
         """
 
-        strategies = ["all", "random", "stratify", "stratify_even", "stratify_guaranteed", "stratify_alt"]
+        strategies = [
+            "all",
+            "random",
+            "stratify",
+            "stratify_even",
+            "stratify_guaranteed",
+            "stratify_alt",
+        ]
         if sampling_strategy not in strategies:
-            raise Exception("You must choose one of the following sampling strategies: {}".format(strategies))
+            raise Exception(
+                "You must choose one of the following sampling strategies: {}".format(
+                    strategies
+                )
+            )
 
         self.stratify_by = stratify_by
         self.id_col = id_col
@@ -122,10 +179,14 @@ class SampleExtractor(object):
 
             if self.logger:
                 print("Stratify on columns: {}".format(",".join(self.stratify_by)))
-            df['_stratify_by'] = df[self.stratify_by].astype(str).apply(''.join, axis=1)
+            df["_stratify_by"] = df[self.stratify_by].astype(str).apply("".join, axis=1)
             frame_size = df.shape[0]
             # So you can pass in a decimal proportion of total dataframe or number of samples
-            sample_n = sample_size if sample_size >= 1 else int(round(sample_size * frame_size))
+            sample_n = (
+                sample_size
+                if sample_size >= 1
+                else int(round(sample_size * frame_size))
+            )
 
             if self.sampling_strategy == "stratify":
 
@@ -140,7 +201,9 @@ class SampleExtractor(object):
                 strata_one = self._take_one_per_strata(df, sample_n)
                 left_to_sample = sample_n - len(strata_one)
                 if left_to_sample > 0:
-                    doc_ids = self._stratify_sample_final(df[~df[self.id_col].isin(strata_one)], left_to_sample)
+                    doc_ids = self._stratify_sample_final(
+                        df[~df[self.id_col].isin(strata_one)], left_to_sample
+                    )
                     doc_ids = list(doc_ids) + list(strata_one)
                 else:
                     print("Nothing left to sample, no stratification applied")
@@ -157,18 +220,34 @@ class SampleExtractor(object):
 
         return list(doc_ids)
 
-
     def _take_one_per_strata(self, df, sample_n):
 
         # Number of groups to stratify by must be less than the total sample size
-        strata_groups = df.groupby('_stratify_by')[self.id_col].count().count()
+        strata_groups = df.groupby("_stratify_by")[self.id_col].count().count()
         if sample_n > strata_groups:
-            print("Sampling one document per strata first ({} strata total)".format(strata_groups))
-            one_per = df.groupby('_stratify_by').apply(lambda x: x.sample(1, random_state=self.seed))[self.id_col].values
+            print(
+                "Sampling one document per strata first ({} strata total)".format(
+                    strata_groups
+                )
+            )
+            one_per = (
+                df.groupby("_stratify_by")
+                .apply(lambda x: x.sample(1, random_state=self.seed))[self.id_col]
+                .values
+            )
             return one_per
         else:
-            print("There are more strata groups ({}) than things to sample: {}".format(strata_groups, sample_n))
-            one_per = df.groupby('_stratify_by').apply(lambda x: x.sample(1, random_state=self.seed))[self.id_col].sample(sample_n).values
+            print(
+                "There are more strata groups ({}) than things to sample: {}".format(
+                    strata_groups, sample_n
+                )
+            )
+            one_per = (
+                df.groupby("_stratify_by")
+                .apply(lambda x: x.sample(1, random_state=self.seed))[self.id_col]
+                .sample(sample_n)
+                .values
+            )
             return one_per
 
     def _stratify_sample_even(self, df, sample_size):
@@ -181,14 +260,25 @@ class SampleExtractor(object):
         :param sample_size:
         """
         random.seed(self.seed)
-        docs_per_strata = int(float(sample_size)/ float(df.groupby('_stratify_by')[self.id_col].count().count()))
-        print("Drawing even samples of {} across all stratification groups".format(docs_per_strata))
+        docs_per_strata = int(
+            float(sample_size)
+            / float(df.groupby("_stratify_by")[self.id_col].count().count())
+        )
+        print(
+            "Drawing even samples of {} across all stratification groups".format(
+                docs_per_strata
+            )
+        )
         doc_ids = []
-        for strata in df['_stratify_by'].unique():
-            strata_data = df[df['_stratify_by'] == strata]
-            doc_ids.extend(list(strata_data.sample(docs_per_strata)[self.id_col].values))
-        if len(doc_ids) <  sample_size:
-            doc_ids.extend(list(df.sample(sample_size - len(doc_ids))[self.id_col].values))
+        for strata in df["_stratify_by"].unique():
+            strata_data = df[df["_stratify_by"] == strata]
+            doc_ids.extend(
+                list(strata_data.sample(docs_per_strata)[self.id_col].values)
+            )
+        if len(doc_ids) < sample_size:
+            doc_ids.extend(
+                list(df.sample(sample_size - len(doc_ids))[self.id_col].values)
+            )
 
         return doc_ids
 
@@ -205,7 +295,7 @@ class SampleExtractor(object):
         """
         print("Kish-style stratification")
         # Subset & copy cols that we care about
-        data = df.copy()[[self.id_col] + ['_stratify_by']]
+        data = df.copy()[[self.id_col] + ["_stratify_by"]]
         frame_size = data.shape[0]
 
         # Shuffle the dataframe
@@ -216,17 +306,21 @@ class SampleExtractor(object):
             self.logger.debug("Dataframe before sorting:{}".format(data.head()))
         data.index = np.random.permutation(data.index)
         # Re-sort grouped by strata
-        data = data.groupby('_stratify_by').apply(lambda x: x.sort_index())
+        data = data.groupby("_stratify_by").apply(lambda x: x.sort_index())
         data.index = list(range(0, frame_size))
         if self.logger:
-            self.logger.debug("Dataframe after shuffle & groupby sorting:{}".format(data.head()))
+            self.logger.debug(
+                "Dataframe after shuffle & groupby sorting:{}".format(data.head())
+            )
 
         skip_interval = float(frame_size) / float(sample_n)
 
-        start_index = np.random.uniform(0, skip_interval) # index to start from
+        start_index = np.random.uniform(0, skip_interval)  # index to start from
         if self.logger:
             self.logger.info("start index : {}".format(start_index))
-        mysample_index = np.round((np.zeros(sample_n) + start_index) + (np.arange(sample_n) * skip_interval))
+        mysample_index = np.round(
+            (np.zeros(sample_n) + start_index) + (np.arange(sample_n) * skip_interval)
+        )
 
         # Return the real id column
         mysample_id = data[data.index.isin(mysample_index)][self.id_col].values
@@ -245,7 +339,7 @@ class SampleExtractor(object):
         """
         print("New stratification method")
         docs_per_strata = {}
-        if '_stratify_by':
+        if "_stratify_by":
 
             def group_percentages(df, groupcols, id_col=None):
 
@@ -260,27 +354,28 @@ class SampleExtractor(object):
                 if not id_col:
                     id_col = df.index
 
-                return pd.pivot_table(
-                    df,
-                    id_col,
-                    groupcols,
-                    aggfunc=[len]
-                ).apply(
+                return pd.pivot_table(df, id_col, groupcols, aggfunc=[len]).apply(
                     lambda x: x / x.sum()
-                )['len']
+                )["len"]
 
-            strata_proportions = group_percentages(df, '_stratify_by', self.id_col)[self.id_col]
+            strata_proportions = group_percentages(df, "_stratify_by", self.id_col)[
+                self.id_col
+            ]
             docs_per_strata = (strata_proportions * sample_size).round().to_dict()
 
             doc_ids = []
-            for strata, strata_data in df.groupby('_stratify_by'):
-                sample_strata_ids = self._basic_sample(strata_data[self.id_col], docs_per_strata[strata]).values.tolist()
+            for strata, strata_data in df.groupby("_stratify_by"):
+                sample_strata_ids = self._basic_sample(
+                    strata_data[self.id_col], docs_per_strata[strata]
+                ).values.tolist()
                 doc_ids = doc_ids + sample_strata_ids
 
             print("Stratified sample of %i extracted" % (len(doc_ids)))
 
         else:
-            doc_ids = self._basic_sample(df[self.id_col], sample_size, seed=self.seed).values.tolist()
+            doc_ids = self._basic_sample(
+                df[self.id_col], sample_size, seed=self.seed
+            ).values.tolist()
 
         return doc_ids
 

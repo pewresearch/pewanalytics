@@ -8,14 +8,7 @@ from scipy.sparse import csr_matrix
 from pewtils import is_not_null, scale_range
 
 
-def compute_mutual_info(
-    y,
-    x,
-    weights=None,
-    col_names=None,
-    l=0,
-    normalize=True
-):
+def compute_mutual_info(y, x, weights=None, col_names=None, l=0, normalize=True):
     """
     :param y: An array or, preferably, a pandas.Series
     :param x: A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix
@@ -41,8 +34,12 @@ def compute_mutual_info(
             x = x.transpose().multiply(csr_matrix(weights)).transpose()
         x1 = pd.Series(x.sum(axis=0).tolist()[0])
         x0 = total - x1
-        x1y0 = pd.Series(x[np.ravel(np.array(y[y == 0].index)), :].sum(axis=0).tolist()[0])
-        x1y1 = pd.Series(x[np.ravel(np.array(y[y == 1].index)), :].sum(axis=0).tolist()[0])
+        x1y0 = pd.Series(
+            x[np.ravel(np.array(y[y == 0].index)), :].sum(axis=0).tolist()[0]
+        )
+        x1y1 = pd.Series(
+            x[np.ravel(np.array(y[y == 1].index)), :].sum(axis=0).tolist()[0]
+        )
 
     else:
 
@@ -77,23 +74,31 @@ def compute_mutual_info(
 
     df = pd.DataFrame()
 
-    df['MI1'] = MI1
-    df['MI0'] = MI0
+    df["MI1"] = MI1
+    df["MI0"] = MI0
 
-    df['total'] = x1
-    df['total_pos_with_term'] = x1y1 # total_pos_mention
-    df['total_neg_with_term'] = x1y0 # total_neg_mention
-    df['total_pos_neg_with_term_diff'] = df['total_pos_with_term'] - df['total_neg_with_term']
+    df["total"] = x1
+    df["total_pos_with_term"] = x1y1  # total_pos_mention
+    df["total_neg_with_term"] = x1y0  # total_neg_mention
+    df["total_pos_neg_with_term_diff"] = (
+        df["total_pos_with_term"] - df["total_neg_with_term"]
+    )
 
-    df['pct_pos_with_term'] = x1y1 / y1  # pct_pos_mention
-    df['pct_neg_with_term'] = x1y0 / y0  # pct_neg_mention
-    df['pct_pos_neg_with_term_diff'] = df['pct_pos_with_term'] - df['pct_neg_with_term']  # pct_pos_neg_mention_diff
-    df['pct_pos_neg_with_term_ratio'] = df['pct_pos_with_term'] / (df['pct_neg_with_term'])  # pct_pos_neg_mention_ratio
+    df["pct_pos_with_term"] = x1y1 / y1  # pct_pos_mention
+    df["pct_neg_with_term"] = x1y0 / y0  # pct_neg_mention
+    df["pct_pos_neg_with_term_diff"] = (
+        df["pct_pos_with_term"] - df["pct_neg_with_term"]
+    )  # pct_pos_neg_mention_diff
+    df["pct_pos_neg_with_term_ratio"] = df["pct_pos_with_term"] / (
+        df["pct_neg_with_term"]
+    )  # pct_pos_neg_mention_ratio
 
-    df['pct_term_pos'] = x1y1 / x1 # pct_mention_pos
-    df['pct_term_neg'] = x1y0 / x1 # pct_mention_neg
-    df['pct_term_pos_neg_diff'] = df['pct_term_pos'] - df['pct_term_neg'] # pct_mention_pos_neg_diff
-    df['pct_term_pos_neg_ratio'] = df['pct_term_pos'] / df['pct_term_neg']
+    df["pct_term_pos"] = x1y1 / x1  # pct_mention_pos
+    df["pct_term_neg"] = x1y0 / x1  # pct_mention_neg
+    df["pct_term_pos_neg_diff"] = (
+        df["pct_term_pos"] - df["pct_term_neg"]
+    )  # pct_mention_pos_neg_diff
+    df["pct_term_pos_neg_ratio"] = df["pct_term_pos"] / df["pct_term_neg"]
 
     if col_names:
         df.index = col_names
@@ -108,7 +113,7 @@ def mutual_info_bar_plot(
     x_col="pct_term_pos_neg_ratio",
     color="grey",
     title=None,
-    width=10
+    width=10,
 ):
     """
 
@@ -126,15 +131,22 @@ def mutual_info_bar_plot(
 
     mutual_info = mutual_info.sort_values(filter_col, ascending=False)[:top_n]
     mutual_info = mutual_info.sort_values(x_col, ascending=False)
-    mutual_info['ngram'] = mutual_info.index
-    buffer = .02 * (mutual_info[x_col].max() - mutual_info[x_col].min())
-    plt.figure(figsize=(width, float(len(mutual_info) * .35)))
+    mutual_info["ngram"] = mutual_info.index
+    buffer = 0.02 * (mutual_info[x_col].max() - mutual_info[x_col].min())
+    plt.figure(figsize=(width, float(len(mutual_info) * 0.35)))
     sns.set_color_codes("pastel")
     g = sns.barplot(x=x_col, y="ngram", data=mutual_info, color=color)
     sns.despine(offset=10, trim=True)
     for index, row in mutual_info.iterrows():
-        g.text(x=row[x_col] + buffer, y=index, s=row["ngram"], horizontalalignment='left',
-               verticalalignment="center", size='large', color=color)
+        g.text(
+            x=row[x_col] + buffer,
+            y=index,
+            s=row["ngram"],
+            horizontalalignment="left",
+            verticalalignment="center",
+            size="large",
+            color=color,
+        )
     g.set_title(title)
 
     return g
@@ -154,7 +166,7 @@ def mutual_info_scatter_plot(
     color_col="MI1",
     size_col="pct_pos_with_term",
     title=None,
-    figsize=(10, 10)
+    figsize=(10, 10),
 ):
     """
 
@@ -194,27 +206,35 @@ def mutual_info_scatter_plot(
         "blue": plt.cm.Blues,
         "green": plt.cm.Greens,
         "orange": plt.cm.Oranges,
-        "red": plt.cm.Reds
+        "red": plt.cm.Reds,
     }
 
     f, ax = plt.subplots(figsize=figsize)
     mutual_info["size"] = mutual_info[size_col].map(
-        lambda x: scale_range(x, mutual_info[size_col].min(), mutual_info[size_col].max(), 15, 25))
+        lambda x: scale_range(
+            x, mutual_info[size_col].min(), mutual_info[size_col].max(), 15, 25
+        )
+    )
     mutual_info["color"] = mutual_info[color_col].map(
-        lambda x: scale_range(x, mutual_info[color_col].min(), mutual_info[color_col].max(), .4, 1))
+        lambda x: scale_range(
+            x, mutual_info[color_col].min(), mutual_info[color_col].max(), 0.4, 1
+        )
+    )
     mutual_info["color"] = mutual_info["color"].map(color_maps[color])
 
     mutual_info["x"] = mutual_info[x_col]
     mutual_info["y"] = mutual_info[y_col]
     ax.set_title(title)
-    ax.set_xlim((mutual_info["x"].min() * .9, mutual_info["x"].max() * 1.1))
-    ax.set_ylim((mutual_info["y"].min() * .9, mutual_info["y"].max() * 1.1))
+    ax.set_xlim((mutual_info["x"].min() * 0.9, mutual_info["x"].max() * 1.1))
+    ax.set_ylim((mutual_info["y"].min() * 0.9, mutual_info["y"].max() * 1.1))
     ax.set_ylabel(ylabel)
     ax.set_xlabel(xlabel)
 
     texts = []
     for index, row in mutual_info.iterrows():
-        texts.append(ax.text(row['x'], row['y'], index, size=row["size"], color=row["color"]))
+        texts.append(
+            ax.text(row["x"], row["y"], index, size=row["size"], color=row["color"])
+        )
 
     return ax
     # plt.savefig(value + '.pdf')
