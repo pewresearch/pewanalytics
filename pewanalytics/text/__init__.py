@@ -418,7 +418,7 @@ class TextDataFrame(object):
         self.corpus["cosine_similarity"] = None
 
         for index, row in tqdm(self.corpus.iterrows(), desc="Matching items to corpus"):
-            row = self.corpus.loc[index]
+            row = self.corpus.iloc[index]
             if is_null(row["match_index"]):
                 for i, sim in [s for s in
                                sorted(zip(list(range(0, len(match_list))), similarities[self.corpus.index.get_loc(index)]),
