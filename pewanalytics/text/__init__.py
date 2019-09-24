@@ -552,20 +552,14 @@ class TextDataFrame(object):
             outcome_col,
             weight_col=None,
             sample_size=None,
-            sort_by="MI",
-            top_n=40,
             l=0,
-            normalize=True,
-            return_raw=False
+            normalize=True
     ):
         """
         :param outcome_col: The name of the column with the binary outcome variable
-        :param top_n: The number of features for each partition you want to return
         :param l: An optional Laplace smoothing parameter
         :param normalize: Toggle normalization on or off (to control for feature prevalance), on by default
-        :param return_raw: Return the raw mutual info dataframe instead of sorting and splitting the results
         :return:
-
         """
 
         if sample_size:
@@ -588,10 +582,7 @@ class TextDataFrame(object):
             weights=weights,
             col_names=self.vectorizer.get_feature_names(),
             l=l,
-            normalize=normalize,
-            top_n=top_n,
-            sort_by=sort_by,
-            return_raw=return_raw
+            normalize=normalize
         )
 
     def kmeans_clusters(self, k=10):
@@ -613,8 +604,8 @@ class TextDataFrame(object):
         for cluster in cluster_df[cluster_col].unique():
             if is_not_null(cluster) and len(cluster_df[cluster_df[cluster_col] == cluster]) >= min_size:
                 self.corpus["{}_{}".format(cluster_col, cluster)] = cluster_df["{}_{}".format(cluster_col, cluster)]
-                minfo = self.mutual_info("{}_{}".format(cluster_col, cluster),
-                                         top_n=top_n, return_raw=True)
+                minfo = self.mutual_info("{}_{}".format(cluster_col, cluster))
+                minfo = minfo.sort_values("MI1", ascending=False)[:top_n]
                 del self.corpus["{}_{}".format(cluster_col, cluster)]
                 minfo = minfo[minfo["MI1"] > 0].sort_values("MI1", ascending=False)[:top_n]
                 terms[cluster] = minfo.index.values
