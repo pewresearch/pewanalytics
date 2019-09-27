@@ -207,12 +207,14 @@ def compute_scores(
         alpha = None
     row["alpha_unweighted"] = alpha
 
-    if len(np.unique(coder_df[outcome_column])) <= 2:
+    labels = np.unique(coder_df[outcome_column])
+    if len(labels) <= 2:
 
         row["cohens_kappa"] = cohen_kappa_score(
             coder1_df[outcome_column],
             coder2_df[outcome_column],
             sample_weight=coder1_df[weight_column],
+            labels=labels,
         )
 
     try:
@@ -230,6 +232,7 @@ def compute_scores(
             coder2_df[outcome_column],
             pos_label=pos_label,
             sample_weight=coder1_df[weight_column],
+            labels=labels,
         )
     except ValueError:
         row["f1"] = None
@@ -240,6 +243,7 @@ def compute_scores(
             coder2_df[outcome_column],
             pos_label=pos_label,
             sample_weight=coder1_df[weight_column],
+            labels=labels,
         )
     except ValueError:
         row["precision"] = None
@@ -251,6 +255,7 @@ def compute_scores(
                 coder2_df[outcome_column],
                 pos_label=pos_label,
                 sample_weight=coder1_df[weight_column],
+                labels=labels,
             ),
         )
     except ValueError:
