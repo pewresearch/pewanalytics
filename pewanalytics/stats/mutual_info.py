@@ -126,21 +126,23 @@ def mutual_info_bar_plot(
     :param width:
     :return: A Matplotlib figure, which you can display via `plt.show()` or alternatively save to a file via `plt.savefig(FILEPATH)`
     """
+
     import seaborn as sns
     import matplotlib.pyplot as plt
 
     mutual_info = mutual_info.sort_values(filter_col, ascending=False)[:top_n]
     mutual_info = mutual_info.sort_values(x_col, ascending=False)
     mutual_info["ngram"] = mutual_info.index
-    buffer = 0.02 * (mutual_info[x_col].max() - mutual_info[x_col].min())
+    buffer = 0.02 * abs(mutual_info[x_col].max() - mutual_info[x_col].min())
     plt.figure(figsize=(width, float(len(mutual_info) * 0.35)))
     sns.set_color_codes("pastel")
     g = sns.barplot(x=x_col, y="ngram", data=mutual_info, color=color)
     sns.despine(offset=10, trim=True)
-    for index, row in mutual_info.iterrows():
+    for i, row in enumerate(mutual_info.iterrows()):
+        index, row = row
         g.text(
             x=row[x_col] + buffer,
-            y=index,
+            y=i,
             s=row["ngram"],
             horizontalalignment="left",
             verticalalignment="center",
