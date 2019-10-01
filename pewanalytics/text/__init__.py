@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import re
 import pandas as pd
 import numpy as np
@@ -298,6 +300,8 @@ class TextCleaner(object):
         filter_pos=None,
         lemmatize=True,
         lemmatizer=None,
+        stem=False,
+        stemmer=None,
         lowercase=True,
         remove_urls=True,
         replacers=None,
@@ -330,6 +334,12 @@ class TextCleaner(object):
             self.lemmatizer = lemmatizer if lemmatizer else nltk.WordNetLemmatizer()
         else:
             self.lemmatizer = None
+        if stem:
+            self.stemmer = stemmer if stemmer else nltk.SnowballStemmer("english")
+        else:
+            self.stemmer = None
+        if lemmatize and stem:
+            raise Exception("You can use stemming or lemmatization but not both")
         if not stopwords:
             stopwords = set(nltk.corpus.stopwords.words("english"))
         self.stopword_regex = re.compile(
@@ -378,9 +388,11 @@ class TextCleaner(object):
 
         if self.lemmatizer:
             text = [self.lemmatizer.lemmatize(word) for word in text]
+        elif self.stemmer:
+            text = [self.stemmer.stem(word) for word in text]
 
         text = " ".join([word for word in text if len(word) > 2])
-        if self.lemmatizer:
+        if self.lemmatizer or self.stemmer:
             text = self.stopword_regex.sub("", text)
             text = re.sub(r"\W+", " ", text)
 

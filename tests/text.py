@@ -101,6 +101,11 @@ class TextTests(unittest.TestCase):
                 self.doc[:100],
                 "plot two teen couples church party drink drive get accident",
             ),
+            (
+                {"stem": True},
+                self.doc[:100],
+                "plot two teen couple church party drink drive get accident",
+            ),
         ]:
             cleaner = TextCleaner(**params)
             cleaned = cleaner.clean(text)
@@ -222,6 +227,9 @@ class TextTests(unittest.TestCase):
             top_n=20,
             x_col="pct_term_pos_neg_ratio",
         )
+        import pdb
+
+        pdb.set_trace()
         # self.assertEqual(str(plot.__hash__()), '-9223372036574337697')
         # TODO: figure out how to get a unique representation of the plot
         self.assertTrue(True)
