@@ -154,7 +154,7 @@ def compute_scores(
     coder2_df = coder_df[coder_df[coder_column] == coder2]
     coder2_df.index = coder2_df[document_column]
     coder1_df = coder1_df[coder1_df.index.isin(coder2_df.index)]
-    coder2_df = coder2_df[coder2_df.index.isin(coder1_df.index)].ix[coder1_df.index]
+    coder2_df = coder2_df[coder2_df.index.isin(coder1_df.index)].loc[coder1_df.index]
 
     row = {
         "coder1": coder1,
@@ -199,7 +199,7 @@ def compute_scores(
             row["{}_std_unweighted".format(labelsetname)] = unweighted_stats.std_mean
 
     alpha = AnnotationTask(
-        data=coder_df[[coder_column, document_column, outcome_column]].as_matrix()
+        data=coder_df[[coder_column, document_column, outcome_column]].values
     )
     try:
         alpha = alpha.alpha()
@@ -315,7 +315,7 @@ def compute_overall_scores(coder_df, document_column, outcome_column, coder_colu
     :return:
     """
     alpha = AnnotationTask(
-        data=coder_df[[coder_column, document_column, outcome_column]].as_matrix()
+        data=coder_df[[coder_column, document_column, outcome_column]].values
     )
     try:
         alpha = alpha.alpha()
