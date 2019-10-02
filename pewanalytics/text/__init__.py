@@ -284,7 +284,9 @@ class TextCleaner(object):
     :param tokenizer: Tokenizer to use (default = nltk.WhitespaceTokenizer())
     :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them with.\
     Anything passed here will be used in addition to a set of built-in replacement patterns for common contractions.
-    :param lemmatizer: Lemmatizer to use (default = nltk.WordNetLemmatizer())
+    :param process_method: Options are "lemmatize", "stem", or None (default = "lemmatize")
+    :param processor: A lemmatizer or stemmer with a "lemmatize" or "stem" function (default for \
+    process_method="lemmatize" is nltk.WordNetLemmatizer(); default for process_method="stem" is nltk.SnowballStemmer())
     :param stopwords: The set of stopwords to remove (default = nltk.corpus.stopwords.words('english'))
     :param lowercase: Whether or not to lowercase the string (default = True)
     :param remove_urls: Whether or not to remove URLs and links from the text (default = True)
@@ -298,10 +300,8 @@ class TextCleaner(object):
         self,
         throw_loud_fail=False,
         filter_pos=None,
-        lemmatize=True,
-        lemmatizer=None,
-        stem=False,
-        stemmer=None,
+        process_method="lemmatize",
+        processor=None,
         lowercase=True,
         remove_urls=True,
         replacers=None,
@@ -330,16 +330,15 @@ class TextCleaner(object):
             (re.compile(r"\b{}\b".format(regex[0])), regex[1])
             for regex in self.replacers
         ]
-        if lemmatize:
-            self.lemmatizer = lemmatizer if lemmatizer else nltk.WordNetLemmatizer()
+        if process_method == "lemmatize":
+            self.processor = processor if processor else nltk.WordNetLemmatizer()
+            self.process_func = self.processor.lemmatize
+        elif process_method == "stem":
+            self.processor = processor if processor else nltk.SnowballStemmer("english")
+            self.process_func = self.processor.stem
         else:
-            self.lemmatizer = None
-        if stem:
-            self.stemmer = stemmer if stemmer else nltk.SnowballStemmer("english")
-        else:
-            self.stemmer = None
-        if lemmatize and stem:
-            raise Exception("You can use stemming or lemmatization but not both")
+            self.processor = None
+            self.process_func = None
         if not stopwords:
             stopwords = set(nltk.corpus.stopwords.words("english"))
         self.stopword_regex = re.compile(
@@ -348,9 +347,6 @@ class TextCleaner(object):
         )
         if remove_urls:
             self.url_regex = URL_REGEX
-        #            self.url_regex = re.compile(
-        #                r"((https?:\/\/(www\.)?)?[-a-zA-Z0-9@:%._\+~#=]{2,4000}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))"
-        #            )
         else:
             self.url_regex = None
 
@@ -386,13 +382,11 @@ class TextCleaner(object):
         text = re.sub(r"\W+", " ", text)  # remove punctuation
         text = self.tokenizer.tokenize(text)  # split on whitespace
 
-        if self.lemmatizer:
-            text = [self.lemmatizer.lemmatize(word) for word in text]
-        elif self.stemmer:
-            text = [self.stemmer.stem(word) for word in text]
+        if self.processor:
+            text = [self.process_func(word) for word in text]
 
         text = " ".join([word for word in text if len(word) > 2])
-        if self.lemmatizer or self.stemmer:
+        if self.processor:
             text = self.stopword_regex.sub("", text)
             text = re.sub(r"\W+", " ", text)
 
