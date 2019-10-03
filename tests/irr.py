@@ -9,6 +9,8 @@ class IRRTests(unittest.TestCase):
         self.dataset = pd.DataFrame(
             {
                 "code": [1, 0, 1, 1, 0, 1, 0, 1, 0, 0],
+                "same_codes": [1, 0, 1, 0, 0, 1, 0, 1, 0, 0],
+                "no_variation_codes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 "coder": [1, 1, 1, 1, 1, 2, 2, 2, 2, 2],
                 "weight": [0.5, 1.5, 1.0, 0.75, 0.175, 0.5, 1.5, 1.0, 0.75, 0.175],
                 "doc": [1, 2, 3, 4, 5, 1, 2, 3, 4, 5],
@@ -60,6 +62,59 @@ class IRRTests(unittest.TestCase):
         self.assertAlmostEquals(scores["coder1_mean_unweighted"], 0.6, 2)
         self.assertAlmostEquals(scores["pct_agree_unweighted"], 0.8, 2)
         self.assertAlmostEquals(scores["accuracy"], 0.81, 2)
+
+        scores = compute_scores(
+            self.dataset, 1, 2, "same_codes", "doc", "coder", "weight", pos_label=1
+        )
+        self.assertAlmostEquals(scores["roc_auc"], 1.0, 2)
+        self.assertAlmostEquals(scores["matthews_corrcoef"], 1.0, 2)
+        self.assertAlmostEquals(scores["alpha_unweighted"], 1.0, 2)
+        self.assertAlmostEquals(scores["f1"], 1.0, 2)
+        self.assertAlmostEquals(scores["recall"], 1.0, 2)
+        self.assertAlmostEquals(scores["coder1_std"], 0.284, 2)
+        self.assertAlmostEquals(scores["coder2_std"], 0.284, 2)
+        self.assertAlmostEquals(scores["coder1_std_unweighted"], 0.245, 2)
+        self.assertAlmostEquals(scores["coder2_std_unweighted"], 0.245, 2)
+        self.assertAlmostEquals(scores["precision"], 1.0, 2)
+        self.assertAlmostEquals(scores["n"], 5, 2)
+        self.assertAlmostEquals(scores["cohens_kappa"], 1.0, 2)
+        self.assertAlmostEquals(scores["precision_recall_min"], 1.0, 2)
+        self.assertAlmostEquals(scores["coder2_mean"], 0.382, 2)
+        self.assertAlmostEquals(scores["coder1_mean"], 0.382, 2)
+        self.assertAlmostEquals(scores["coder2_mean_unweighted"], 0.4, 2)
+        self.assertAlmostEquals(scores["coder1_mean_unweighted"], 0.4, 2)
+        self.assertAlmostEquals(scores["pct_agree_unweighted"], 1.0, 2)
+        self.assertAlmostEquals(scores["accuracy"], 1.0, 2)
+
+        scores = compute_scores(
+            self.dataset,
+            1,
+            2,
+            "no_variation_codes",
+            "doc",
+            "coder",
+            "weight",
+            pos_label=1,
+        )
+        self.assertIsNone(scores["roc_auc"])
+        self.assertAlmostEquals(scores["matthews_corrcoef"], 1.0, 2)
+        self.assertAlmostEquals(scores["alpha_unweighted"], 1.0, 2)
+        self.assertAlmostEquals(scores["f1"], 1.0, 2)
+        self.assertAlmostEquals(scores["recall"], 1.0, 2)
+        self.assertAlmostEquals(scores["coder1_std"], 0.0, 2)
+        self.assertAlmostEquals(scores["coder2_std"], 0.0, 2)
+        self.assertAlmostEquals(scores["coder1_std_unweighted"], 0.0, 2)
+        self.assertAlmostEquals(scores["coder2_std_unweighted"], 0.0, 2)
+        self.assertAlmostEquals(scores["precision"], 1.0, 2)
+        self.assertAlmostEquals(scores["n"], 5, 2)
+        self.assertAlmostEquals(scores["cohens_kappa"], 1.0, 2)
+        self.assertAlmostEquals(scores["precision_recall_min"], 1.0, 2)
+        self.assertAlmostEquals(scores["coder2_mean"], 1.0, 2)
+        self.assertAlmostEquals(scores["coder1_mean"], 1.0, 2)
+        self.assertAlmostEquals(scores["coder2_mean_unweighted"], 1.0, 2)
+        self.assertAlmostEquals(scores["coder1_mean_unweighted"], 1.0, 2)
+        self.assertAlmostEquals(scores["pct_agree_unweighted"], 1.0, 2)
+        self.assertAlmostEquals(scores["accuracy"], 1.0, 2)
 
     def test_compute_overall_scores(self):
         from pewanalytics.stats.irr import compute_overall_scores

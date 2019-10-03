@@ -149,6 +149,8 @@ def compute_scores(
     :return:
     """
 
+    old_np_settings = np.seterr(all="raise")
+
     coder1_df = coder_df[coder_df[coder_column] == coder1]
     coder1_df.index = coder1_df[document_column]
     coder2_df = coder_df[coder_df[coder_column] == coder2]
@@ -210,12 +212,15 @@ def compute_scores(
     labels = np.unique(coder_df[outcome_column])
     if len(labels) <= 2:
 
-        row["cohens_kappa"] = cohen_kappa_score(
-            coder1_df[outcome_column],
-            coder2_df[outcome_column],
-            sample_weight=coder1_df[weight_column],
-            labels=labels,
-        )
+        try:
+            row["cohens_kappa"] = cohen_kappa_score(
+                coder1_df[outcome_column],
+                coder2_df[outcome_column],
+                sample_weight=coder1_df[weight_column],
+                labels=labels,
+            )
+        except FloatingPointError:
+            row["cohens_kappa"] = 1.0
 
     try:
         row["accuracy"] = accuracy_score(
@@ -274,6 +279,8 @@ def compute_scores(
         )
     except ValueError:
         row["matthews_corrcoef"] = None
+    except FloatingPointError:
+        row["matthews_corrcoef"] = 1.0
 
     try:
         row["roc_auc"] = (
@@ -300,6 +307,8 @@ def compute_scores(
         if type(v) == tuple:
             row[k] = v[0]
             # For some weird reason, some of the sklearn scorers return 1-tuples sometimes
+
+    np.seterr(**old_np_settings)
 
     return row
 
