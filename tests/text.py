@@ -196,6 +196,7 @@ class TextTests(unittest.TestCase):
 
         from pewanalytics.text import TextDataFrame
         from pewanalytics.stats.mutual_info import mutual_info_scatter_plot
+        import matplotlib.pyplot as plt
 
         self.df["outcome"] = (self.df["sentiment"] == "pos").astype(int)
         tdf = TextDataFrame(self.df, "text", min_frequency=50, max_df=0.5)
@@ -209,6 +210,7 @@ class TextTests(unittest.TestCase):
             y_col="MI1",
             scale_y_even=True,
         )
+        # plt.show()
         # self.assertEqual(str(plot.__hash__()), '308194536')
         # TODO: figure out how to get a unique representation of the plot
         self.assertTrue(True)
@@ -217,6 +219,7 @@ class TextTests(unittest.TestCase):
 
         from pewanalytics.text import TextDataFrame
         from pewanalytics.stats.mutual_info import mutual_info_bar_plot
+        import matplotlib.pyplot as plt
 
         self.df["outcome"] = (self.df["sentiment"] == "pos").astype(int)
         tdf = TextDataFrame(self.df, "text", min_frequency=50, max_df=0.5)
@@ -227,9 +230,7 @@ class TextTests(unittest.TestCase):
             top_n=20,
             x_col="pct_term_pos_neg_ratio",
         )
-        import pdb
-
-        pdb.set_trace()
+        # plt.show()
         # self.assertEqual(str(plot.__hash__()), '-9223372036574337697')
         # TODO: figure out how to get a unique representation of the plot
         self.assertTrue(True)
