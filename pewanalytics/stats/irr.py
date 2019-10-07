@@ -135,8 +135,10 @@ def compute_scores(
     weight_column,
     pos_label=None,
 ):
+
     """
-    Computes a variety of IRR scores, including Cohen's kappa, Krippendorf's alpha, precision, and recall
+    Computes a variety of inter-rater reliability scores, including Cohen's kappa, Krippendorf's alpha, precision,
+    and recall.
 
     :param coder_df: A dataframe of codes
     :param coder1: The value in `coder_column` for rows corresponding to the first coder
@@ -146,7 +148,7 @@ def compute_scores(
     :param coder_column: The column containing values that indicate which coder assigned the code
     :param weight_column: The column that contains sampling weights
     :param pos_label: The value indicating a positive label (optional)
-    :return:
+    :return: A dataframe of scores, with rows corresponding to the different code values.
     """
 
     old_np_settings = np.seterr(all="raise")
@@ -314,15 +316,18 @@ def compute_scores(
 
 
 def compute_overall_scores(coder_df, document_column, outcome_column, coder_column):
+
     """
-    Computes overall IRR scores
+    Computes overall inter-rater reliability scores (Krippendorf's Alpha and Fleiss' Kappa). Allows for more than two
+    coders and code values.
     
     :param coder_df: A dataframe of codes
     :param document_column: The column that contains IDs for the documents
     :param outcome_column: The column that contains the codes
     :param coder_column: The column containing values that indicate which coder assigned the code
-    :return:
+    :return: A dictionary containing the scores
     """
+
     alpha = AnnotationTask(
         data=coder_df[[coder_column, document_column, outcome_column]].values
     )

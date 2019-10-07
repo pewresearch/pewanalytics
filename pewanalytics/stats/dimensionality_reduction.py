@@ -12,9 +12,12 @@ def _decompose(
 ):
 
     """
+    Used to break apart a set of features using a scikit-learn decomposition class and return the resulting matrices.
+
     :param features: A dataframe or sparse matrix with rows are documents and columns are features
     :param feature_names: An optional list of feature names (for sparse matrices)
     :param k: Number of dimensions to extract
+    :param component_prefix: A prefix for the column names
     :return: A tuple of two dataframes, (features x components, documents x components)
     """
 
@@ -47,6 +50,8 @@ def _decompose(
 def get_pca(features, feature_names=None, k=20):
 
     """
+    Performs PCA on a set of features.
+
     :param features: A dataframe or sparse matrix with rows are documents and columns are features
     :param feature_names: An optional list of feature names (for sparse matrices)
     :param k: Number of dimensions to extract
@@ -61,6 +66,8 @@ def get_pca(features, feature_names=None, k=20):
 def get_lsa(features, feature_names=None, k=20):
 
     """
+    Performs LSA on a set of features.
+
     :param features: A dataframe or sparse matrix with rows are documents and columns are features
     :param feature_names: An optional list of feature names (for sparse matrices)
     :param k: Number of dimensions to extract
@@ -75,9 +82,10 @@ def get_lsa(features, feature_names=None, k=20):
 def correspondence_analysis(edges, n=1):
 
     """
-    :param edges: edges is a dataframe of NxN where both the rows and columns are "nodes" and the values are some sort of closeness/similarity measure (so you could use a cosine similarity matrix if youre doing text)
-    :param n: Number of dimensions you want
-    :return:
+    :param edges: edges is a dataframe of NxN where both the rows and columns are "nodes" and the values are some sort
+    of closeness or similarity measure (like a cosine similarity matrix)
+    :param n: Number of dimensions to extract
+    :return: A dataframe of the N dimensions
     """
 
     mca_counts = MCA(edges)
