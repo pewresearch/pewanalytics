@@ -47,11 +47,16 @@ from pewanalytics.stats.dimensionality_reduction import get_lsa, get_pca
 
 
 def has_fragment(text, fragment):
+
     """
+    Checks whether a substring ("fragment") is contained within a larger string ("text"). Uses the `pewtils.decode_text`
+    function to process both the text and the fragment when running this check.
+
     :param text: The text to search
     :param fragment: The fragment to search for
     :return: Whether or not the text contains the fragment
     """
+
     if any([(fragment in text), (_decode_text(fragment) in _decode_text(text))]):
         return True
     else:
@@ -59,12 +64,16 @@ def has_fragment(text, fragment):
 
 
 def remove_fragments(text, fragments, throw_loud_fail=False):
+
     """
     Iteratively remove fragments from a string
+
     :param text: string
     :param fragments: A list of string fragments to search for and remove
+    :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
     :return: The original string, minus any parts that matched the fragments provided
     """
+
     for f in fragments:
         new_text = text.replace(f, "")
         # if the new text is the same as previous, try decoding
@@ -81,6 +90,7 @@ def remove_fragments(text, fragments, throw_loud_fail=False):
 
 
 def filter_parts_of_speech(text, filter_pos=None, exclude=False):
+
     """
     Retain words associated with parts of speech in the text if exclude = False.
     If exclude = True, exclude words associated with parts of speech.
@@ -88,11 +98,11 @@ def filter_parts_of_speech(text, filter_pos=None, exclude=False):
 
     :param text: string
     :param filter_pos: array of part of speech tags (default is 'NN', 'NNP', and 'JJ')
-        the options here are: CD, VBN, VBG, RB
-        Note: the full list of POS is here: https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
+    The full list of POS is here: https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
 
-    :return: cleaned string
+    :return: A string comprised solely of words that matched to the specified parts of speech
     """
+
     if not filter_pos:
         filter_pos = ("NN", "NNP", "JJ")
     text = text.split()
@@ -105,15 +115,17 @@ def filter_parts_of_speech(text, filter_pos=None, exclude=False):
 
 
 def get_fuzzy_ratio(text1, text2, throw_loud_fail=False):
+
     """
-    Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares \
+    Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares
     to the overall length of the texts.
 
     :param text1: First string
     :param text2: Second string
-    :param throw_loud_fail: bool; does not remove all remove nonascii characters if false
+    :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
     :return: The Levenshtein ratio between the two texts
     """
+
     try:
         return fuzz.ratio(text1, text2)
     except (UnicodeDecodeError, UnicodeEncodeError):
@@ -123,15 +135,15 @@ def get_fuzzy_ratio(text1, text2, throw_loud_fail=False):
 
 
 def get_fuzzy_partial_ratio(text1, text2, throw_loud_fail=False, timeout=5):
-    """
-    Useful to calculate similarity of two strings that are of noticeably different lengths.  Allows for the possibility \
-    that one text is a subset of the other; finds the largest overlap and computes the Levenshtein ratio on that.
 
+    """
+    Useful to calculate similarity of two strings that are of noticeably different lengths.  Allows for the possibility
+    that one text is a subset of the other; finds the largest overlap and computes the Levenshtein ratio on that.
 
     :param text1: First string
     :param text2: Second string
     :param timeout: The number of seconds to wait before giving up
-    :param throw_loud_fail: bool; does not remove all remove nonascii characters if false
+    :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
     :return: The partial Levenshtein ratio between the two texts
 
     :accepts kwarg timeout:
@@ -150,17 +162,17 @@ def get_fuzzy_partial_ratio(text1, text2, throw_loud_fail=False, timeout=5):
 
 
 class SentenceTokenizer(object):
-    """
-    Initializes a tokenizer that can be be used to break text into tokens using the `tokenize` function
-
-    :param base_tokenizer: The tokenizer to use (default = NLTK's English Punkt tokenizer)
-    :param regex_split_trailing: A compiled regex object used to define the end of sentences
-    :param regex_split_leading: A compiled regex object used to define the beginning of sentences
-    """
-
     def __init__(
         self, base_tokenizer=None, regex_split_trailing=None, regex_split_leading=None
     ):
+
+        """
+        Initializes a tokenizer that can be be used to break text into tokens using the `tokenize` function
+
+        :param base_tokenizer: The tokenizer to use (default = NLTK's English Punkt tokenizer)
+        :param regex_split_trailing: A compiled regex object used to define the end of sentences
+        :param regex_split_leading: A compiled regex object used to define the beginning of sentences
+        """
 
         self.base_tokenizer = (
             base_tokenizer
@@ -171,12 +183,13 @@ class SentenceTokenizer(object):
         self.regex_split_leading = regex_split_leading
 
     def tokenize(self, text, throw_loud_fail=False, min_length=None):
+
         """
         :param text: The text to tokenize
-        :param throw_loud_fail: bool; does not remove all remove nonascii characters if false
-        :param min_length: The minimum acceptable length of a sentence \
-            (if a token is shorter than this, it will be considered part of the preceding sentence)
-        :return:
+        :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
+        :param min_length: The minimum acceptable length of a sentence (if a token is shorter than this,
+        it will be considered part of the preceding sentence)
+        :return: A list of sentences
         """
 
         text = _decode_text(text, throw_loud_fail)
@@ -228,11 +241,13 @@ class SentenceTokenizer(object):
 
 
 class TextOverlapExtractor(object):
-    """
-    :param tokenizer: The tokenizer to use (default = SentenceTokenizer())
-    """
-
     def __init__(self, tokenizer=None):
+
+        """
+        A helper class designed to identify overlapping sections between two strings. 
+
+        :param tokenizer: The tokenizer to use (default = SentenceTokenizer())
+        """
 
         if not tokenizer:
             self.tokenizer = SentenceTokenizer()
@@ -240,13 +255,27 @@ class TextOverlapExtractor(object):
             self.tokenizer = tokenizer
 
     def get_text_overlaps(self, text1, text2, min_length=20, tokenize=True):
+
         """
+        Extracts all overlapping segments of at least `min_length` characters between the two texts. If `tokenize=True`
+        then only tokens that appear fully in both texts will be extracted. For example:
+
+        ```python
+        >>> text1 = "This is a sentence. This is another sentence. And a third sentence. And yet a fourth sentence."
+        >>> text2 = "This is a different sentence. This is another sentence. And a third sentence. But the fourth sentence is different too."
+        >>> extractor = TextOverlapExtractor()
+        >>> extractor.get_text_overlaps(text1, text2, min_length=10, tokenize=False)
+        [' sentence. This is another sentence. And a third sentence. ', ' fourth sentence']
+        >>> extractor.get_text_overlaps(text1, text2, min_length=10, tokenize=True)
+        ['This is another sentence.', 'And a third sentence.']
+        ```
+
         :param text1: A piece of text
         :param text2: Another piece of text to compare against the first
-        :param min_length: Minimum length of overlapping text to identify
-        :param tokenize: Whether or not to tokenize the results; \
-        if False, a single block of concatenated text will be returned (default = True)
-        :return:
+        :param min_length: The minimum size of the overlap to be considered (number of characters)
+        :param tokenize: If True, overlapping segments will only be included if they consist of atomic tokens; overlaps
+        that consist of only part of a token will be excluded (default=True)
+        :return: A list of all of the identified overlapping segments
         """
 
         if tokenize:
@@ -257,17 +286,28 @@ class TextOverlapExtractor(object):
         s = SequenceMatcher(None, text1, text2, autojunk=True)
         for block in s.get_matching_blocks():
             if block.size >= min_length:
-                for token in self.tokenizer.tokenize(
-                    text1[block.a : (block.a + block.size)], min_length=min_length
-                ):
-                    if len(token) >= min_length:
+                overlap = text1[block.a : (block.a + block.size)]
+                if tokenize:
+                    for token in self.tokenizer.tokenize(
+                        overlap, min_length=min_length
+                    ):
                         token = token.strip()
-                        if not tokenize or token in valid_tokens:
+                        if token in valid_tokens:
                             fragments.append(token)
+                elif len(overlap) >= min_length:
+                    fragments.append(overlap)
 
         return fragments
 
     def get_largest_overlap(self, text1, text2):
+
+        """
+        Returns the largest overlapping segment of text between the two texts (this doesn't use the tokenizer).
+
+        :param text1: A piece of text
+        :param text2: Another piece of text to compare against the first
+        :return: The largest substring that occurs in both texts
+        """
 
         s = SequenceMatcher(None, text1, text2)
         pos_a, pos_b, size = s.find_longest_match(0, len(text1), 0, len(text2))
@@ -275,27 +315,6 @@ class TextOverlapExtractor(object):
 
 
 class TextCleaner(object):
-    """
-    A class for cleaning text up, in preparation for NLP, etc.  Attempts to decode the text.  Then lowercases,
-    expands contractions, removes punctuation, lemmatizes, removes stopwords and words less than three characters,
-    and consolidates whitespace.
-
-    :param lemmatize: Whether or not to lemmatize the tokens (default = True)
-    :param tokenizer: Tokenizer to use (default = nltk.WhitespaceTokenizer())
-    :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them with.\
-    Anything passed here will be used in addition to a set of built-in replacement patterns for common contractions.
-    :param process_method: Options are "lemmatize", "stem", or None (default = "lemmatize")
-    :param processor: A lemmatizer or stemmer with a "lemmatize" or "stem" function (default for \
-    process_method="lemmatize" is nltk.WordNetLemmatizer(); default for process_method="stem" is nltk.SnowballStemmer())
-    :param stopwords: The set of stopwords to remove (default = nltk.corpus.stopwords.words('english'))
-    :param lowercase: Whether or not to lowercase the string (default = True)
-    :param remove_urls: Whether or not to remove URLs and links from the text (default = True)
-    :param throw_loud_fail: bool; does not remove all remove nonascii characters if false
-    :param strip_html: Whether or not to remove contents wrapped in HTML tags (default = False)
-    :param filter_pos: A list of WordNet parts-of-speech tags to keep; \
-    if provided, all other words will be removed (default = None)
-    """
-
     def __init__(
         self,
         throw_loud_fail=False,
@@ -309,6 +328,29 @@ class TextCleaner(object):
         strip_html=False,
         tokenizer=None,
     ):
+
+        """
+        A class for cleaning text up, in preparation for NLP, etc.  Attempts to decode the text.  Then lowercases,
+        expands contractions, removes punctuation, lemmatizes or stems, removes stopwords and words less than three
+        characters, and consolidates whitespace.
+
+        :param lemmatize: Whether or not to lemmatize the tokens (default = True)
+        :param tokenizer: Tokenizer to use (default = nltk.WhitespaceTokenizer())
+        :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them
+        with. Anything passed here will be used in addition to a set of built-in replacement patterns for common
+        contractions.
+        :param process_method: Options are "lemmatize", "stem", or None (default = "lemmatize")
+        :param processor: A lemmatizer or stemmer with a "lemmatize" or "stem" function (default for
+        process_method="lemmatize" is nltk.WordNetLemmatizer(); default for process_method="stem" is
+        nltk.SnowballStemmer())
+        :param stopwords: The set of stopwords to remove (default = nltk.corpus.stopwords.words('english'))
+        :param lowercase: Whether or not to lowercase the string (default = True)
+        :param remove_urls: Whether or not to remove URLs and links from the text (default = True)
+        :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
+        :param strip_html: Whether or not to remove contents wrapped in HTML tags (default = False)
+        :param filter_pos: A list of WordNet parts-of-speech tags to keep;
+        if provided, all other words will be removed (default = None)
+        """
 
         self.tokenizer = tokenizer if tokenizer else nltk.WhitespaceTokenizer()
         self.replacers = replacers if replacers else []
@@ -395,26 +437,31 @@ class TextCleaner(object):
 
 
 class TextDataFrame(object):
-    """
-    :param df: A dataframe of documents.  Must contain a column with text.
-    :param text_column: The name of the column in the dataframe that contains the text
-    :param min_frequency: The minimum number of documents a word must be found in for it to be used in \
-        document comparisons (default = 1)
-    :param vectorizer_kwargs: All remaining keyword arguments are passed to TfidfVectorizer
-    """
+    def __init__(self, df, text_column, **vectorizer_kwargs):
 
-    def __init__(self, df, text_column, min_frequency=1, **vectorizer_kwargs):
+        """
+        This is a class full of functions for working with dataframes of documents - it has utilities for identifying
+        potential duplicates, identifying recurring segments of text, computing metrics like mutual information,
+        extracting clusters of documents, and more. Given a DataFrame and the name of the column that contains the
+        text to be analyzed, the TextDataFrame will automatically produce a TF-IDF sparse matrix representation of the
+        text upon initialization. All other parameters are passed along to the scikit-learn TfidfVectorizer. For more
+        info on the parameters it excepts, refer to the official documentation here:
+        https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html
+
+        :param df: A dataframe of documents.  Must contain a column with text.
+        :param text_column: The name of the column in the dataframe that contains the text
+        :param vectorizer_kwargs: All remaining keyword arguments are passed to TfidfVectorizer
+        """
 
         self.corpus = df
         self.text_column = text_column
-        self.vectorizer = TfidfVectorizer(
-            min_df=min_frequency, decode_error="ignore", **vectorizer_kwargs
-        )
+        self.vectorizer = TfidfVectorizer(decode_error="ignore", **vectorizer_kwargs)
         self.tfidf = self.vectorizer.fit_transform(df[text_column])
 
     def search_corpus(self, text):
+
         """
-        Compares the provided text against the documents in the corpus and returns the most similar documents. \
+        Compares the provided text against the documents in the corpus and returns the most similar documents.
         A new column called 'cosine_similarity' is generated, which is used to sort and return the dataframe.
 
         :param text: The text to compare documents against
@@ -429,9 +476,11 @@ class TextDataFrame(object):
         self, match_list, allow_multiple=False, min_similarity=0.9
     ):
         """
+        Takes a list of text values and attempts to match them to the documents in the DataFrame. Each document will
+        be matched to the value in the list to which it is most similar, based on cosine similarity.
 
         :param match_list: A list of strings (other documents) to be matched to documents in the dataframe
-        :param allow_multiple: If set to True and your corpus contains duplicates, they will all be matched to \
+        :param allow_multiple: If set to True and your corpus contains duplicates, they will all be matched to
         their best match in match_list.  If False (default), only the first row will be matched.
         :param min_similarity: Minimum cosine similarity required for any match to be made.
         :return: Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity
@@ -483,9 +532,10 @@ class TextDataFrame(object):
     def extract_corpus_fragments(
         self, scan_top_n_matches_per_doc=20, min_fragment_length=15
     ):
+
         """
-        Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus. \
-        During each comparison, overlapping fragments are identified.  This can be useful for identifying common \
+        Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus.
+        During each comparison, overlapping fragments are identified.  This can be useful for identifying common
         boilerplate sentences, repeated paragraphs, etc.
 
         :param scan_top_n_matches_per_doc: The number of other documents to compare each document against.
@@ -537,19 +587,18 @@ class TextDataFrame(object):
     ):
 
         """
-        Search for duplicates by using cosine similarity and Levenshtein ratios.  This will struggle with large \
-        corpora, so we recommend trying to filter down to potential duplicates first.  The corpus will first be \
-        scanned for document pairs with a cosine similarity greater or equal to the `tfidf_threshold`.  Then, \
+        Search for duplicates by using cosine similarity and Levenshtein ratios.  This will struggle with large
+        corpora, so we recommend trying to filter down to potential duplicates first.  The corpus will first be
+        scanned for document pairs with a cosine similarity greater or equal to the `tfidf_threshold`.  Then,
         each of these pairs will be compared using the more stringent `fuzzy_ratio_threshold`.
 
         :param tfidf_threshold: Minimum cosine similarity for two documents to be considered potential dupes.
         :param fuzzy_ratio_threshold: The required Levenshtein ratio to consider two documents duplicates.
-        :param filter_function: An optional function that allows for more complex filtering.  The function must accept \
-        the following parameters: text1, text2, cosine_similarity, fuzzy_ratio.  Must return True or False, indicating \
+        :param filter_function: An optional function that allows for more complex filtering.  The function must accept
+        the following parameters: text1, text2, cosine_similarity, fuzzy_ratio.  Must return True or False, indicating
         whether the two documents should be considered duplicates.
-        :return: A list of lists, containing groups of duplicate documents \
-        (represented as rows from the corpus dataframe)
-
+        :return: A list of lists, containing groups of duplicate documents (represented as rows from the corpus
+        dataframe)
         """
 
         text = self.corpus[self.text_column]
@@ -615,11 +664,14 @@ class TextDataFrame(object):
     def mutual_info(
         self, outcome_col, weight_col=None, sample_size=None, l=0, normalize=True
     ):
+
         """
+        A wrapper around `pewanalytics.stats.mutual_info.compute_mutual_info`
+
         :param outcome_col: The name of the column with the binary outcome variable
         :param l: An optional Laplace smoothing parameter
-        :param normalize: Toggle normalization on or off (to control for feature prevalance), on by default
-        :return:
+        :param normalize: Toggle normalization on or off (to control for feature prevalence), on by default
+        :return: A DataFrame of ngrams and various metrics about them, including mutual information
         """
 
         if sample_size:
@@ -649,6 +701,14 @@ class TextDataFrame(object):
 
     def kmeans_clusters(self, k=10):
 
+        """
+        A wrapper around `pewanalytics.stats.clustering.compute_kmeans_clusters`. Will compute clusters of documents.
+        The resulting cluster IDs for each document are saved in the TextDataFrame's `corpus` in a new column called
+        "kmeans".
+
+        :param k: The number of clusters to extract
+        """
+
         self.corpus["kmeans"] = compute_kmeans_clusters(
             self.tfidf, k=k, return_score=False
         )
@@ -656,12 +716,31 @@ class TextDataFrame(object):
 
     def hdbscan_clusters(self, min_cluster_size=100, min_samples=1):
 
+        """
+        A wrapper around `pewanalytics.stats.clustering.compute_hdbscan_clusters`. Will compute clusters of documents.
+        The resulting cluster IDs for each document are saved in the TextDataFrame's `corpus` in a new column called
+        "hdbscan".
+
+        :param min_cluster_size: The minimum number of documents that a cluster must contain.
+        :param min_samples: An HDBSCAN parameter; refer to the documentation for more information
+        """
+
         self.corpus["hdbscan"] = compute_hdbscan_clusters(
             self.tfidf, min_cluster_size=min_cluster_size, min_samples=min_samples
         )
         print("HDBSCAN clusters saved to self.corpus['hdbscan']")
 
     def top_cluster_terms(self, cluster_col, min_size=50, top_n=10):
+
+        """
+        Extracts the top terms for each cluster, based on a column of cluster IDs saved to `self.corpus`, using
+        mutual information. Returns the `top_n` terms for each cluster.
+
+        :param cluster_col: The name of the column that contains the document cluster IDs
+        :param min_size: Ignore clusters that have fewer than this number of documents
+        :param top_n: The number of top terms to identify for each cluster
+        :return: A dictionary; keys are the cluster IDs and values are the top terms for the cluster
+        """
 
         dummies = pd.get_dummies(self.corpus[cluster_col], prefix=cluster_col)
         cluster_df = pd.concat([self.corpus, dummies], axis=1)
@@ -694,9 +773,10 @@ class TextDataFrame(object):
     def pca_components(self, k=20):
 
         """
+        A wrapper around `pewanalytics.stats.dimensionality_reduction.get_pca`.
         Saves the PCA components to self.corpus as new columns ('pca_1', 'pca_2', etc.),
         saves the top component for each document as self.corpus['pca'], and returns
-        the features-component matrix
+        the features-component matrix.
 
         :param k: Number of dimensions to extract
         :return: A dataframe of (features x components)
@@ -713,6 +793,7 @@ class TextDataFrame(object):
     def lsa_components(self, k=20):
 
         """
+        A wrapper around `pewanalytics.stats.dimensionality_reduction.get_lsa`.
         Saves the LSA components to self.corpus as new columns ('lsa_1', 'lsa_2', etc.),
         saves the top component for each document as self.corpus['lsa'], and returns
         the features-component matrix
@@ -732,11 +813,13 @@ class TextDataFrame(object):
     def get_top_documents(self, component_prefix="cluster", top_n=5):
 
         """
-        Use after running get_pca_components or get_lsa_components
+        Use after running `get_pca_components` or `get_lsa_components`. Returns the `top_n` documents with the highest
+        scores for each components.
 
         :param component_prefix: 'lsa' or 'pca' (you must first run get_pca_components or get_lsa_components)
         :param top_n: Number of documents to return for each component
-        :return: A dictionary where keys are the component, and values are the top_n document indices (or text, if text_column is provided) for each component
+        :return: A dictionary where keys are the component, and values are the text values for the component's `top_n`
+        documents
         """
 
         top_docs = {}
@@ -758,10 +841,12 @@ class TextDataFrame(object):
         """
         Use to produce word co-occurrence matrices. Based on a helpful StackOverflow post:
         https://stackoverflow.com/questions/35562789/how-do-i-calculate-a-word-word-co-occurrence-matrix-with-sklearn
+
         :param normalize: If True, will be normalized
         :param min_frequency: The minimum document frequency required for a term to be included
         :param max_frequency: The maximum proportion of documents containing a term allowed to include the term
-        :return:
+        :return: A matrix of (terms x terms) whose values indicate the number of documents in which two terms
+        co-occurred
         """
 
         text = self.corpus[self.text_column]
@@ -793,8 +878,9 @@ class TextDataFrame(object):
         """
         Use to produce document co-occurrence matrices. Based on a helpful StackOverflow post:
         https://stackoverflow.com/questions/35562789/how-do-i-calculate-a-word-word-co-occurrence-matrix-with-sklearn
+
         :param normalize: If True, will be normalized
-        :return:
+        :return: A matrix of (documents x documents) whose values indicate the number of terms they had in common
         """
 
         text = self.corpus[self.text_column]

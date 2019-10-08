@@ -68,6 +68,29 @@ class TextTests(unittest.TestCase):
             "one of the guys dies , but his girlfriend continues to see him in her life , and has nightmares .",
         )
 
+        text1 = "This is a sentence. This is another sentence. And a third sentence. And yet a fourth sentence."
+        text2 = "This is a different sentence. This is another sentence. And a third sentence. But the fourth sentence is different too."
+        overlaps = extractor.get_text_overlaps(
+            text1, text2, tokenize=True, min_length=10
+        )
+        self.assertEqual(len(overlaps), 2)
+        self.assertIn("This is another sentence.", overlaps)
+        self.assertIn("And a third sentence.", overlaps)
+
+        overlaps = extractor.get_text_overlaps(
+            text1, text2, tokenize=False, min_length=10
+        )
+        self.assertEqual(len(overlaps), 2)
+        self.assertIn(
+            " sentence. This is another sentence. And a third sentence. ", overlaps
+        )
+        self.assertIn(" fourth sentence", overlaps)
+
+        largest = extractor.get_largest_overlap(text1, text2)
+        self.assertEqual(
+            largest, " sentence. This is another sentence. And a third sentence. "
+        )
+
     def test_text_cleaner(self):
         from pewanalytics.text import TextCleaner
 
