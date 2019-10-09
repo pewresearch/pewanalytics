@@ -6,28 +6,35 @@ from pewtils import decode_text
 
 
 class NamedEntityExtractor(object):
+    def __init__(self):
 
-    """
-    :param text: string
-    :return: dictionary of entities
-    """
+        """
+        A wrapper around NLTK named entity extraction. May be expanded in the future to include NER models from other
+        packages like SpaCy.
+        """
 
-    def __init__(self, text):
+        pass
+
+    def extract(self, text):
+
+        """
+        :param text: a string from which to extract named entities
+        :return: dictionary of entities organized by their category
+        """
+
         try:
             text = str(text)
         except Exception as e:
             text = decode_text(text)
 
-        self.text = text
+        text = text
         try:
-            self.tree = ne_chunk(pos_tag(word_tokenize(text)))
+            tree = ne_chunk(pos_tag(word_tokenize(text)))
         except LookupError:
             nltk.download("maxent_ne_chunker")
             nltk.download("words")
-            self.tree = ne_chunk(pos_tag(word_tokenize(text)))
+            tree = ne_chunk(pos_tag(word_tokenize(text)))
 
-    def extract(self):
-        tree = self.tree
         roots = {}
         for branch in tree:
             if type(branch) is nltk.Tree:
@@ -39,6 +46,7 @@ class NamedEntityExtractor(object):
                         roots[branch.label()] = leaf
                 except Exception as e:
                     pass
+
         return roots
 
 class Cooccurance:

@@ -8,9 +8,15 @@ from calendar import IllegalMonthError
 
 
 class DateFinder(object):
+
     """Search bodies of text for dates"""
 
     def __init__(self):
+
+        """
+        Searches bodies of text for dates using a series of regular expressions and a parser from `dateutil`.
+        Verifies that `dateutil` did not auto-fill missing values in the date.
+        """
 
         # A generally permissive date regex, also fairly prone to false positives
         self.general_date_regex = self._compile_permissive_date_regex()
@@ -22,7 +28,11 @@ class DateFinder(object):
         self.standard_time_regex = self._compile_time_regex()
 
     def _compile_part_regex(self):
-        """:output: regex that breaks dates into component parts"""
+
+        """
+        :return: regex that breaks dates into component parts
+        """
+
         part_regex = re.compile(
             r"""(?ix)             # case-insensitive, verbose regex
             \b                    # match a word boundary
@@ -35,7 +45,11 @@ class DateFinder(object):
         return part_regex
 
     def _compile_permissive_date_regex(self):
-        """:output: regex looking for dates """
+
+        """
+        :return: regex looking for dates
+        """
+
         general_date_regex = re.compile(
             r"""(?=((?ix)             # case-insensitive, verbose regex
             \b                    # match a word boundary
@@ -54,14 +68,23 @@ class DateFinder(object):
         return general_date_regex
 
     def _compile_time_regex(self):
-        """Return a regex that searches for times"""
+
+        """
+        :return: regex that searches for times
+        """
+
         standard_time_regex = re.compile("((?:\d\d|\d):[0-9][0-9])")
         return standard_time_regex
 
     def _remove_part_and_time_references(self, text):
-        """Return the text without any references to "parts" or specific times.
-            :param text:
+
         """
+        Return the text without any references to "parts" or specific times.
+
+        :param text: A string to be cleaned that contains a date
+        :return: A cleaned string without additional time info
+        """
+
         part_references = re.findall(self.part_regex, text)
 
         for reference in part_references:
@@ -75,15 +98,17 @@ class DateFinder(object):
         return text
 
     def find_dates(self, text, cutoff_date_start, cutoff_date_end):
-        """Return all of the dates (in text form and as datetime) in the text variable,
+
+        """
+        Return all of the dates (in text form and as datetime) in the text variable,
         but none before or after the start and end cutoff dates.
 
-        :param text: to search
+        :param text: the text to scan for dates
         :param cutoff_date_start: no dates will be found before this date
         :param cutoff_date_end: no dates will be returned after this date
-
-        :output: dates list
+        :return: A list of tuples containing (datetime object, raw date text)
         """
+
         final_dates, suspected_dates = [], []
 
         # Start by stripping out all references to parts, like "pt. 1" from the text, as well as times like "March 12 2018, 8:00. These
