@@ -13,42 +13,76 @@ class TopicsTests(unittest.TestCase):
     def test_scikit_lda_topic_model(self):
         from pewanalytics.text.topics import ScikitLDATopicModel
 
-        model = ScikitLDATopicModel(self.df, "text", num_topics=5)
+        model = ScikitLDATopicModel(
+            self.df, "text", num_topics=5, min_df=10, max_df=0.8
+        )
         model.fit()
-        model.get_score()
-        model.get_features(self.df)
-        model.get_topics()
-        model.get_document_topics(self.df)
+        scores = model.get_score()
+        features = model.get_features(self.df)
+        topics = model.get_topics()
+        doc_topics = model.get_document_topics(self.df)
+        self.assertTrue(True)
 
     def test_scikit_nmf_topic_model(self):
         from pewanalytics.text.topics import ScikitNMFTopicModel
 
-        model = ScikitNMFTopicModel(self.df, "text", num_topics=5)
+        model = ScikitNMFTopicModel(
+            self.df, "text", num_topics=5, min_df=10, max_df=0.8
+        )
         model.fit()
-        model.get_score()
-        model.get_features(self.df)
-        model.get_topics()
-        model.get_document_topics(self.df)
+        scores = model.get_score()
+        features = model.get_features(self.df)
+        topics = model.get_topics()
+        doc_topics = model.get_document_topics(self.df)
+        self.assertTrue(True)
 
     def test_gensim_lda_topic_model(self):
         from pewanalytics.text.topics import GensimLDATopicModel
 
-        model = GensimLDATopicModel(self.df, "text", num_topics=5)
+        model = GensimLDATopicModel(
+            self.df, "text", num_topics=5, min_df=10, max_df=0.8
+        )
         model.fit()
-        model.get_score()
-        model.get_features(self.df)
-        model.print_topics()
-        model.get_document_topics(self.df)
+        scores = model.get_score()
+        features = model.get_features(self.df)
+        topics = model.get_topics()
+        doc_topics = model.get_document_topics(self.df)
+        self.assertTrue(True)
+
+    def test_gensim_lda_topic_model_multicore(self):
+        from pewanalytics.text.topics import GensimLDATopicModel
+
+        model = GensimLDATopicModel(
+            self.df, "text", num_topics=5, min_df=10, max_df=0.8
+        )
+        model.fit(use_multicore=True)
+        scores = model.get_score()
+        features = model.get_features(self.df)
+        topics = model.get_topics()
+        doc_topics = model.get_document_topics(self.df)
+        self.assertTrue(True)
 
     def test_gensim_hdp_topic_model(self):
         from pewanalytics.text.topics import GensimHDPTopicModel
 
-        model = GensimHDPTopicModel(self.df, "text", num_topics=5)
-        model.fit(T=10)
-        model.get_score()
-        model.get_features(self.df)
-        model.print_topics()
-        model.get_document_topics(self.df)
+        model = GensimHDPTopicModel(self.df, "text", min_df=10, max_df=0.8)
+        model.fit()
+        scores = model.get_score()
+        features = model.get_features(self.df)
+        topics = model.get_topics()
+        doc_topics = model.get_document_topics(self.df)
+        self.assertTrue(True)
+
+    def test_corex_topic_model(self):
+        from pewanalytics.text.topics import CorExTopicModel
+
+        model = CorExTopicModel(self.df, "text", num_topics=5, min_df=10, max_df=0.8)
+        model.fit()
+        scores = model.get_score()
+        features = model.get_features(self.df)
+        topics = model.get_topics()
+        doc_topics = model.get_document_topics(self.df)
+        self.assertTrue(True)
 
     def tearDown(self):
         pass
