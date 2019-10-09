@@ -174,7 +174,7 @@ class TextTests(unittest.TestCase):
         from pewanalytics.text import TextDataFrame
 
         self.df["outcome"] = (self.df["sentiment"] == "pos").astype(int)
-        tdf = TextDataFrame(self.df, "text", min_frequency=50, max_df=0.5)
+        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
         mutual_info = tdf.mutual_info("outcome")
         pos = mutual_info.sort_values("MI1", ascending=False)[:10]
         neg = mutual_info.sort_values("MI0", ascending=False)[:10]
@@ -222,7 +222,7 @@ class TextTests(unittest.TestCase):
         import matplotlib.pyplot as plt
 
         self.df["outcome"] = (self.df["sentiment"] == "pos").astype(int)
-        tdf = TextDataFrame(self.df, "text", min_frequency=50, max_df=0.5)
+        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
         mutual_info = tdf.mutual_info("outcome")
         plot = mutual_info_scatter_plot(
             mutual_info,
@@ -245,7 +245,7 @@ class TextTests(unittest.TestCase):
         import matplotlib.pyplot as plt
 
         self.df["outcome"] = (self.df["sentiment"] == "pos").astype(int)
-        tdf = TextDataFrame(self.df, "text", min_frequency=50, max_df=0.5)
+        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
         mutual_info = tdf.mutual_info("outcome")
         plot = mutual_info_bar_plot(
             mutual_info,
@@ -261,7 +261,7 @@ class TextTests(unittest.TestCase):
     def test_tdf_kmeans_clusters(self):
         from pewanalytics.text import TextDataFrame
 
-        tdf = TextDataFrame(self.df, "text", min_frequency=50, max_df=0.5)
+        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
         tdf.kmeans_clusters(k=2)
         terms = tdf.top_cluster_terms("kmeans")
         self.assertEqual(len(terms.keys()), 2)
@@ -271,7 +271,7 @@ class TextTests(unittest.TestCase):
     def test_tdf_hdbscan_clusters(self):
         from pewanalytics.text import TextDataFrame
 
-        tdf = TextDataFrame(self.df, "text", min_frequency=50, max_df=0.5)
+        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
         tdf.hdbscan_clusters(min_cluster_size=10)
         terms = tdf.top_cluster_terms("hdbscan")
         self.assertEqual(len(terms.keys()), 3)
@@ -282,7 +282,7 @@ class TextTests(unittest.TestCase):
     def test_tdf_pca_components(self):
         from pewanalytics.text import TextDataFrame
 
-        tdf = TextDataFrame(self.df, "text", min_frequency=50, max_df=0.5)
+        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
         tdf.pca_components(k=5)
         docs = tdf.get_top_documents(component_prefix="pca", top_n=2)
         self.assertEqual(docs["pca_0"][0][:10], "there must")
@@ -294,7 +294,7 @@ class TextTests(unittest.TestCase):
     def test_tdf_lsa_components(self):
         from pewanalytics.text import TextDataFrame
 
-        tdf = TextDataFrame(self.df, "text", min_frequency=50, max_df=0.5)
+        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
         tdf.lsa_components(k=5)
         docs = tdf.get_top_documents(component_prefix="lsa", top_n=2)
         self.assertEqual(docs["lsa_0"][0][:10], " * * * the")
@@ -307,7 +307,7 @@ class TextTests(unittest.TestCase):
 
         from pewanalytics.text import TextDataFrame
 
-        tdf = TextDataFrame(self.df, "text", min_frequency=50, max_df=0.5)
+        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
 
         from sklearn.feature_extraction.text import CountVectorizer
 
@@ -331,7 +331,7 @@ class TextTests(unittest.TestCase):
 
         from pewanalytics.text import TextDataFrame
 
-        tdf = TextDataFrame(self.df, "text", min_frequency=50, max_df=0.5)
+        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
         mat = tdf.make_document_cooccurrence_matrix(normalize=False)
         self.assertTrue(len(mat) == len(self.df))
         self.assertTrue(mat.max().max() > 1.0)
@@ -343,7 +343,7 @@ class TextTests(unittest.TestCase):
         from pewanalytics.stats.dimensionality_reduction import correspondence_analysis
         from pewanalytics.text import TextDataFrame
 
-        tdf = TextDataFrame(self.df, "text", min_frequency=50, max_df=0.5)
+        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
         matrix = pd.DataFrame(
             tdf.tfidf.todense(), columns=tdf.vectorizer.get_feature_names()
         )
