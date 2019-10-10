@@ -142,7 +142,7 @@ class TopicModel(object):
         for i, topic in self.get_topics(
             include_weights=include_weights, top_n=top_n
         ).items():
-            print("{}: {}".format(i, topic))
+            print("{}: {}".format(i, ", ".join(topic)))
 
 
 class ScikitLDATopicModel(TopicModel):
