@@ -18,7 +18,7 @@ def compute_mutual_info(y, x, weights=None, col_names=None, l=0, normalize=True)
     features but the results will not be as readily interpretable.) The function returns a DataFrame of metrics
     computed for each feature, including:
     - `MI1`: the feature's mutual information for the positive class
-    - `MI2`: the feature's mutual information for the negative class
+    - `MI0`: the feature's mutual information for the negative class
     - `total`: the total number of times a feature appeared
     - `total_pos_with_term`: the total number of times a feature appeared in positive cases
     - `total_neg_with_term`: the total number of times a feature appeared in negative cases
