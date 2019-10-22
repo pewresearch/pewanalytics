@@ -4,6 +4,7 @@ import pandas as pd
 import math
 import os
 import copy
+import re
 import random
 
 
@@ -14,6 +15,21 @@ class TextTests(unittest.TestCase):
         self.df["sentiment"] = self.df["fileid"].map(lambda x: x.split("/")[0])
         self.doc = self.df["text"].values[0]
         random.seed(42)
+
+    def test_has_fragment(self):
+        from pewanalytics.text import has_fragment
+
+        self.assertTrue(has_fragment("testing one two three", "one two"))
+        self.assertFalse(has_fragment("testing one two three", "four"))
+
+    def test_remove_fragments(self):
+        from pewanalytics.text import remove_fragments
+
+        for val, frags, expected in [
+            ("testing one two three", ["one two"], "testing  three"),
+            ("testing one two three", ["testing", "three"], " one two "),
+        ]:
+            self.assertEqual(remove_fragments(val, frags), expected)
 
     def test_filter_parts_of_speech(self):
         from pewanalytics.text import filter_parts_of_speech
@@ -39,6 +55,13 @@ class TextTests(unittest.TestCase):
             filtered = filter_parts_of_speech(self.doc[:500], filter_pos=[pos])
             self.assertEqual(filtered, expected)
 
+        result = filter_parts_of_speech(self.doc[:100], filter_pos=None)
+        self.assertEqual(result, "plot teen church party drink drive accident")
+        result = filter_parts_of_speech(self.doc[:100], exclude=True)
+        self.assertEqual(
+            result, ": two couples go to a , and then . they get into an ."
+        )
+
     def test_sentence_tokenizer(self):
         from pewanalytics.text import SentenceTokenizer
 
@@ -52,6 +75,17 @@ class TextTests(unittest.TestCase):
             'watch the movie and " sorta " find out .',
             "critique : a mind-fuck movie for the teen generation that touches on a very cool idea , but presents it in a very bad package .",
             "which is what makes this review an even harder one to write , since i generally applaud films which attempt",
+        ]
+        for expected, tokenized in zip(expected, tokenized):
+            self.assertEqual(expected, tokenized)
+        regex = re.compile(r"\:")
+        tokenizer = SentenceTokenizer(
+            regex_split_trailing=regex, regex_split_leading=regex
+        )
+        tokenized = tokenizer.tokenize(self.doc[:100], min_length=10)
+        expected = [
+            "two teen couples go to a church party , drink and then drive .",
+            "they get into an accident .",
         ]
         for expected, tokenized in zip(expected, tokenized):
             self.assertEqual(expected, tokenized)
@@ -141,6 +175,14 @@ class TextTests(unittest.TestCase):
         tdf = TextDataFrame(self.df, "text")
         results = tdf.search_corpus("movie")
         self.assertEqual(len(results[results["search_cosine_similarity"] > 0.2]), 5)
+
+    def test_tdf_match_text_to_corpus(self):
+        from pewanalytics.text import TextDataFrame
+
+        tdf = TextDataFrame(self.df[:100], "text")
+        self.df["alt_text"] = self.df["text"].map(lambda x: x[:-100])
+        matches = tdf.match_text_to_corpus(self.df["alt_text"][:100])
+        self.assertEqual(self.df[:100].index.values, matches["match_index"].values)
 
     def test_tdf_extract_corpus_fragments(self):
         from pewanalytics.text import TextDataFrame
