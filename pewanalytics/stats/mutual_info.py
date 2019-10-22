@@ -75,11 +75,13 @@ def compute_mutual_info(y, x, weights=None, col_names=None, l=0, normalize=True)
         if type(x).__name__ != "DataFrame":
             x = pd.DataFrame(x, columns=col_names)
 
-        x1 = x.multiply(weights, axis="index").sum()
-        x0 = ((x * -1) + 1).multiply(weights, axis="index").sum()
-
         if is_not_null(weights):
             x = x.multiply(weights, axis="index")
+            x1 = x.multiply(weights, axis="index").sum()
+            x0 = ((x * -1) + 1).multiply(weights, axis="index").sum()
+        else:
+            x1 = x.sum()
+            x0 = ((x * -1) + 1).sum()
         x1y0 = x[y == 0].sum()
         x1y1 = x[y == 1].sum()
 
