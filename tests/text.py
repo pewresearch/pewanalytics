@@ -182,7 +182,8 @@ class TextTests(unittest.TestCase):
         tdf = TextDataFrame(self.df[:100], "text")
         self.df["alt_text"] = self.df["text"].map(lambda x: x[:-100])
         matches = tdf.match_text_to_corpus(self.df["alt_text"][:100])
-        self.assertEqual(self.df[:100].index.values, matches["match_index"].values)
+        for i, j in zip(self.df[:100].index.values, matches["match_index"].values):
+            self.assertEqual(i, j)
 
     def test_tdf_extract_corpus_fragments(self):
         from pewanalytics.text import TextDataFrame
@@ -213,9 +214,6 @@ class TextTests(unittest.TestCase):
         self.assertEqual(len(dupes), 7)
 
     def test_tdf_mutual_info(self):
-
-        ### TODO: add tests for known correct values; insert a specific word in a few documents and confirm it's correct
-        ### TODO: also refactor so that the tests align with the correct modules (the stats tests are scattered around and it's hard to find them)
 
         from pewanalytics.text import TextDataFrame
 
