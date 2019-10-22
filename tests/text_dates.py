@@ -2,7 +2,7 @@ from __future__ import print_function
 import unittest
 
 
-class DatesTests(unittest.TestCase):
+class TextDatesTests(unittest.TestCase):
     def setUp(self):
         pass
 

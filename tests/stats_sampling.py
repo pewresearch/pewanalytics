@@ -4,7 +4,7 @@ import os
 import pandas as pd
 
 
-class SamplingTests(unittest.TestCase):
+class StatsSamplingTests(unittest.TestCase):
     def setUp(self):
 
         self.df = pd.read_csv(os.path.join("tests", "test_data.csv"))

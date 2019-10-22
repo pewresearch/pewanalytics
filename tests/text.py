@@ -1,6 +1,7 @@
 from __future__ import print_function
 import unittest
 import pandas as pd
+import math
 import os
 import copy
 import random
@@ -171,47 +172,87 @@ class TextTests(unittest.TestCase):
 
     def test_tdf_mutual_info(self):
 
+        ### TODO: add tests for known correct values; insert a specific word in a few documents and confirm it's correct
+        ### TODO: also refactor so that the tests align with the correct modules (the stats tests are scattered around and it's hard to find them)
+
         from pewanalytics.text import TextDataFrame
 
         self.df["outcome"] = (self.df["sentiment"] == "pos").astype(int)
-        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
-        mutual_info = tdf.mutual_info("outcome")
+        self.df["text"] = self.df.apply(
+            lambda x: "{} always_pos".format(x["text"]) if x["outcome"] else x["text"],
+            axis=1,
+        )
+        tdf = TextDataFrame(
+            self.df,
+            "text",
+            min_df=50,
+            max_df=0.5,
+            use_idf=False,
+            binary=True,
+            sublinear_tf=False,
+            smooth_idf=False,
+            norm=None,
+        )
+        # games occurs 24 times in the pos class, 26 times in the neg class; total is 50
+        # overall document total is 2000 (1000 pos)
+        px1y1 = 24.0 / 2000.0
+        px1y0 = 26.0 / 2000.0
+        px1 = 50.0 / 2000.0
+        px0 = (2000.0 - 50.0) / 2000.0
+        py1 = 1000.0 / 2000.0
+
+        mutual_info = tdf.mutual_info("outcome", normalize=False)
+        MI1 = math.log(px1y1 / (px1 * py1), 2)
+        MI1_alt = math.log(px1y1, 2) - math.log(px1, 2) - math.log(py1, 2)
+        self.assertAlmostEqual(mutual_info.loc["games"]["MI1"], MI1, 4)
+        self.assertAlmostEqual(mutual_info.loc["games"]["MI1"], MI1_alt, 4)
+
+        mutual_info = tdf.mutual_info("outcome", normalize=True)
+        MI1_norm = MI1 / (-1 * math.log(px1y1, 2))
+        MI1_norm_alt = (math.log(px1 * py1, 2) / math.log(px1y1, 2)) - 1.0
+        self.assertAlmostEqual(mutual_info.loc["games"]["MI1"], MI1_norm, 4)
+        self.assertAlmostEqual(mutual_info.loc["games"]["MI1"], MI1_norm_alt, 4)
+
         pos = mutual_info.sort_values("MI1", ascending=False)[:10]
         neg = mutual_info.sort_values("MI0", ascending=False)[:10]
 
-        self.assertEqual(pos.index[0], "outstanding")
+        self.assertEqual(pos.index[0], "always_pos")
+        self.assertEqual(pos.iloc[0]["MI1"], 1.0)
+        self.assertEqual(pos.index[1], "outstanding")
         for field, val in [
-            ("MI1", 0.101480),
-            ("MI0", -0.217881),
-            ("total", 5.266579),
-            ("total_pos_with_term", 4.851582),
-            ("total_neg_with_term", 0.414997),
-            ("total_pos_neg_with_term_diff", 4.436586),
-            ("pct_pos_with_term", 0.004852),
-            ("pct_neg_with_term", 0.000415),
-            ("pct_term_pos", 0.921202),
-            ("pct_term_neg", 0.078798),
-            ("pct_term_pos_neg_diff", 0.842404),
-            ("pct_pos_neg_with_term_diff", 0.004437),
-            ("pct_pos_neg_with_term_ratio", 11.690651),
+            ("MI1", 0.178374),
+            ("MI0", -0.319942),
+            ("total", 68.0),
+            ("total_pos_with_term", 63.0),
+            ("total_neg_with_term", 5.0),
+            ("total_pos_neg_with_term_diff", 58.0),
+            ("pct_pos_with_term", 0.063),
+            ("pct_neg_with_term", 0.005),
+            ("pct_pos_neg_with_term_diff", 0.058),
+            ("pct_pos_neg_with_term_ratio", 12.6),
+            ("pct_term_pos", 0.926471),
+            ("pct_term_neg", 0.073529),
+            ("pct_term_pos_neg_diff", 0.852941),
+            ("pct_term_pos_neg_ratio", 12.6),
         ]:
-            self.assertAlmostEqual(pos.iloc[0][field], val, 4)
+            self.assertAlmostEqual(pos.iloc[1][field], val, 4)
 
-        self.assertEqual(neg.index[0], "worst")
+        self.assertEqual(neg.index[0], "bad")
         for field, val in [
-            ("MI1", -0.186571),
-            ("MI0", 0.108647),
-            ("total", 15.958741),
-            ("total_pos_with_term", 2.247558),
-            ("total_neg_with_term", 13.711183),
-            ("total_pos_neg_with_term_diff", -11.463624),
-            ("pct_pos_with_term", 0.002248),
-            ("pct_neg_with_term", 0.013711),
-            ("pct_term_pos", 0.140836),
-            ("pct_term_neg", 0.859164),
-            ("pct_term_pos_neg_diff", -0.718329),
-            ("pct_pos_neg_with_term_diff", -0.011464),
-            ("pct_pos_neg_with_term_ratio", 0.163922),
+            ("MI1", -0.195836),
+            ("MI0", 0.209830),
+            ("total", 773.0),
+            ("total_pos_with_term", 259.0),
+            ("total_neg_with_term", 514.0),
+            ("total_pos_neg_with_term_diff", -255.0),
+            ("pct_pos_with_term", 0.259),
+            ("pct_neg_with_term", 0.514),
+            ("pct_pos_neg_with_term_diff", -0.255),
+            ("pct_pos_neg_with_term_ratio", 0.503891),
+            ("pct_term_pos", 0.335058),
+            ("pct_term_neg", 0.664942),
+            ("pct_term_pos_neg_diff", -0.329884),
+            ("pct_term_pos_neg_ratio", 0.503891),
         ]:
             self.assertAlmostEqual(neg.iloc[0][field], val, 4)
 
@@ -338,20 +379,6 @@ class TextTests(unittest.TestCase):
         mat = tdf.make_document_cooccurrence_matrix(normalize=True)
         self.assertTrue(len(mat) == len(self.df))
         self.assertTrue(mat.max().max() == 1.0)
-
-    def test_correspondence_analysis(self):
-        from pewanalytics.stats.dimensionality_reduction import correspondence_analysis
-        from pewanalytics.text import TextDataFrame
-
-        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
-        matrix = pd.DataFrame(
-            tdf.tfidf.todense(), columns=tdf.vectorizer.get_feature_names()
-        )
-        mca = correspondence_analysis(matrix)
-        self.assertAlmostEqual(mca["mca_1"].values[0], 0.59554, 4)
-        self.assertEqual(mca["node"].values[0], "over")
-        self.assertAlmostEqual(mca["mca_1"].values[-1], -0.4274, 4)
-        self.assertEqual(mca["node"].values[-1], "red")
 
     def tearDown(self):
         pass

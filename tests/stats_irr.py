@@ -2,7 +2,7 @@ from __future__ import print_function
 import unittest
 
 
-class IRRTests(unittest.TestCase):
+class StatsIRRTests(unittest.TestCase):
     def setUp(self):
         import pandas as pd
 

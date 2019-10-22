@@ -2,7 +2,7 @@ from __future__ import print_function
 import unittest
 
 
-class NERTests(unittest.TestCase):
+class TextNERTests(unittest.TestCase):
     def setUp(self):
         pass
 

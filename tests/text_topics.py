@@ -4,7 +4,7 @@ import pandas as pd
 import os
 
 
-class TopicsTests(unittest.TestCase):
+class TextTopicsTests(unittest.TestCase):
     def setUp(self):
 
         self.df = pd.read_csv(os.path.join("tests", "test_data.csv"))[:200]
