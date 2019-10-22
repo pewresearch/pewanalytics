@@ -107,10 +107,10 @@ def filter_parts_of_speech(text, filter_pos=None, exclude=False):
         filter_pos = ("NN", "NNP", "JJ")
     text = text.split()
     tagged_words = nltk.pos_tag(text)
-    if exclude == False:
+    if not exclude:
         valid = [word[0] for word in tagged_words if word[1] in filter_pos]
     else:
-        valid = [word[0] for word in tagged_words if word[1] != filter_pos]
+        valid = [word[0] for word in tagged_words if word[1] not in filter_pos]
     return " ".join(valid)
 
 
