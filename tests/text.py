@@ -256,49 +256,6 @@ class TextTests(unittest.TestCase):
         ]:
             self.assertAlmostEqual(neg.iloc[0][field], val, 4)
 
-    def test_mutual_info_scatter_plot(self):
-
-        from pewanalytics.text import TextDataFrame
-        from pewanalytics.stats.mutual_info import mutual_info_scatter_plot
-        import matplotlib.pyplot as plt
-
-        self.df["outcome"] = (self.df["sentiment"] == "pos").astype(int)
-        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
-        mutual_info = tdf.mutual_info("outcome")
-        plot = mutual_info_scatter_plot(
-            mutual_info,
-            filter_col="MI1",
-            top_n=20,
-            x_col="pct_term_pos_neg_ratio",
-            scale_x_even=True,
-            y_col="MI1",
-            scale_y_even=True,
-        )
-        # plt.show()
-        # self.assertEqual(str(plot.__hash__()), '308194536')
-        # TODO: figure out how to get a unique representation of the plot
-        self.assertTrue(True)
-
-    def test_mutual_info_bar_plot(self):
-
-        from pewanalytics.text import TextDataFrame
-        from pewanalytics.stats.mutual_info import mutual_info_bar_plot
-        import matplotlib.pyplot as plt
-
-        self.df["outcome"] = (self.df["sentiment"] == "pos").astype(int)
-        tdf = TextDataFrame(self.df, "text", min_df=50, max_df=0.5)
-        mutual_info = tdf.mutual_info("outcome")
-        plot = mutual_info_bar_plot(
-            mutual_info,
-            filter_col="pct_term_pos_neg_ratio",
-            top_n=20,
-            x_col="pct_term_pos_neg_ratio",
-        )
-        # plt.show()
-        # self.assertEqual(str(plot.__hash__()), '-9223372036574337697')
-        # TODO: figure out how to get a unique representation of the plot
-        self.assertTrue(True)
-
     def test_tdf_kmeans_clusters(self):
         from pewanalytics.text import TextDataFrame
 
