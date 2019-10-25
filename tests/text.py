@@ -184,6 +184,15 @@ class TextTests(unittest.TestCase):
         matches = tdf.match_text_to_corpus(self.df["alt_text"][:100])
         for i, j in zip(self.df[:100].index.values, matches["match_index"].values):
             self.assertEqual(i, j)
+        tdf.corpus.loc[tdf.corpus.index[1:10], "text"] = "plot"
+        matches = tdf.match_text_to_corpus(
+            self.df["alt_text"][:100], allow_multiple=True, min_similarity=0.05
+        )
+        self.assertEqual(matches["match_index"].value_counts().max(), 9)
+        matches = tdf.match_text_to_corpus(
+            self.df["alt_text"][:100], allow_multiple=False, min_similarity=0.05
+        )
+        self.assertEqual(matches["match_index"].value_counts().max(), 1)
 
     def test_tdf_extract_corpus_fragments(self):
         from pewanalytics.text import TextDataFrame
