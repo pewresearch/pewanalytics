@@ -18,10 +18,16 @@ class TextTopicsTests(unittest.TestCase):
         )
         model.fit()
         scores = model.get_score()
+        self.assertIn("perplexity", scores.keys())
+        self.assertIn("score", scores.keys())
         features = model.get_features(self.df)
+        self.assertEqual(
+            features.shape, (200, len(model.vectorizer.get_feature_names()))
+        )
         topics = model.get_topics()
+        self.assertEqual(len(topics), 5)
         doc_topics = model.get_document_topics(self.df)
-        self.assertTrue(True)
+        self.assertEqual(doc_topics.shape, (200, 5))
 
     def test_scikit_nmf_topic_model(self):
         from pewanalytics.text.topics import ScikitNMFTopicModel
@@ -31,10 +37,15 @@ class TextTopicsTests(unittest.TestCase):
         )
         model.fit()
         scores = model.get_score()
+        self.assertEqual(len(scores.keys()), 0)
         features = model.get_features(self.df)
+        self.assertEqual(
+            features.shape, (200, len(model.vectorizer.get_feature_names()))
+        )
         topics = model.get_topics()
+        self.assertEqual(len(topics), 5)
         doc_topics = model.get_document_topics(self.df)
-        self.assertTrue(True)
+        self.assertEqual(doc_topics.shape, (200, 5))
 
     def test_gensim_lda_topic_model(self):
         from pewanalytics.text.topics import GensimLDATopicModel
@@ -44,10 +55,15 @@ class TextTopicsTests(unittest.TestCase):
         )
         model.fit()
         scores = model.get_score()
+        self.assertEqual(len(scores.keys()), 0)
         features = model.get_features(self.df)
+        self.assertEqual(
+            features.shape, (200, len(model.vectorizer.get_feature_names()))
+        )
         topics = model.get_topics()
+        self.assertEqual(len(topics), 5)
         doc_topics = model.get_document_topics(self.df)
-        self.assertTrue(True)
+        self.assertEqual(doc_topics.shape, (200, 5))
 
     def test_gensim_lda_topic_model_multicore(self):
         from pewanalytics.text.topics import GensimLDATopicModel
@@ -57,10 +73,15 @@ class TextTopicsTests(unittest.TestCase):
         )
         model.fit(use_multicore=True)
         scores = model.get_score()
+        self.assertEqual(len(scores.keys()), 0)
         features = model.get_features(self.df)
+        self.assertEqual(
+            features.shape, (200, len(model.vectorizer.get_feature_names()))
+        )
         topics = model.get_topics()
+        self.assertEqual(len(topics), 5)
         doc_topics = model.get_document_topics(self.df)
-        self.assertTrue(True)
+        self.assertEqual(doc_topics.shape, (200, 5))
 
     def test_gensim_hdp_topic_model(self):
         from pewanalytics.text.topics import GensimHDPTopicModel
@@ -68,10 +89,16 @@ class TextTopicsTests(unittest.TestCase):
         model = GensimHDPTopicModel(self.df, "text", min_df=10, max_df=0.8)
         model.fit()
         scores = model.get_score()
+        self.assertEqual(len(scores.keys()), 0)
         features = model.get_features(self.df)
+        self.assertEqual(
+            features.shape, (200, len(model.vectorizer.get_feature_names()))
+        )
         topics = model.get_topics()
+        num_topics = len(topics)
+        self.assertGreater(num_topics, 0)
         doc_topics = model.get_document_topics(self.df)
-        self.assertTrue(True)
+        self.assertEqual(doc_topics.shape, (200, num_topics))
 
     def test_corex_topic_model(self):
         from pewanalytics.text.topics import CorExTopicModel
@@ -79,10 +106,15 @@ class TextTopicsTests(unittest.TestCase):
         model = CorExTopicModel(self.df, "text", num_topics=5, min_df=10, max_df=0.8)
         model.fit()
         scores = model.get_score()
+        self.assertIn("total_correlation", scores.keys())
         features = model.get_features(self.df)
+        self.assertEqual(
+            features.shape, (200, len(model.vectorizer.get_feature_names()))
+        )
         topics = model.get_topics()
+        self.assertEqual(len(topics), 5)
         doc_topics = model.get_document_topics(self.df)
-        self.assertTrue(True)
+        self.assertEqual(doc_topics.shape, (200, 5))
 
     def tearDown(self):
         pass
