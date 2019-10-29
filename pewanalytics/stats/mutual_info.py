@@ -114,7 +114,7 @@ def compute_mutual_info(y, x, weights=None, col_names=None, l=0, normalize=True)
     df["total_pos_neg_with_term_diff"] = (
         df["total_pos_with_term"] - df["total_neg_with_term"]
     )
-
+    df["pct_with_term"] = x1 / (x1 + x0)
     df["pct_pos_with_term"] = x1y1 / y1  # pct_pos_mention
     df["pct_neg_with_term"] = x1y0 / y0  # pct_neg_mention
     df["pct_pos_neg_with_term_diff"] = (
