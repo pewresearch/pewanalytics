@@ -669,6 +669,7 @@ class TextDataFrame(object):
         A wrapper around `pewanalytics.stats.mutual_info.compute_mutual_info`
 
         :param outcome_col: The name of the column with the binary outcome variable
+        :param weight_col: (Optional) Name of the column to use in weighting
         :param l: An optional Laplace smoothing parameter
         :param normalize: Toggle normalization on or off (to control for feature prevalence), on by default
         :return: A DataFrame of ngrams and various metrics about them, including mutual information
@@ -685,7 +686,7 @@ class TextDataFrame(object):
         else:
             df = df.dropna(subset=[self.text_column, outcome_col]).reset_index()
         y = df[outcome_col]
-        x = self.vectorizer.fit_transform(df[self.text_column])
+        x = self.vectorizer.transform(df[self.text_column])
         weights = None
         if weight_col:
             weights = df[weight_col]
