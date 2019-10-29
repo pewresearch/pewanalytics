@@ -27,7 +27,6 @@ class NamedEntityExtractor(object):
         except Exception as e:
             text = decode_text(text)
 
-        text = text
         try:
             tree = ne_chunk(pos_tag(word_tokenize(text)))
         except LookupError:
