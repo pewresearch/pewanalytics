@@ -360,11 +360,11 @@ class TextCleaner(object):
                 (r"can\'t", "cannot"),
                 (r"i\'m", "i am"),
                 (r"ain\'t", "is not"),
-                (r"(\w+)\'ll", "\g<1> will"),
-                (r"(\w+)n\'t", "\g<1>_not"),
-                (r"(\w+)\'ve", "\g<1> have"),
-                (r"(\w+)\'re", "\g<1> are"),
-                (r"(\w+)\'d", "\g<1> would"),
+                (r"(\w+)\'ll", r"\g<1> will"),
+                (r"(\w+)n\'t", r"\g<1>_not"),
+                (r"(\w+)\'ve", r"\g<1> have"),
+                (r"(\w+)\'re", r"\g<1> are"),
+                (r"(\w+)\'d", r"\g<1> would"),
                 (r"it\'s", "it is"),
             ]
         )
