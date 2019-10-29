@@ -479,7 +479,10 @@ class GensimLDATopicModel(TopicModel):
             for topic, weight in doc_topics:
                 row["topic_{}".format(topic)] = weight
             rows.append(row)
-        return pd.DataFrame(rows)
+        df = pd.DataFrame(rows)
+        df = df.set_index(df["index"])
+        del df["index"]
+        return df
 
     def get_topics(self, include_weights=False, top_n=10):
 
@@ -629,7 +632,10 @@ class GensimHDPTopicModel(TopicModel):
                 if not self.topic_ids or topic in self.topic_ids:
                     row["topic_{}".format(topic)] = weight
             rows.append(row)
-        return pd.DataFrame(rows).fillna(0)
+        df = pd.DataFrame(rows).fillna(0)
+        df = df.set_index(df["index"])
+        del df["index"]
+        return df
 
     def get_topics(self, include_weights=False, top_n=10):
 
@@ -704,12 +710,12 @@ class CorExTopicModel(TopicModel):
     def get_score(self):
 
         """
-        Not currently implemented for CorEx
+        Returns the total correlation stat for the trained CorEx model.
 
-        :return: Empty dictionary
+        :return: A dictionary with goodness-of-fit scores
         """
 
-        return {}
+        return {"total_correlation": self.model.tc}
 
     def get_document_topics(self, df):
 
