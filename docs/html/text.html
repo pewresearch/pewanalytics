@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>the pewanalytics text module &#8212; pewanalytics 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="the pewanalytics stats module" href="stats.html" />
+    <link rel="prev" title="Home" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="the-pewanalytics-text-module">
+<h1>the pewanalytics text module<a class="headerlink" href="#the-pewanalytics-text-module" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="some-simple-things-you-can-do">
+<h2>Some simple things you can do<a class="headerlink" href="#some-simple-things-you-can-do" title="Permalink to this headline">¶</a></h2>
+<p>Parts of speech</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="kn">import</span> <span class="n">filter_parts_of_speech</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;original_text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">filter_parts_of_speech</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">filter_pos</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;NN&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Tokenize sentences</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="kn">import</span> <span class="n">SentenceTokenizer</span>
+<span class="n">SentenceTokenizer</span>
+</pre></div>
+</div>
+<p>Clean text</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="kn">import</span> <span class="n">TextCleaner</span>
+<span class="n">clean_text</span> <span class="o">=</span> <span class="n">TextCleaner</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">messy_text</span><span class="p">,</span>
+                            <span class="n">decode_text</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                            <span class="n">lemmatize</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                            <span class="n">lemmatizer</span> <span class="o">=</span> <span class="n">my_personal_favorite_lemmatizer</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Analyze and classify lists of documents</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="kn">import</span> <span class="n">TextDataFrame</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="text-utilities">
+<h2>Text Utilities<a class="headerlink" href="#text-utilities" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Running these functions requires text contain no special characters</p>
+</div>
+</div>
+<div class="section" id="dates">
+<h2>Dates<a class="headerlink" href="#dates" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="named-entity-recognition">
+<h2>Named Entity Recognition<a class="headerlink" href="#named-entity-recognition" title="Permalink to this headline">¶</a></h2>
+<p>A light-weight wrapper using <a class="reference external" href="https://www.nltk.org/book/ch07.html">NLTK’s Named Entity Recognition
+model</a>.</p>
+<p>To use</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text.ner</span> <span class="kn">import</span> <span class="n">NamedEntityExtractor</span>
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">NamedEntityExtractor</span><span class="p">(</span><span class="n">messy_text</span><span class="p">)</span>
+<span class="n">roots</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="indices">
+<h3>Indices<a class="headerlink" href="#indices" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pewanalytics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Text</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#some-simple-things-you-can-do">Some simple things you can do</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#text-utilities">Text Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dates">Dates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#named-entity-recognition">Named Entity Recognition</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">Stats</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Home</a></li>
+      <li>Next: <a href="stats.html" title="next chapter">the pewanalytics stats module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Pew Research Center.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/text.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
