@@ -1,8 +1,6 @@
 """
 .. _stats:
 
-.. tip: Insert tip
-
 .. autosummary::
     :toctree: _autosummary
     :template: clean.rst

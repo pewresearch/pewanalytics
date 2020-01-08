@@ -82,8 +82,7 @@ def get_lsa(features, feature_names=None, k=20):
 def correspondence_analysis(edges, n=1):
 
     """
-    :param edges: edges is a dataframe of NxN where both the rows and columns are "nodes" and the values are some sort
-    of closeness or similarity measure (like a cosine similarity matrix)
+    :param edges: edges is a dataframe of NxN where both the rows and columns are "nodes" and the values are some sort of closeness or similarity measure (like a cosine similarity matrix)
     :param n: Number of dimensions to extract
     :return: A dataframe of the N dimensions
     """
