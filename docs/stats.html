@@ -36,18 +36,318 @@
 <p>Statistics utilities for weighting, clustering, dimensionality reduction, and inter-rater reliability</p>
 <div class="section" id="module-pewanalytics.stats">
 <span id="stats-utilities"></span><h2>Stats Utilities<a class="headerlink" href="#module-pewanalytics.stats" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="stats"></span></div>
-<div class="section" id="clustering">
-<h2>Clustering<a class="headerlink" href="#clustering" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#module-pewanalytics.stats.clustering" title="pewanalytics.stats.clustering"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clustering</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#module-pewanalytics.stats.irr" title="pewanalytics.stats.irr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">irr</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#module-pewanalytics.stats.dimensionality_reduction" title="pewanalytics.stats.dimensionality_reduction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dimensionality_reduction</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#module-pewanalytics.stats.mutual_info" title="pewanalytics.stats.mutual_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutual_info</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sampling</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="section" id="dimensionality-reduction">
-<h2>Dimensionality Reduction<a class="headerlink" href="#dimensionality-reduction" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pewanalytics.stats.clustering">
+<span id="clustering"></span><h2>Clustering<a class="headerlink" href="#module-pewanalytics.stats.clustering" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pewanalytics.stats.clustering.compute_hdbscan_clusters">
+<code class="sig-prename descclassname">pewanalytics.stats.clustering.</code><code class="sig-name descname">compute_hdbscan_clusters</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">min_cluster_size=100</em>, <em class="sig-param">min_samples=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/clustering.html#compute_hdbscan_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.clustering.compute_hdbscan_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses HDBSCAN clustering to automatically identify the best number of clusters and map each unit to one.
+Rows are the units, and columns are features. Returns a series with the cluster labels for each row.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>features</strong> – TF-IDF sparse matrix or a Pandas DataFrame</p></li>
+<li><p><strong>min_cluster_size</strong> – int - minimum number of documents/units that can exist in a cluster.</p></li>
+<li><p><strong>min_samples</strong> – Minimum number of samples to draw (see HDBSCAN documentation for more)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Series with the cluster ID that each row belongs to</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.stats.clustering.compute_kmeans_clusters">
+<code class="sig-prename descclassname">pewanalytics.stats.clustering.</code><code class="sig-name descname">compute_kmeans_clusters</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">k=10</em>, <em class="sig-param">return_score=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/clustering.html#compute_kmeans_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.clustering.compute_kmeans_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses K-Means from scikit-learn to cluster an arbitrary set of features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>features</strong> – TF-IDF sparse matrix or pandas DataFrame</p></li>
+<li><p><strong>k</strong> – int, number of clusters</p></li>
+<li><p><strong>return_score</strong> – bool, default=False; if True, returns a tuple with the cluster assignments and the silhouette score of the clustering</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>series corresponding to the cluster labels for each row</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
-<div class="section" id="inter-rater-reliability">
-<h2>Inter-rater Reliability<a class="headerlink" href="#inter-rater-reliability" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pewanalytics.stats.dimensionality_reduction">
+<span id="dimensionality-reduction"></span><h2>Dimensionality Reduction<a class="headerlink" href="#module-pewanalytics.stats.dimensionality_reduction" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pewanalytics.stats.dimensionality_reduction.correspondence_analysis">
+<code class="sig-prename descclassname">pewanalytics.stats.dimensionality_reduction.</code><code class="sig-name descname">correspondence_analysis</code><span class="sig-paren">(</span><em class="sig-param">edges</em>, <em class="sig-param">n=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/dimensionality_reduction.html#correspondence_analysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.dimensionality_reduction.correspondence_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>edges</strong> – edges is a dataframe of NxN where both the rows and columns are “nodes” and the values are some sort of closeness or similarity measure (like a cosine similarity matrix)</p></li>
+<li><p><strong>n</strong> – Number of dimensions to extract</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dataframe of the N dimensions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.stats.dimensionality_reduction.get_lsa">
+<code class="sig-prename descclassname">pewanalytics.stats.dimensionality_reduction.</code><code class="sig-name descname">get_lsa</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">feature_names=None</em>, <em class="sig-param">k=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/dimensionality_reduction.html#get_lsa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.dimensionality_reduction.get_lsa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs LSA on a set of features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>features</strong> – A dataframe or sparse matrix with rows are documents and columns are features</p></li>
+<li><p><strong>feature_names</strong> – An optional list of feature names (for sparse matrices)</p></li>
+<li><p><strong>k</strong> – Number of dimensions to extract</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple of two dataframes, (features x components, documents x components)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.stats.dimensionality_reduction.get_pca">
+<code class="sig-prename descclassname">pewanalytics.stats.dimensionality_reduction.</code><code class="sig-name descname">get_pca</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">feature_names=None</em>, <em class="sig-param">k=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/dimensionality_reduction.html#get_pca"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.dimensionality_reduction.get_pca" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs PCA on a set of features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>features</strong> – A dataframe or sparse matrix with rows are documents and columns are features</p></li>
+<li><p><strong>feature_names</strong> – An optional list of feature names (for sparse matrices)</p></li>
+<li><p><strong>k</strong> – Number of dimensions to extract</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple of two dataframes, (features x components, documents x components)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
-<div class="section" id="mutual-information">
-<h2>Mutual Information<a class="headerlink" href="#mutual-information" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pewanalytics.stats.irr">
+<span id="inter-rater-reliability"></span><h2>Inter-rater Reliability<a class="headerlink" href="#module-pewanalytics.stats.irr" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pewanalytics.stats.irr.compute_overall_scores">
+<code class="sig-prename descclassname">pewanalytics.stats.irr.</code><code class="sig-name descname">compute_overall_scores</code><span class="sig-paren">(</span><em class="sig-param">coder_df</em>, <em class="sig-param">document_column</em>, <em class="sig-param">outcome_column</em>, <em class="sig-param">coder_column</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#compute_overall_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.irr.compute_overall_scores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes overall inter-rater reliability scores (Krippendorf’s Alpha and Fleiss’ Kappa). Allows for more than two
+coders and code values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coder_df</strong> – A dataframe of codes</p></li>
+<li><p><strong>document_column</strong> – The column that contains IDs for the documents</p></li>
+<li><p><strong>outcome_column</strong> – The column that contains the codes</p></li>
+<li><p><strong>coder_column</strong> – The column containing values that indicate which coder assigned the code</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing the scores</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.stats.irr.compute_scores">
+<code class="sig-prename descclassname">pewanalytics.stats.irr.</code><code class="sig-name descname">compute_scores</code><span class="sig-paren">(</span><em class="sig-param">coder_df</em>, <em class="sig-param">coder1</em>, <em class="sig-param">coder2</em>, <em class="sig-param">outcome_column</em>, <em class="sig-param">document_column</em>, <em class="sig-param">coder_column</em>, <em class="sig-param">weight_column</em>, <em class="sig-param">pos_label=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#compute_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.irr.compute_scores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a variety of inter-rater reliability scores, including Cohen’s kappa, Krippendorf’s alpha, precision,
+and recall.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coder_df</strong> – A dataframe of codes</p></li>
+<li><p><strong>coder1</strong> – The value in <cite>coder_column</cite> for rows corresponding to the first coder</p></li>
+<li><p><strong>coder2</strong> – The value in <cite>coder_column</cite> for rows corresponding to the second coder</p></li>
+<li><p><strong>outcome_column</strong> – The column that contains the codes</p></li>
+<li><p><strong>document_column</strong> – The column that contains IDs for the documents</p></li>
+<li><p><strong>coder_column</strong> – The column containing values that indicate which coder assigned the code</p></li>
+<li><p><strong>weight_column</strong> – The column that contains sampling weights</p></li>
+<li><p><strong>pos_label</strong> – The value indicating a positive label (optional)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dataframe of scores, with rows corresponding to the different code values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.stats.irr.kappa_sample_size_CI">
+<code class="sig-prename descclassname">pewanalytics.stats.irr.</code><code class="sig-name descname">kappa_sample_size_CI</code><span class="sig-paren">(</span><em class="sig-param">kappa0</em>, <em class="sig-param">kappaL</em>, <em class="sig-param">props</em>, <em class="sig-param">kappaU=None</em>, <em class="sig-param">alpha=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#kappa_sample_size_CI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.irr.kappa_sample_size_CI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translated from kappaSize: <a class="reference external" href="https://github.com/cran/kappaSize/blob/master/R/CIBinary.R">https://github.com/cran/kappaSize/blob/master/R/CIBinary.R</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kappa0</strong> – The preliminary value of kappa</p></li>
+<li><p><strong>kappaL</strong> – The desired expected lower bound for a two-sided 100(1 - alpha) % confidence interval for kappa. Alternatively, if kappaU is set to NA, the procedure produces the number of required subjects for a one-sided confidence interval</p></li>
+<li><p><strong>props</strong> – The anticipated prevalence of the desired trait</p></li>
+<li><p><strong>kappaU</strong> – The desired expected upper confidence limit for kappa</p></li>
+<li><p><strong>alpha</strong> – The desired type I error rate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.stats.irr.kappa_sample_size_power">
+<code class="sig-prename descclassname">pewanalytics.stats.irr.</code><code class="sig-name descname">kappa_sample_size_power</code><span class="sig-paren">(</span><em class="sig-param">rate1</em>, <em class="sig-param">rate2</em>, <em class="sig-param">k1</em>, <em class="sig-param">k0</em>, <em class="sig-param">alpha=0.05</em>, <em class="sig-param">power=0.8</em>, <em class="sig-param">twosided=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#kappa_sample_size_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.irr.kappa_sample_size_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translated from N.cohen.kappa: <a class="reference external" href="https://cran.r-project.org/web/packages/irr/irr.pdf">https://cran.r-project.org/web/packages/irr/irr.pdf</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rate1</strong> – the probability that the first rater will record a positive diagnosis</p></li>
+<li><p><strong>rate2</strong> – the probability that the second rater will record a positive diagnosis</p></li>
+<li><p><strong>k1</strong> – the true Cohen’s Kappa statistic</p></li>
+<li><p><strong>k0</strong> – the value of kappa under the null hypothesis</p></li>
+<li><p><strong>alpha</strong> – type I error of test</p></li>
+<li><p><strong>power</strong> – the desired power to detect the difference between true kappa and hypothetical kappa</p></li>
+<li><p><strong>twosided</strong> – TRUE if test is two-sided</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns required sample size</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pewanalytics.stats.mutual_info">
+<span id="mutual-information"></span><h2>Mutual Information<a class="headerlink" href="#module-pewanalytics.stats.mutual_info" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pewanalytics.stats.mutual_info.compute_mutual_info">
+<code class="sig-prename descclassname">pewanalytics.stats.mutual_info.</code><code class="sig-name descname">compute_mutual_info</code><span class="sig-paren">(</span><em class="sig-param">y</em>, <em class="sig-param">x</em>, <em class="sig-param">weights=None</em>, <em class="sig-param">col_names=None</em>, <em class="sig-param">l=0</em>, <em class="sig-param">normalize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/mutual_info.html#compute_mutual_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.mutual_info.compute_mutual_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes pointwise mutual information for a set of observations partitioned into two groups. The function expects
+<cite>y</cite> to correspond to a list or series of values indicating which partition an observation belongs two. <cite>y</cite> must
+be a binary flag. <cite>x</cite> is a set of features (either a DataFrame or sparse matrix) where the rows correspond to
+observations and the columns represent the presence of features (you can technically run this using non-binary
+features but the results will not be as readily interpretable.) The function returns a DataFrame of metrics
+computed for each feature, including:
+- <cite>MI1</cite>: the feature’s mutual information for the positive class
+- <cite>MI0</cite>: the feature’s mutual information for the negative class
+- <cite>total</cite>: the total number of times a feature appeared
+- <cite>total_pos_with_term</cite>: the total number of times a feature appeared in positive cases
+- <cite>total_neg_with_term</cite>: the total number of times a feature appeared in negative cases
+- <cite>total_pos_neg_with_term_diff</cite>: the raw difference in the number of times a feature appeared in positive cases
+relative to negative cases
+- <cite>pct_pos_with_term</cite>: the proportion of positive cases that had the feature
+- <cite>pct_neg_with_term</cite>: the proportion of negative cases that had the feature
+- <cite>pct_pos_neg_with_term_ratio</cite>: a likelihood ratio indicating the degree to which positive case was more likely to
+have the feature than a negative case
+- <cite>pct_term_pos</cite>: of the cases that had a feature, the proportion that were in the positive class
+- <cite>pct_term_neg</cite>: of the cases that had a feature, the proportion that were in the negative class
+- <cite>pct_term_pos_neg_diff</cite>: the percentage point difference between the proportion of cases with the feature that
+were positive vs. negative
+- <cite>pct_term_pos_neg_ratio</cite>: a likelihood ratio indicating the degree to which a feature was more likely to appear
+in a positive case relative to a negative one (may not be meaningful when classes are imbalanced)</p>
+<p>Note that <cite>pct_term_pos</cite> and <cite>pct_term_neg</cite> may not be directly comparable if classes are imbalanced, and in such
+cases a <cite>pct_term_pos_neg_diff</cite> above zero or <cite>pct_term_pos_neg_ratio</cite> above 1 may not indicate a true association
+with the positive class if positive cases outnumber negative ones.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> – An array or, preferably, a pandas.Series</p></li>
+<li><p><strong>x</strong> – A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix</p></li>
+<li><p><strong>col_names</strong> – The feature names associated with the columns in matrix ‘x’</p></li>
+<li><p><strong>l</strong> – An optional Laplace smoothing parameter</p></li>
+<li><p><strong>normalize</strong> – Toggle normalization on or off (to control for feature prevalance), on by default</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dataframe of features with a variety of computed metrics including mutual information.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.stats.mutual_info.mutual_info_bar_plot">
+<code class="sig-prename descclassname">pewanalytics.stats.mutual_info.</code><code class="sig-name descname">mutual_info_bar_plot</code><span class="sig-paren">(</span><em class="sig-param">mutual_info</em>, <em class="sig-param">filter_col='MI1'</em>, <em class="sig-param">top_n=50</em>, <em class="sig-param">x_col='pct_term_pos_neg_ratio'</em>, <em class="sig-param">color='grey'</em>, <em class="sig-param">title=None</em>, <em class="sig-param">width=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/mutual_info.html#mutual_info_bar_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.mutual_info.mutual_info_bar_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a mutual information table generated by <cite>compute_mutual_info</cite>, selects the top features based on <cite>filter_col</cite>
+and then generates a bar plot of top features sorted by <cite>x_col</cite>.  Allows for an easy visualization of feature
+differences. Can subsequently call <cite>plt.show()</cite> or <cite>plt.savefig</cite> to display or save the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mutual_info</strong> – A mutual information table generated by <cite>compute_mutual_info</cite></p></li>
+<li><p><strong>filter_col</strong> – The column to use when selecting top features; sorts in descending order and picks the top <cite>top_n</cite></p></li>
+<li><p><strong>top_n</strong> – The number of features to display</p></li>
+<li><p><strong>x_col</strong> – The column by which to sort the final set of top features (after they have been selected by <cite>filter_col</cite></p></li>
+<li><p><strong>color</strong> – The color of the bars</p></li>
+<li><p><strong>title</strong> – The title of the plot</p></li>
+<li><p><strong>width</strong> – The width of the plot</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Matplotlib figure, which you can display via <cite>plt.show()</cite> or alternatively save to a file via <cite>plt.savefig(FILEPATH)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.stats.mutual_info.mutual_info_scatter_plot">
+<code class="sig-prename descclassname">pewanalytics.stats.mutual_info.</code><code class="sig-name descname">mutual_info_scatter_plot</code><span class="sig-paren">(</span><em class="sig-param">mutual_info</em>, <em class="sig-param">filter_col='MI1'</em>, <em class="sig-param">top_n=50</em>, <em class="sig-param">x_col='pct_term_pos_neg_ratio'</em>, <em class="sig-param">xlabel=None</em>, <em class="sig-param">scale_x_even=True</em>, <em class="sig-param">y_col='MI1'</em>, <em class="sig-param">ylabel=None</em>, <em class="sig-param">scale_y_even=True</em>, <em class="sig-param">color='grey'</em>, <em class="sig-param">color_col='MI1'</em>, <em class="sig-param">size_col='pct_pos_with_term'</em>, <em class="sig-param">title=None</em>, <em class="sig-param">figsize=(10</em>, <em class="sig-param">10)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/mutual_info.html#mutual_info_scatter_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.mutual_info.mutual_info_scatter_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a mutual information table generated by <cite>compute_mutual_info</cite>, selects the top features based on <cite>filter_col</cite>
+and then generates a scatter plot of top features by <cite>x_col</cite> and <cite>y_col</cite>. The names of the features will be
+displayed with varying colors and sizes depending on the variables specified in <cite>color_col</cite> and <cite>size_col</cite>.
+Allows for an easy visualization of feature differences. Can subsequently call <cite>plt.show()</cite> or <cite>plt.savefig</cite> to
+display or save the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mutual_info</strong> – A mutual information table generated by <cite>compute_mutual_info</cite></p></li>
+<li><p><strong>filter_col</strong> – The column to use when selecting top features; sorts in descending order and picks the top <cite>top_n</cite></p></li>
+<li><p><strong>top_n</strong> – The number of features to display</p></li>
+<li><p><strong>x_col</strong> – The column to use as the x-axis</p></li>
+<li><p><strong>xlabel</strong> – Label for the x-axis</p></li>
+<li><p><strong>scale_x_even</strong> – If True, set values to their ordered rank (allows for even spacing)</p></li>
+<li><p><strong>y_col</strong> – The column to use as the y-axis</p></li>
+<li><p><strong>ylabel</strong> – Label for the y-axis</p></li>
+<li><p><strong>scale_y_even</strong> – If True, set values to their ordered rank (allows for even spacing)</p></li>
+<li><p><strong>color</strong> – The color for the features</p></li>
+<li><p><strong>color_col</strong> – The column to use when shading the features</p></li>
+<li><p><strong>size_col</strong> – The column to use to size the features</p></li>
+<li><p><strong>title</strong> – The title of the plot</p></li>
+<li><p><strong>figsize</strong> – The size of the plot (tuple)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Matplotlib figure, which you can display via <cite>plt.show()</cite> or alternatively save to a file via <cite>plt.savefig(FILEPATH)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="toctree-wrapper compound">
 </div>
 <div class="section" id="indices">
@@ -83,10 +383,10 @@
 <li class="toctree-l1"><a class="reference internal" href="text.html">Text</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Stats</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-pewanalytics.stats">Stats Utilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clustering">Clustering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dimensionality-reduction">Dimensionality Reduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#inter-rater-reliability">Inter-rater Reliability</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#mutual-information">Mutual Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pewanalytics.stats.clustering">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pewanalytics.stats.dimensionality_reduction">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pewanalytics.stats.irr">Inter-rater Reliability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pewanalytics.stats.mutual_info">Mutual Information</a></li>
 </ul>
 </li>
 </ul>

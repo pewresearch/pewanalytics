@@ -66,9 +66,134 @@
 <p class="admonition-title">Warning</p>
 <p>Running these functions requires text contain no special characters</p>
 </div>
+<span class="target" id="module-pewanalytics.text"></span><dl class="function">
+<dt id="pewanalytics.text.filter_parts_of_speech">
+<code class="sig-prename descclassname">pewanalytics.text.</code><code class="sig-name descname">filter_parts_of_speech</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">filter_pos=None</em>, <em class="sig-param">exclude=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#filter_parts_of_speech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.filter_parts_of_speech" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retain words associated with parts of speech in the text if exclude = False.
+If exclude = True, exclude words associated with parts of speech.
+Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – string</p></li>
+<li><p><strong>filter_pos</strong> – array of part of speech tags (default is ‘NN’, ‘NNP’, and ‘JJ’)</p></li>
+</ul>
+</dd>
+</dl>
+<p>The full list of POS is here: <a class="reference external" href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A string comprised solely of words that matched to the specified parts of speech</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.text.get_fuzzy_partial_ratio">
+<code class="sig-prename descclassname">pewanalytics.text.</code><code class="sig-name descname">get_fuzzy_partial_ratio</code><span class="sig-paren">(</span><em class="sig-param">text1</em>, <em class="sig-param">text2</em>, <em class="sig-param">throw_loud_fail=False</em>, <em class="sig-param">timeout=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#get_fuzzy_partial_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.get_fuzzy_partial_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Useful to calculate similarity of two strings that are of noticeably different lengths.  Allows for the possibility
+that one text is a subset of the other; finds the largest overlap and computes the Levenshtein ratio on that.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text1</strong> – First string</p></li>
+<li><p><strong>text2</strong> – Second string</p></li>
+<li><p><strong>timeout</strong> – The number of seconds to wait before giving up</p></li>
+<li><p><strong>throw_loud_fail</strong> – bool; whether or not to raise an error if text decoding fails (default=False)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The partial Levenshtein ratio between the two texts</p>
+</dd>
+<dt class="field-odd">Accepts kwarg timeout</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.text.get_fuzzy_ratio">
+<code class="sig-prename descclassname">pewanalytics.text.</code><code class="sig-name descname">get_fuzzy_ratio</code><span class="sig-paren">(</span><em class="sig-param">text1</em>, <em class="sig-param">text2</em>, <em class="sig-param">throw_loud_fail=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#get_fuzzy_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.get_fuzzy_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares
+to the overall length of the texts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text1</strong> – First string</p></li>
+<li><p><strong>text2</strong> – Second string</p></li>
+<li><p><strong>throw_loud_fail</strong> – bool; whether or not to raise an error if text decoding fails (default=False)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Levenshtein ratio between the two texts</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.text.has_fragment">
+<code class="sig-prename descclassname">pewanalytics.text.</code><code class="sig-name descname">has_fragment</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">fragment</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#has_fragment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.has_fragment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a substring (“fragment”) is contained within a larger string (“text”). Uses the <cite>pewtils.decode_text</cite>
+function to process both the text and the fragment when running this check.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – The text to search</p></li>
+<li><p><strong>fragment</strong> – The fragment to search for</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether or not the text contains the fragment</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.text.remove_fragments">
+<code class="sig-prename descclassname">pewanalytics.text.</code><code class="sig-name descname">remove_fragments</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">fragments</em>, <em class="sig-param">throw_loud_fail=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text.html#remove_fragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.remove_fragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iteratively remove fragments from a string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – string</p></li>
+<li><p><strong>fragments</strong> – A list of string fragments to search for and remove</p></li>
+<li><p><strong>throw_loud_fail</strong> – bool; whether or not to raise an error if text decoding fails (default=False)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The original string, minus any parts that matched the fragments provided</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
-<div class="section" id="dates">
-<h2>Dates<a class="headerlink" href="#dates" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pewanalytics.text.dates">
+<span id="dates"></span><h2>Dates<a class="headerlink" href="#module-pewanalytics.text.dates" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pewanalytics.text.dates.DateFinder">
+<em class="property">class </em><code class="sig-prename descclassname">pewanalytics.text.dates.</code><code class="sig-name descname">DateFinder</code><a class="reference internal" href="_modules/pewanalytics/text/dates.html#DateFinder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.dates.DateFinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Search bodies of text for dates</p>
+<dl class="method">
+<dt id="pewanalytics.text.dates.DateFinder.find_dates">
+<code class="sig-name descname">find_dates</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">cutoff_date_start</em>, <em class="sig-param">cutoff_date_end</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/dates.html#DateFinder.find_dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.dates.DateFinder.find_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all of the dates (in text form and as datetime) in the text variable,
+but none before or after the start and end cutoff dates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – the text to scan for dates</p></li>
+<li><p><strong>cutoff_date_start</strong> – no dates will be found before this date</p></li>
+<li><p><strong>cutoff_date_end</strong> – no dates will be returned after this date</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of tuples containing (datetime object, raw date text)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="named-entity-recognition">
 <h2>Named Entity Recognition<a class="headerlink" href="#named-entity-recognition" title="Permalink to this headline">¶</a></h2>
@@ -80,7 +205,7 @@ model</a>.</p>
 <span class="n">roots</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="toctree-wrapper compound">
+<span class="target" id="module-pewanalytics.text.ner"></span><div class="toctree-wrapper compound">
 </div>
 <div class="section" id="indices">
 <h3>Indices<a class="headerlink" href="#indices" title="Permalink to this headline">¶</a></h3>
@@ -115,7 +240,7 @@ model</a>.</p>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Text</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#some-simple-things-you-can-do">Some simple things you can do</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#text-utilities">Text Utilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dates">Dates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pewanalytics.text.dates">Dates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#named-entity-recognition">Named Entity Recognition</a></li>
 </ul>
 </li>
