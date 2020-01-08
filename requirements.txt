@@ -36,4 +36,4 @@ unicode
 unidecode>=0.4.20
 xlsxwriter>=1.1.8
 xlrd>=1.2.0
-git+ssh://labsdeploy/pewresearch/pewtils#egg=pewtils
+https://github.com/pewresearch/pewtils#egg=pewtils
