@@ -6,13 +6,12 @@ from pewtils import decode_text
 
 
 class NamedEntityExtractor(object):
+    """
+    A wrapper around NLTK named entity extraction. May be expanded in the future to include NER models from other
+    packages like SpaCy.
+    """
     def __init__(self):
-
-        """
-        A wrapper around NLTK named entity extraction. May be expanded in the future to include NER models from other
-        packages like SpaCy.
-        """
-
+        
         pass
 
     def extract(self, text):

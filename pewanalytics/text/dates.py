@@ -8,8 +8,9 @@ from calendar import IllegalMonthError
 
 
 class DateFinder(object):
-
-    """Search bodies of text for dates"""
+    """
+    Search bodies of text for dates
+    """
 
     def __init__(self):
 

@@ -1,5 +1,5 @@
 ****************************
-the pewanalytics text module
+pewanalytics: Text Module
 ****************************
 
 
@@ -30,10 +30,31 @@ Analyze and classify lists of documents ::
 
     from pewanalytics.text import TextDataFrame
 
+.. automodule :: pewanalytics.text
+  :noindex:
+  :no-members:
+  :autosummary:
+  :autosummary-members:
+  :autosummary-inherited-members:
 
 
+.. rubric:: Text: Dates
+.. automodule :: pewanalytics.text.dates
+  :noindex:
+  :no-members:
+  :autosummary:
+  :autosummary-members:
 
-Text Utilities
+
+.. rubric:: Text: Named Entity Recognition
+.. automodule :: pewanalytics.text.ner
+  :noindex:
+  :no-members:
+  :autosummary:
+  :autosummary-members:
+
+
+Text Methods
 --------------
 
 .. warning ::

@@ -1,49 +1,64 @@
 *****************************
-the pewanalytics stats module
+pewanalytics: Stats Module
 *****************************
 
 Statistics utilities for weighting, clustering, dimensionality reduction, and inter-rater reliability
 
-Stats Utilities
----------------
-
-.. automodule :: pewanalytics.stats
-    :members:
-    :show-inheritance:
-
 Clustering
-----------
-
+++++++++++
 .. automodule :: pewanalytics.stats.clustering
-    :members:
-    :show-inheritance:
+  :noindex:
+  :no-members:
+  :autosummary:
+  :autosummary-members:
+
 
 Dimensionality Reduction
-------------------------
-
+++++++++++++++++++++++++++++++
 .. automodule :: pewanalytics.stats.dimensionality_reduction
-    :members:
+  :noindex:
+  :no-members:
+  :autosummary:
+  :autosummary-members:
 
 
 Inter-rater Reliability
------------------------
-
+++++++++++++++++++++++++++++++
 .. automodule :: pewanalytics.stats.irr
-    :members:
-    :show-inheritance:
+  :noindex:
+  :no-members:
+  :autosummary:
+  :autosummary-members:
+
 
 Mutual Information
-------------------
-
+++++++++++++++++++++++++++++++
 .. automodule :: pewanalytics.stats.mutual_info
-    :members:
-    :show-inheritance:
+  :noindex:
+  :no-members:
+  :autosummary:
+  :autosummary-members:
+
+
+Sampling
+++++++++++++++++++++++++++++++
+.. automodule :: pewanalytics.stats.sampling
+  :noindex:
+  :no-members:
+  :autosummary:
+  :autosummary-members:
 
 
 
 .. toctree::
-   :caption: Navigation
-   :maxdepth: 2
+   :caption: **pewanalytics.stats** Module:
+   :maxdepth: 1
+
+   Clustering <clustering>
+   Inter-rater Reliability <irr>
+   Dimensionality Reduction <dimensionality_reduction>
+   Mutual Information <mutual_info>
+   Sampling <sampling>
 
 Indices
 =======

@@ -1,3 +1,6 @@
+"""
+
+"""
 from __future__ import print_function
 from __future__ import division
 from builtins import zip
@@ -128,6 +131,26 @@ def compute_balanced_sample_weights(sample, weight_vars, weight_column=None):
 
 
 class SampleExtractor(object):
+    """
+    A helper class for extracting samples using various sampling methods. After specifying the sampling
+    options on the SampleExtractor, you can make multiple calls to `extract`, passing in a DataFrame from
+    which to sample, and the desired size of the sample. The available sampling methods are:
+
+    - all: Returns all of the IDs
+    - random: Returns a random sample
+    - stratify: Proportional stratification, method from Kish, Leslie. "Survey sampling." (1965). Chapter 4.
+    - stratify_even: Sample evenly from each strata (will obviously not be representative)
+    - stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one
+    observation from each strata (if sample size is small and/or there are many small strata, the resulting sample
+    may be far from representative)
+
+    :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify,
+    stratify_even, stratify_guaranteed
+    :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on
+    :param id_col: column in the DataFrame to be used as the unique ID of observations
+    :param verbose: Whether or not to print information during the sampling process (default=False)
+    :param seed: Random seed (optional)
+    """
     def __init__(
         self,
         sampling_strategy="random",
@@ -136,28 +159,6 @@ class SampleExtractor(object):
         verbose=False,
         seed=None,
     ):
-
-        """
-        A helper class for extracting samples using various sampling methods. After specifying the sampling
-        options on the SampleExtractor, you can make multiple calls to `extract`, passing in a DataFrame from
-        which to sample, and the desired size of the sample. The available sampling methods are:
-
-        - all: Returns all of the IDs
-        - random: Returns a random sample
-        - stratify: Proportional stratification, method from Kish, Leslie. "Survey sampling." (1965). Chapter 4.
-        - stratify_even: Sample evenly from each strata (will obviously not be representative)
-        - stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one
-        observation from each strata (if sample size is small and/or there are many small strata, the resulting sample
-        may be far from representative)
-
-        :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify,
-        stratify_even, stratify_guaranteed
-        :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on
-        :param id_col: column in the DataFrame to be used as the unique ID of observations
-        :param verbose: Whether or not to print information during the sampling process (default=False)
-        :param seed: Random seed (optional)
-        """
-
         strategies = [
             "all",
             "random",

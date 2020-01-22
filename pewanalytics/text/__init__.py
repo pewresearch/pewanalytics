@@ -96,10 +96,10 @@ def filter_parts_of_speech(text, filter_pos=None, exclude=False):
     If exclude = True, exclude words associated with parts of speech.
     Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)
 
+    | The full list of POS is here: https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
+
     :param text: string
     :param filter_pos: array of part of speech tags (default is 'NN', 'NNP', and 'JJ')
-    The full list of POS is here: https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
-
     :return: A string comprised solely of words that matched to the specified parts of speech
     """
 
@@ -244,7 +244,7 @@ class TextOverlapExtractor(object):
     def __init__(self, tokenizer=None):
 
         """
-        A helper class designed to identify overlapping sections between two strings. 
+        A helper class designed to identify overlapping sections between two strings.
 
         :param tokenizer: The tokenizer to use (default = SentenceTokenizer())
         """

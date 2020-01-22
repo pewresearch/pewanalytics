@@ -17,22 +17,22 @@ def compute_mutual_info(y, x, weights=None, col_names=None, l=0, normalize=True)
     observations and the columns represent the presence of features (you can technically run this using non-binary
     features but the results will not be as readily interpretable.) The function returns a DataFrame of metrics
     computed for each feature, including:
-    - `MI1`: the feature's mutual information for the positive class
-    - `MI0`: the feature's mutual information for the negative class
-    - `total`: the total number of times a feature appeared
-    - `total_pos_with_term`: the total number of times a feature appeared in positive cases
-    - `total_neg_with_term`: the total number of times a feature appeared in negative cases
-    - `total_pos_neg_with_term_diff`: the raw difference in the number of times a feature appeared in positive cases
+    |- `MI1`: the feature's mutual information for the positive class
+    |- `MI0`: the feature's mutual information for the negative class
+    |- `total`: the total number of times a feature appeared
+    |- `total_pos_with_term`: the total number of times a feature appeared in positive cases
+    |- `total_neg_with_term`: the total number of times a feature appeared in negative cases
+    |- `total_pos_neg_with_term_diff`: the raw difference in the number of times a feature appeared in positive cases \
     relative to negative cases
-    - `pct_pos_with_term`: the proportion of positive cases that had the feature
-    - `pct_neg_with_term`: the proportion of negative cases that had the feature
-    - `pct_pos_neg_with_term_ratio`: a likelihood ratio indicating the degree to which positive case was more likely to
+    |- `pct_pos_with_term`: the proportion of positive cases that had the feature
+    |- `pct_neg_with_term`: the proportion of negative cases that had the feature
+    |- `pct_pos_neg_with_term_ratio`: a likelihood ratio indicating the degree to which positive case was more likely to \
     have the feature than a negative case
-    - `pct_term_pos`: of the cases that had a feature, the proportion that were in the positive class
-    - `pct_term_neg`: of the cases that had a feature, the proportion that were in the negative class
-    - `pct_term_pos_neg_diff`: the percentage point difference between the proportion of cases with the feature that
+    |- `pct_term_pos`: of the cases that had a feature, the proportion that were in the positive class
+    |- `pct_term_neg`: of the cases that had a feature, the proportion that were in the negative class
+    |- `pct_term_pos_neg_diff`: the percentage point difference between the proportion of cases with the feature that \
     were positive vs. negative
-    - `pct_term_pos_neg_ratio`: a likelihood ratio indicating the degree to which a feature was more likely to appear
+    |- `pct_term_pos_neg_ratio`: a likelihood ratio indicating the degree to which a feature was more likely to appear \
     in a positive case relative to a negative one (may not be meaningful when classes are imbalanced)
 
     Note that `pct_term_pos` and `pct_term_neg` may not be directly comparable if classes are imbalanced, and in such

@@ -320,7 +320,7 @@ def compute_overall_scores(coder_df, document_column, outcome_column, coder_colu
     """
     Computes overall inter-rater reliability scores (Krippendorf's Alpha and Fleiss' Kappa). Allows for more than two
     coders and code values.
-    
+
     :param coder_df: A dataframe of codes
     :param document_column: The column that contains IDs for the documents
     :param outcome_column: The column that contains the codes
