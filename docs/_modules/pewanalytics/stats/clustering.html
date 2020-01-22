@@ -40,7 +40,7 @@
 <span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">linear_kernel</span>
 
 
-<div class="viewcode-block" id="compute_kmeans_clusters"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.clustering.compute_kmeans_clusters">[docs]</a><span class="k">def</span> <span class="nf">compute_kmeans_clusters</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">return_score</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_kmeans_clusters"><a class="viewcode-back" href="../../../clustering.html#pewanalytics.stats.clustering.compute_kmeans_clusters">[docs]</a><span class="k">def</span> <span class="nf">compute_kmeans_clusters</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">return_score</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses K-Means from scikit-learn to cluster an arbitrary set of features.</span>
 
@@ -60,7 +60,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">km</span><span class="o">.</span><span class="n">labels_</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">silhouette_avg</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="compute_hdbscan_clusters"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.clustering.compute_hdbscan_clusters">[docs]</a><span class="k">def</span> <span class="nf">compute_hdbscan_clusters</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_hdbscan_clusters"><a class="viewcode-back" href="../../../clustering.html#pewanalytics.stats.clustering.compute_hdbscan_clusters">[docs]</a><span class="k">def</span> <span class="nf">compute_hdbscan_clusters</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses HDBSCAN clustering to automatically identify the best number of clusters and map each unit to one.</span>
 <span class="sd">    Rows are the units, and columns are features. Returns a series with the cluster labels for each row.</span>

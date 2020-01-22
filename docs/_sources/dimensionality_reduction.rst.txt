@@ -1,0 +1,9 @@
+*****************************
+Dimentionality Reduction
+*****************************
+
+``stats.dimensionality_reduction``
+
+.. automodule :: pewanalytics.stats.dimensionality_reduction
+  :autosummary:
+  :members:

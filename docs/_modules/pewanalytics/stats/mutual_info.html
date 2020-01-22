@@ -41,7 +41,7 @@
 <span class="kn">from</span> <span class="nn">pewtils</span> <span class="kn">import</span> <span class="n">is_not_null</span><span class="p">,</span> <span class="n">scale_range</span>
 
 
-<div class="viewcode-block" id="compute_mutual_info"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.mutual_info.compute_mutual_info">[docs]</a><span class="k">def</span> <span class="nf">compute_mutual_info</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">col_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_mutual_info"><a class="viewcode-back" href="../../../mutual_info.html#pewanalytics.stats.mutual_info.compute_mutual_info">[docs]</a><span class="k">def</span> <span class="nf">compute_mutual_info</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">col_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes pointwise mutual information for a set of observations partitioned into two groups. The function expects</span>
@@ -50,22 +50,22 @@
 <span class="sd">    observations and the columns represent the presence of features (you can technically run this using non-binary</span>
 <span class="sd">    features but the results will not be as readily interpretable.) The function returns a DataFrame of metrics</span>
 <span class="sd">    computed for each feature, including:</span>
-<span class="sd">    - `MI1`: the feature&#39;s mutual information for the positive class</span>
-<span class="sd">    - `MI0`: the feature&#39;s mutual information for the negative class</span>
-<span class="sd">    - `total`: the total number of times a feature appeared</span>
-<span class="sd">    - `total_pos_with_term`: the total number of times a feature appeared in positive cases</span>
-<span class="sd">    - `total_neg_with_term`: the total number of times a feature appeared in negative cases</span>
-<span class="sd">    - `total_pos_neg_with_term_diff`: the raw difference in the number of times a feature appeared in positive cases</span>
+<span class="sd">    |- `MI1`: the feature&#39;s mutual information for the positive class</span>
+<span class="sd">    |- `MI0`: the feature&#39;s mutual information for the negative class</span>
+<span class="sd">    |- `total`: the total number of times a feature appeared</span>
+<span class="sd">    |- `total_pos_with_term`: the total number of times a feature appeared in positive cases</span>
+<span class="sd">    |- `total_neg_with_term`: the total number of times a feature appeared in negative cases</span>
+<span class="sd">    |- `total_pos_neg_with_term_diff`: the raw difference in the number of times a feature appeared in positive cases \</span>
 <span class="sd">    relative to negative cases</span>
-<span class="sd">    - `pct_pos_with_term`: the proportion of positive cases that had the feature</span>
-<span class="sd">    - `pct_neg_with_term`: the proportion of negative cases that had the feature</span>
-<span class="sd">    - `pct_pos_neg_with_term_ratio`: a likelihood ratio indicating the degree to which positive case was more likely to</span>
+<span class="sd">    |- `pct_pos_with_term`: the proportion of positive cases that had the feature</span>
+<span class="sd">    |- `pct_neg_with_term`: the proportion of negative cases that had the feature</span>
+<span class="sd">    |- `pct_pos_neg_with_term_ratio`: a likelihood ratio indicating the degree to which positive case was more likely to \</span>
 <span class="sd">    have the feature than a negative case</span>
-<span class="sd">    - `pct_term_pos`: of the cases that had a feature, the proportion that were in the positive class</span>
-<span class="sd">    - `pct_term_neg`: of the cases that had a feature, the proportion that were in the negative class</span>
-<span class="sd">    - `pct_term_pos_neg_diff`: the percentage point difference between the proportion of cases with the feature that</span>
+<span class="sd">    |- `pct_term_pos`: of the cases that had a feature, the proportion that were in the positive class</span>
+<span class="sd">    |- `pct_term_neg`: of the cases that had a feature, the proportion that were in the negative class</span>
+<span class="sd">    |- `pct_term_pos_neg_diff`: the percentage point difference between the proportion of cases with the feature that \</span>
 <span class="sd">    were positive vs. negative</span>
-<span class="sd">    - `pct_term_pos_neg_ratio`: a likelihood ratio indicating the degree to which a feature was more likely to appear</span>
+<span class="sd">    |- `pct_term_pos_neg_ratio`: a likelihood ratio indicating the degree to which a feature was more likely to appear \</span>
 <span class="sd">    in a positive case relative to a negative one (may not be meaningful when classes are imbalanced)</span>
 
 <span class="sd">    Note that `pct_term_pos` and `pct_term_neg` may not be directly comparable if classes are imbalanced, and in such</span>
@@ -170,7 +170,7 @@
     <span class="k">return</span> <span class="n">df</span></div>
 
 
-<div class="viewcode-block" id="mutual_info_bar_plot"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.mutual_info.mutual_info_bar_plot">[docs]</a><span class="k">def</span> <span class="nf">mutual_info_bar_plot</span><span class="p">(</span>
+<div class="viewcode-block" id="mutual_info_bar_plot"><a class="viewcode-back" href="../../../mutual_info.html#pewanalytics.stats.mutual_info.mutual_info_bar_plot">[docs]</a><span class="k">def</span> <span class="nf">mutual_info_bar_plot</span><span class="p">(</span>
     <span class="n">mutual_info</span><span class="p">,</span>
     <span class="n">filter_col</span><span class="o">=</span><span class="s2">&quot;MI1&quot;</span><span class="p">,</span>
     <span class="n">top_n</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
@@ -221,7 +221,7 @@
     <span class="k">return</span> <span class="n">g</span></div>
 
 
-<div class="viewcode-block" id="mutual_info_scatter_plot"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.mutual_info.mutual_info_scatter_plot">[docs]</a><span class="k">def</span> <span class="nf">mutual_info_scatter_plot</span><span class="p">(</span>
+<div class="viewcode-block" id="mutual_info_scatter_plot"><a class="viewcode-back" href="../../../mutual_info.html#pewanalytics.stats.mutual_info.mutual_info_scatter_plot">[docs]</a><span class="k">def</span> <span class="nf">mutual_info_scatter_plot</span><span class="p">(</span>
     <span class="n">mutual_info</span><span class="p">,</span>
     <span class="n">filter_col</span><span class="o">=</span><span class="s2">&quot;MI1&quot;</span><span class="p">,</span>
     <span class="n">top_n</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>

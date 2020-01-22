@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Clustering &#8212; pewanalytics 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Inter-rater Reliability" href="irr.html" />
+    <link rel="prev" title="pewanalytics: Stats Module" href="stats.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="clustering">
+<h1>Clustering<a class="headerlink" href="#clustering" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">stats.clustering</span></code></p>
+<span class="target" id="module-pewanalytics.stats.clustering"></span><p><strong>Functions</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.clustering.compute_hdbscan_clusters" title="pewanalytics.stats.clustering.compute_hdbscan_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_hdbscan_clusters</span></code></a>(features[, …])</p></td>
+<td><p>Uses HDBSCAN clustering to automatically identify the best number of clusters and map each unit to one.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.stats.clustering.compute_kmeans_clusters" title="pewanalytics.stats.clustering.compute_kmeans_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_kmeans_clusters</span></code></a>(features[, k, …])</p></td>
+<td><p>Uses K-Means from scikit-learn to cluster an arbitrary set of features.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="pewanalytics.stats.clustering.compute_hdbscan_clusters">
+<code class="sig-prename descclassname">pewanalytics.stats.clustering.</code><code class="sig-name descname">compute_hdbscan_clusters</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">min_cluster_size=100</em>, <em class="sig-param">min_samples=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/clustering.html#compute_hdbscan_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.clustering.compute_hdbscan_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses HDBSCAN clustering to automatically identify the best number of clusters and map each unit to one.
+Rows are the units, and columns are features. Returns a series with the cluster labels for each row.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>features</strong> – TF-IDF sparse matrix or a Pandas DataFrame</p></li>
+<li><p><strong>min_cluster_size</strong> – int - minimum number of documents/units that can exist in a cluster.</p></li>
+<li><p><strong>min_samples</strong> – Minimum number of samples to draw (see HDBSCAN documentation for more)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Series with the cluster ID that each row belongs to</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.stats.clustering.compute_kmeans_clusters">
+<code class="sig-prename descclassname">pewanalytics.stats.clustering.</code><code class="sig-name descname">compute_kmeans_clusters</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">k=10</em>, <em class="sig-param">return_score=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/clustering.html#compute_kmeans_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.clustering.compute_kmeans_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses K-Means from scikit-learn to cluster an arbitrary set of features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>features</strong> – TF-IDF sparse matrix or pandas DataFrame</p></li>
+<li><p><strong>k</strong> – int, number of clusters</p></li>
+<li><p><strong>return_score</strong> – bool, default=False; if True, returns a tuple with the cluster assignments and the silhouette score of the clustering</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>series corresponding to the cluster labels for each row</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pewanalytics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="text.html">Text</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="stats.html">Stats</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="stats.html#clustering">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html#dimensionality-reduction">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html#inter-rater-reliability">Inter-rater Reliability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html#mutual-information">Mutual Information</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="stats.html#sampling">Sampling</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="stats.html">pewanalytics: Stats Module</a><ul>
+      <li>Previous: <a href="stats.html" title="previous chapter">pewanalytics: Stats Module</a></li>
+      <li>Next: <a href="irr.html" title="next chapter">Inter-rater Reliability</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Pew Research Center.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/clustering.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

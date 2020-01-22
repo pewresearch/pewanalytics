@@ -80,7 +80,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">components</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_pca"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.dimensionality_reduction.get_pca">[docs]</a><span class="k">def</span> <span class="nf">get_pca</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="get_pca"><a class="viewcode-back" href="../../../dimensionality_reduction.html#pewanalytics.stats.dimensionality_reduction.get_pca">[docs]</a><span class="k">def</span> <span class="nf">get_pca</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs PCA on a set of features.</span>
@@ -96,7 +96,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_lsa"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.dimensionality_reduction.get_lsa">[docs]</a><span class="k">def</span> <span class="nf">get_lsa</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="get_lsa"><a class="viewcode-back" href="../../../dimensionality_reduction.html#pewanalytics.stats.dimensionality_reduction.get_lsa">[docs]</a><span class="k">def</span> <span class="nf">get_lsa</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs LSA on a set of features.</span>
@@ -112,9 +112,11 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="correspondence_analysis"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.dimensionality_reduction.correspondence_analysis">[docs]</a><span class="k">def</span> <span class="nf">correspondence_analysis</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="correspondence_analysis"><a class="viewcode-back" href="../../../dimensionality_reduction.html#pewanalytics.stats.dimensionality_reduction.correspondence_analysis">[docs]</a><span class="k">def</span> <span class="nf">correspondence_analysis</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Performs CA on a set of features.</span>
+
 <span class="sd">    :param edges: edges is a dataframe of NxN where both the rows and columns are &quot;nodes&quot; and the values are some sort of closeness or similarity measure (like a cosine similarity matrix)</span>
 <span class="sd">    :param n: Number of dimensions to extract</span>
 <span class="sd">    :return: A dataframe of the N dimensions</span>

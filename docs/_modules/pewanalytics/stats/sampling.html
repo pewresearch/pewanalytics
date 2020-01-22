@@ -1,0 +1,451 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pewanalytics.stats.sampling &#8212; pewanalytics 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pewanalytics.stats.sampling</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">zip</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">range</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">object</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="compute_sample_weights_from_frame"><a class="viewcode-back" href="../../../sampling.html#pewanalytics.stats.sampling.compute_sample_weights_from_frame">[docs]</a><span class="k">def</span> <span class="nf">compute_sample_weights_from_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">weight_vars</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes two dataframes and computes sampling weights for the second one, based on the first. The first dataframe</span>
+<span class="sd">    should be equivalent to the population that the second dataframe, a sample, was drawn from. Weights will be</span>
+<span class="sd">    calculated based on the differences in the distribution of one or more variables specified in `weight_vars`</span>
+<span class="sd">    (these should be the names of columns). Returns a series equal in length to the `sample` with the computed weights.</span>
+
+<span class="sd">    :param frame: DataFrame (must contain all of the columns specified in `weight_vars`)</span>
+<span class="sd">    :param sample: DataFrame (must contain all of the columns specified in `weight_vars`)</span>
+<span class="sd">    :param weight_vars: The names of the columns to use when computing weights.</span>
+<span class="sd">    :return: A Series containing the weights for each row in the `sample`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">weight_vars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="n">frame</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">sample</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">sample_grouped</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">weight_vars</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="n">sample_grouped</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+        <span class="n">frame_grouped</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">weight_vars</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="n">frame_grouped</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">frame_grouped</span> <span class="o">/</span> <span class="n">sample_grouped</span>
+        <span class="n">weights</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">weights</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">weight_vars</span> <span class="ow">and</span> <span class="n">c</span> <span class="o">!=</span> <span class="s2">&quot;weight&quot;</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">weights</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sample</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                <span class="n">weights</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="n">weight_vars</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">index</span>
+            <span class="n">sample</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                <span class="n">weights</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="n">weight_vars</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="n">weight_vars</span>
+            <span class="p">)</span>
+            <span class="n">sample</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sample</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="k">return</span> <span class="n">sample</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="compute_balanced_sample_weights"><a class="viewcode-back" href="../../../sampling.html#pewanalytics.stats.sampling.compute_balanced_sample_weights">[docs]</a><span class="k">def</span> <span class="nf">compute_balanced_sample_weights</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">weight_vars</span><span class="p">,</span> <span class="n">weight_column</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a DataFrame and one or more column names (`weight_vars`) and computes weights such that every unique</span>
+<span class="sd">    combination of values in the weighting columns are balanced (when weighted, the sum of the observations with each</span>
+<span class="sd">    combination will be equal to one another.)</span>
+
+<span class="sd">    :param sample: DataFrame (must contain all of the columns specified in `weight_vars`)</span>
+<span class="sd">    :param weight_vars: The names of the columns to use when computing weights.</span>
+<span class="sd">    :param weight_column: An option column containing existing weights, which can be factored into the new weights.</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">weight_vars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="n">num_valid_combos</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">weight_vars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">weight_vars</span><span class="p">))</span>
+        <span class="n">combo_weights</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">combos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">set</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="nb">tuple</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">weight_vars</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sample</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">combos</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">weight_column</span><span class="p">:</span>
+                <span class="n">combo_weights</span><span class="p">[</span><span class="n">combo</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                    <span class="n">sample</span><span class="p">[</span>
+                        <span class="nb">eval</span><span class="p">(</span>
+                            <span class="s2">&quot; &amp; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                <span class="p">[</span>
+                                    <span class="s2">&quot;(sample[&#39;</span><span class="si">{}</span><span class="s2">&#39;]==</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+                                    <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">weight_vars</span><span class="p">,</span> <span class="n">combo</span><span class="p">)</span>
+                                <span class="p">]</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="p">][</span><span class="n">weight_column</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="n">weight_column</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">combo_weights</span><span class="p">[</span><span class="n">combo</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span>
+                        <span class="n">sample</span><span class="p">[</span>
+                            <span class="nb">eval</span><span class="p">(</span>
+                                <span class="s2">&quot; &amp; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                    <span class="p">[</span>
+                                        <span class="s2">&quot;(sample[&#39;</span><span class="si">{}</span><span class="s2">&#39;]==</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+                                        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">weight_vars</span><span class="p">,</span> <span class="n">combo</span><span class="p">)</span>
+                                    <span class="p">]</span>
+                                <span class="p">)</span>
+                            <span class="p">)</span>
+                        <span class="p">]</span>
+                    <span class="p">)</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">combo_weights</span><span class="p">[</span><span class="n">combo</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">num_valid_combos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">combo_weights</span><span class="p">[</span><span class="n">combo</span><span class="p">]</span>
+
+        <span class="n">balanced_ratio</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">num_valid_combos</span><span class="p">)</span>
+        <span class="n">combo_weights</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">balanced_ratio</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">combo_weights</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="n">sample</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">combo_weights</span><span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">weight_vars</span><span class="p">])],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sample</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="k">return</span> <span class="n">sample</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="SampleExtractor"><a class="viewcode-back" href="../../../sampling.html#pewanalytics.stats.sampling.SampleExtractor">[docs]</a><span class="k">class</span> <span class="nc">SampleExtractor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A helper class for extracting samples using various sampling methods. After specifying the sampling</span>
+<span class="sd">    options on the SampleExtractor, you can make multiple calls to `extract`, passing in a DataFrame from</span>
+<span class="sd">    which to sample, and the desired size of the sample. The available sampling methods are:</span>
+
+<span class="sd">    - all: Returns all of the IDs</span>
+<span class="sd">    - random: Returns a random sample</span>
+<span class="sd">    - stratify: Proportional stratification, method from Kish, Leslie. &quot;Survey sampling.&quot; (1965). Chapter 4.</span>
+<span class="sd">    - stratify_even: Sample evenly from each strata (will obviously not be representative)</span>
+<span class="sd">    - stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one</span>
+<span class="sd">    observation from each strata (if sample size is small and/or there are many small strata, the resulting sample</span>
+<span class="sd">    may be far from representative)</span>
+
+<span class="sd">    :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify,</span>
+<span class="sd">    stratify_even, stratify_guaranteed</span>
+<span class="sd">    :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on</span>
+<span class="sd">    :param id_col: column in the DataFrame to be used as the unique ID of observations</span>
+<span class="sd">    :param verbose: Whether or not to print information during the sampling process (default=False)</span>
+<span class="sd">    :param seed: Random seed (optional)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sampling_strategy</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
+        <span class="n">stratify_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">id_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">strategies</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;all&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;random&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;stratify&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;stratify_even&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;stratify_guaranteed&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">sampling_strategy</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">strategies</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;You must choose one of the following sampling strategies: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">strategies</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stratify_by</span> <span class="o">=</span> <span class="n">stratify_by</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_col</span> <span class="o">=</span> <span class="n">id_col</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span> <span class="o">=</span> <span class="n">sampling_strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()))</span>
+
+<div class="viewcode-block" id="SampleExtractor.extract"><a class="viewcode-back" href="../../../sampling.html#pewanalytics.stats.sampling.SampleExtractor.extract">[docs]</a>    <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract a sample from a DataFrame</span>
+
+<span class="sd">        :param df: The DataFrame to sample from</span>
+<span class="sd">        :param sample_size: The desired size of the sample</span>
+<span class="sd">        :return: A list of IDs reflecting the observations selected from the DataFrame during sampling</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">doc_ids</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+            <span class="n">doc_ids</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+            <span class="n">doc_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_sample</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_col</span><span class="p">],</span> <span class="n">sample_size</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;stratify&quot;</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Stratify on columns: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stratify_by</span><span class="p">)))</span>
+
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;_stratify_by&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stratify_by</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># So you can pass in a decimal proportion of total dataframe or number of samples</span>
+            <span class="n">sample_n</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">sample_size</span>
+                <span class="k">if</span> <span class="n">sample_size</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+                <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">sample_size</span> <span class="o">*</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span> <span class="o">==</span> <span class="s2">&quot;stratify&quot;</span><span class="p">:</span>
+                <span class="n">doc_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stratify_sample</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">sample_n</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span> <span class="o">==</span> <span class="s2">&quot;stratify_even&quot;</span><span class="p">:</span>
+                <span class="n">doc_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stratify_even_sample</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">sample_n</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span> <span class="o">==</span> <span class="s2">&quot;stratify_guaranteed&quot;</span><span class="p">:</span>
+                <span class="n">doc_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stratify_guaranteed_sample</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">sample_n</span><span class="p">)</span>
+
+            <span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;_stratify_by&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sample of </span><span class="si">%i</span><span class="s2"> extracted&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_random_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Basic random sample&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sample_size</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sample_size</span><span class="p">),</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">df</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">sample_size</span><span class="p">),</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_stratify_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">sample_n</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Kish-style stratification&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Subset &amp; copy cols that we care about</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()[[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_col</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;_stratify_by&quot;</span><span class="p">]]</span>
+        <span class="n">frame_size</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Shuffle the dataframe</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Random seed: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">))</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dataframe before sorting: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()))</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="c1"># Re-sort grouped by strata</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;_stratify_by&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">sort_index</span><span class="p">())</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">frame_size</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dataframe after shuffle &amp; groupby sorting: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()))</span>
+
+        <span class="n">skip_interval</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">frame_size</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">sample_n</span><span class="p">)</span>
+
+        <span class="n">start_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">skip_interval</span><span class="p">)</span>  <span class="c1"># index to start from</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Start index: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_index</span><span class="p">))</span>
+        <span class="n">sample_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sample_n</span><span class="p">)</span> <span class="o">+</span> <span class="n">start_index</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">sample_n</span><span class="p">)</span> <span class="o">*</span> <span class="n">skip_interval</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Return the real id column</span>
+        <span class="n">sample_ids</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">sample_index</span><span class="p">)][</span><span class="bp">self</span><span class="o">.</span><span class="n">id_col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="k">return</span> <span class="n">sample_ids</span>
+
+    <span class="k">def</span> <span class="nf">_stratify_even_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">):</span>
+
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">docs_per_strata</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">sample_size</span><span class="p">)</span>
+            <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;_stratify_by&quot;</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_col</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Drawing even samples of </span><span class="si">{}</span><span class="s2"> across all stratification groups&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">docs_per_strata</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">doc_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">strata</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;_stratify_by&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="n">strata_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;_stratify_by&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">strata</span><span class="p">]</span>
+            <span class="n">doc_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">strata_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">docs_per_strata</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">sample_size</span><span class="p">:</span>
+            <span class="n">doc_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">sample_size</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">))[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">doc_ids</span>
+
+    <span class="k">def</span> <span class="nf">_stratify_guaranteed_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">):</span>
+
+        <span class="c1"># Number of groups to stratify by must be less than the total sample size</span>
+        <span class="n">strata_groups</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;_stratify_by&quot;</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_col</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">sample_size</span> <span class="o">&gt;</span> <span class="n">strata_groups</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Sampling one document per strata first (</span><span class="si">{}</span><span class="s2"> strata total)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">strata_groups</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="n">strata_one</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;_stratify_by&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">))[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_col</span><span class="p">]</span>
+                <span class="o">.</span><span class="n">values</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;There are more strata groups (</span><span class="si">{}</span><span class="s2">) than things to sample: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">strata_groups</span><span class="p">,</span> <span class="n">sample_size</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="n">strata_one</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;_stratify_by&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">))[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_col</span><span class="p">]</span>
+                <span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">sample_size</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">values</span>
+            <span class="p">)</span>
+
+        <span class="n">left_to_sample</span> <span class="o">=</span> <span class="n">sample_size</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">strata_one</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">left_to_sample</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">doc_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stratify_sample</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_col</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">strata_one</span><span class="p">)],</span> <span class="n">left_to_sample</span>
+            <span class="p">)</span>
+            <span class="n">doc_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">strata_one</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nothing left to sample, no stratification applied&quot;</span><span class="p">)</span>
+            <span class="n">doc_ids</span> <span class="o">=</span> <span class="n">strata_one</span>
+
+        <span class="k">return</span> <span class="n">doc_ids</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">pewanalytics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../text.html">Text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../stats.html">Stats</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Pew Research Center.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

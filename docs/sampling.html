@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sampling &#8212; pewanalytics 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Mutual Information" href="mutual_info.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="sampling">
+<h1>Sampling<a class="headerlink" href="#sampling" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">stats.sampling</span></code></p>
+<span class="target" id="module-pewanalytics.stats.sampling"></span><p><strong>Classes</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.sampling.SampleExtractor" title="pewanalytics.stats.sampling.SampleExtractor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SampleExtractor</span></code></a>([sampling_strategy, …])</p></td>
+<td><p>A helper class for extracting samples using various sampling methods.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.sampling.compute_balanced_sample_weights" title="pewanalytics.stats.sampling.compute_balanced_sample_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_balanced_sample_weights</span></code></a>(sample, …)</p></td>
+<td><p>Takes a DataFrame and one or more column names (<cite>weight_vars</cite>) and computes weights such that every unique</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.stats.sampling.compute_sample_weights_from_frame" title="pewanalytics.stats.sampling.compute_sample_weights_from_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_sample_weights_from_frame</span></code></a>(frame, …)</p></td>
+<td><p>Takes two dataframes and computes sampling weights for the second one, based on the first.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="pewanalytics.stats.sampling.SampleExtractor">
+<em class="property">class </em><code class="sig-prename descclassname">pewanalytics.stats.sampling.</code><code class="sig-name descname">SampleExtractor</code><span class="sig-paren">(</span><em class="sig-param">sampling_strategy='random'</em>, <em class="sig-param">stratify_by=None</em>, <em class="sig-param">id_col=None</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#SampleExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.sampling.SampleExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper class for extracting samples using various sampling methods. After specifying the sampling
+options on the SampleExtractor, you can make multiple calls to <cite>extract</cite>, passing in a DataFrame from
+which to sample, and the desired size of the sample. The available sampling methods are:</p>
+<ul class="simple">
+<li><p>all: Returns all of the IDs</p></li>
+<li><p>random: Returns a random sample</p></li>
+<li><p>stratify: Proportional stratification, method from Kish, Leslie. “Survey sampling.” (1965). Chapter 4.</p></li>
+<li><p>stratify_even: Sample evenly from each strata (will obviously not be representative)</p></li>
+<li><p>stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one</p></li>
+</ul>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.sampling.SampleExtractor.extract" title="pewanalytics.stats.sampling.SampleExtractor.extract"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract</span></code></a>(df, sample_size)</p></td>
+<td><p>Extract a sample from a DataFrame</p></td>
+</tr>
+</tbody>
+</table>
+<p>observation from each strata (if sample size is small and/or there are many small strata, the resulting sample
+may be far from representative)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sampling_strategy</strong> – The method to be used to extract samples. Options are: all, random, stratify,</p>
+</dd>
+</dl>
+<p>stratify_even, stratify_guaranteed
+:param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on
+:param id_col: column in the DataFrame to be used as the unique ID of observations
+:param verbose: Whether or not to print information during the sampling process (default=False)
+:param seed: Random seed (optional)</p>
+<dl class="method">
+<dt id="pewanalytics.stats.sampling.SampleExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">sample_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#SampleExtractor.extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.sampling.SampleExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract a sample from a DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – The DataFrame to sample from</p></li>
+<li><p><strong>sample_size</strong> – The desired size of the sample</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of IDs reflecting the observations selected from the DataFrame during sampling</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.stats.sampling.compute_balanced_sample_weights">
+<code class="sig-prename descclassname">pewanalytics.stats.sampling.</code><code class="sig-name descname">compute_balanced_sample_weights</code><span class="sig-paren">(</span><em class="sig-param">sample</em>, <em class="sig-param">weight_vars</em>, <em class="sig-param">weight_column=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#compute_balanced_sample_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.sampling.compute_balanced_sample_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a DataFrame and one or more column names (<cite>weight_vars</cite>) and computes weights such that every unique
+combination of values in the weighting columns are balanced (when weighted, the sum of the observations with each
+combination will be equal to one another.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample</strong> – DataFrame (must contain all of the columns specified in <cite>weight_vars</cite>)</p></li>
+<li><p><strong>weight_vars</strong> – The names of the columns to use when computing weights.</p></li>
+<li><p><strong>weight_column</strong> – An option column containing existing weights, which can be factored into the new weights.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewanalytics.stats.sampling.compute_sample_weights_from_frame">
+<code class="sig-prename descclassname">pewanalytics.stats.sampling.</code><code class="sig-name descname">compute_sample_weights_from_frame</code><span class="sig-paren">(</span><em class="sig-param">frame</em>, <em class="sig-param">sample</em>, <em class="sig-param">weight_vars</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#compute_sample_weights_from_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.sampling.compute_sample_weights_from_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes two dataframes and computes sampling weights for the second one, based on the first. The first dataframe
+should be equivalent to the population that the second dataframe, a sample, was drawn from. Weights will be
+calculated based on the differences in the distribution of one or more variables specified in <cite>weight_vars</cite>
+(these should be the names of columns). Returns a series equal in length to the <cite>sample</cite> with the computed weights.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frame</strong> – DataFrame (must contain all of the columns specified in <cite>weight_vars</cite>)</p></li>
+<li><p><strong>sample</strong> – DataFrame (must contain all of the columns specified in <cite>weight_vars</cite>)</p></li>
+<li><p><strong>weight_vars</strong> – The names of the columns to use when computing weights.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Series containing the weights for each row in the <cite>sample</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pewanalytics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="text.html">Text</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="stats.html">Stats</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="stats.html#clustering">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html#dimensionality-reduction">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html#inter-rater-reliability">Inter-rater Reliability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html#mutual-information">Mutual Information</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="stats.html#sampling">Sampling</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="stats.html">pewanalytics: Stats Module</a><ul>
+      <li>Previous: <a href="mutual_info.html" title="previous chapter">Mutual Information</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Pew Research Center.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/sampling.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

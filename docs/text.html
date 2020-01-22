@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>the pewanalytics text module &#8212; pewanalytics 0.0.1 documentation</title>
+    <title>pewanalytics: Text Module &#8212; pewanalytics 0.0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -14,7 +14,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="the pewanalytics stats module" href="stats.html" />
+    <link rel="next" title="pewanalytics: Stats Module" href="stats.html" />
     <link rel="prev" title="Home" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -32,8 +32,8 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="the-pewanalytics-text-module">
-<h1>the pewanalytics text module<a class="headerlink" href="#the-pewanalytics-text-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="pewanalytics-text-module">
+<h1>pewanalytics: Text Module<a class="headerlink" href="#pewanalytics-text-module" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="some-simple-things-you-can-do">
 <h2>Some simple things you can do<a class="headerlink" href="#some-simple-things-you-can-do" title="Permalink to this headline">¶</a></h2>
 <p>Parts of speech</p>
@@ -59,6 +59,56 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="kn">import</span> <span class="n">TextDataFrame</span>
 </pre></div>
 </div>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.filter_parts_of_speech" title="pewanalytics.text.filter_parts_of_speech"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_parts_of_speech</span></code></a>(text[, filter_pos, …])</p></td>
+<td><p>Retain words associated with parts of speech in the text if exclude = False.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.get_fuzzy_partial_ratio" title="pewanalytics.text.get_fuzzy_partial_ratio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_fuzzy_partial_ratio</span></code></a>(text1, text2[, …])</p></td>
+<td><p>Useful to calculate similarity of two strings that are of noticeably different lengths.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.get_fuzzy_ratio" title="pewanalytics.text.get_fuzzy_ratio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_fuzzy_ratio</span></code></a>(text1, text2[, throw_loud_fail])</p></td>
+<td><p>Uses Levenshtein Distance to calculate similarity of two strings.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.has_fragment" title="pewanalytics.text.has_fragment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_fragment</span></code></a>(text, fragment)</p></td>
+<td><p>Checks whether a substring (“fragment”) is contained within a larger string (“text”).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.remove_fragments" title="pewanalytics.text.remove_fragments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_fragments</span></code></a>(text, fragments[, …])</p></td>
+<td><p>Iteratively remove fragments from a string</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Text: Dates</p>
+<p><strong>Classes</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.dates.DateFinder" title="pewanalytics.text.dates.DateFinder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DateFinder</span></code></a>()</p></td>
+<td><p>Search bodies of text for dates</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Text: Named Entity Recognition</p>
+<p><strong>Classes</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.ner.NamedEntityExtractor" title="pewanalytics.text.ner.NamedEntityExtractor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedEntityExtractor</span></code></a>()</p></td>
+<td><p>A wrapper around NLTK named entity extraction.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="text-utilities">
 <h2>Text Utilities<a class="headerlink" href="#text-utilities" title="Permalink to this headline">¶</a></h2>
@@ -72,6 +122,9 @@
 <dd><p>Retain words associated with parts of speech in the text if exclude = False.
 If exclude = True, exclude words associated with parts of speech.
 Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)</p>
+<div class="line-block">
+<div class="line">The full list of POS is here: <a class="reference external" href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html</a></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -79,11 +132,8 @@ Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)</p>
 <li><p><strong>filter_pos</strong> – array of part of speech tags (default is ‘NN’, ‘NNP’, and ‘JJ’)</p></li>
 </ul>
 </dd>
-</dl>
-<p>The full list of POS is here: <a class="reference external" href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A string comprised solely of words that matched to the specified parts of speech</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string comprised solely of words that matched to the specified parts of speech</p>
 </dd>
 </dl>
 </dd></dl>
@@ -205,7 +255,27 @@ model</a>.</p>
 <span class="n">roots</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
 </pre></div>
 </div>
-<span class="target" id="module-pewanalytics.text.ner"></span><div class="toctree-wrapper compound">
+<span class="target" id="module-pewanalytics.text.ner"></span><dl class="class">
+<dt id="pewanalytics.text.ner.NamedEntityExtractor">
+<em class="property">class </em><code class="sig-prename descclassname">pewanalytics.text.ner.</code><code class="sig-name descname">NamedEntityExtractor</code><a class="reference internal" href="_modules/pewanalytics/text/ner.html#NamedEntityExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.ner.NamedEntityExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper around NLTK named entity extraction. May be expanded in the future to include NER models from other
+packages like SpaCy.</p>
+<dl class="method">
+<dt id="pewanalytics.text.ner.NamedEntityExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/ner.html#NamedEntityExtractor.extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.ner.NamedEntityExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> – a string from which to extract named entities</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary of entities organized by their category</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="toctree-wrapper compound">
 </div>
 <div class="section" id="indices">
 <h3>Indices<a class="headerlink" href="#indices" title="Permalink to this headline">¶</a></h3>
@@ -252,7 +322,7 @@ model</a>.</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="index.html" title="previous chapter">Home</a></li>
-      <li>Next: <a href="stats.html" title="next chapter">the pewanalytics stats module</a></li>
+      <li>Next: <a href="stats.html" title="next chapter">pewanalytics: Stats Module</a></li>
   </ul></li>
 </ul>
 </div>

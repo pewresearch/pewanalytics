@@ -49,7 +49,7 @@
 <span class="kn">from</span> <span class="nn">pewtils</span> <span class="kn">import</span> <span class="n">is_not_null</span>
 
 
-<div class="viewcode-block" id="kappa_sample_size_power"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.irr.kappa_sample_size_power">[docs]</a><span class="k">def</span> <span class="nf">kappa_sample_size_power</span><span class="p">(</span>
+<div class="viewcode-block" id="kappa_sample_size_power"><a class="viewcode-back" href="../../../irr.html#pewanalytics.stats.irr.kappa_sample_size_power">[docs]</a><span class="k">def</span> <span class="nf">kappa_sample_size_power</span><span class="p">(</span>
     <span class="n">rate1</span><span class="p">,</span> <span class="n">rate2</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">twosided</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">):</span>
 
@@ -107,7 +107,7 @@
     <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">N</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="kappa_sample_size_CI"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.irr.kappa_sample_size_CI">[docs]</a><span class="k">def</span> <span class="nf">kappa_sample_size_CI</span><span class="p">(</span><span class="n">kappa0</span><span class="p">,</span> <span class="n">kappaL</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">kappaU</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+<div class="viewcode-block" id="kappa_sample_size_CI"><a class="viewcode-back" href="../../../irr.html#pewanalytics.stats.irr.kappa_sample_size_CI">[docs]</a><span class="k">def</span> <span class="nf">kappa_sample_size_CI</span><span class="p">(</span><span class="n">kappa0</span><span class="p">,</span> <span class="n">kappaL</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">kappaU</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Translated from kappaSize: https://github.com/cran/kappaSize/blob/master/R/CIBinary.R</span>
@@ -158,7 +158,7 @@
     <span class="k">return</span> <span class="n">n</span></div>
 
 
-<div class="viewcode-block" id="compute_scores"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.irr.compute_scores">[docs]</a><span class="k">def</span> <span class="nf">compute_scores</span><span class="p">(</span>
+<div class="viewcode-block" id="compute_scores"><a class="viewcode-back" href="../../../irr.html#pewanalytics.stats.irr.compute_scores">[docs]</a><span class="k">def</span> <span class="nf">compute_scores</span><span class="p">(</span>
     <span class="n">coder_df</span><span class="p">,</span>
     <span class="n">coder1</span><span class="p">,</span>
     <span class="n">coder2</span><span class="p">,</span>
@@ -348,12 +348,12 @@
     <span class="k">return</span> <span class="n">row</span></div>
 
 
-<div class="viewcode-block" id="compute_overall_scores"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.irr.compute_overall_scores">[docs]</a><span class="k">def</span> <span class="nf">compute_overall_scores</span><span class="p">(</span><span class="n">coder_df</span><span class="p">,</span> <span class="n">document_column</span><span class="p">,</span> <span class="n">outcome_column</span><span class="p">,</span> <span class="n">coder_column</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_overall_scores"><a class="viewcode-back" href="../../../irr.html#pewanalytics.stats.irr.compute_overall_scores">[docs]</a><span class="k">def</span> <span class="nf">compute_overall_scores</span><span class="p">(</span><span class="n">coder_df</span><span class="p">,</span> <span class="n">document_column</span><span class="p">,</span> <span class="n">outcome_column</span><span class="p">,</span> <span class="n">coder_column</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes overall inter-rater reliability scores (Krippendorf&#39;s Alpha and Fleiss&#39; Kappa). Allows for more than two</span>
 <span class="sd">    coders and code values.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param coder_df: A dataframe of codes</span>
 <span class="sd">    :param document_column: The column that contains IDs for the documents</span>
 <span class="sd">    :param outcome_column: The column that contains the codes</span>

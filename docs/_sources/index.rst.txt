@@ -27,15 +27,6 @@ Or install from source ::
     planning to drop support for earlier versions. We highly recommend you upgrade to Python3.
 
 
-Tests ::
-
-    pytest
-
-
-
-Our examples
-
-
 ******************
 Full Documentation
 ******************
