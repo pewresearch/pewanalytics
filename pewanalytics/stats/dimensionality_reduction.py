@@ -10,7 +10,6 @@ from sklearn.decomposition import PCA, TruncatedSVD
 def _decompose(
     features, decompose_class, feature_names=None, k=20, component_prefix="component"
 ):
-
     """
     Used to break apart a set of features using a scikit-learn decomposition class and return the resulting matrices.
 

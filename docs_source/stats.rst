@@ -4,8 +4,9 @@ pewanalytics: Stats Module
 
 Statistics utilities for weighting, clustering, dimensionality reduction, and inter-rater reliability
 
-Clustering
-++++++++++
+.. rubric:: Stats Modules
+``stats.clustering.<function>``
+
 .. automodule :: pewanalytics.stats.clustering
   :noindex:
   :no-members:
@@ -13,8 +14,8 @@ Clustering
   :autosummary-members:
 
 
-Dimensionality Reduction
-++++++++++++++++++++++++++++++
+``stats.dimentionality_reduction.<function>``
+
 .. automodule :: pewanalytics.stats.dimensionality_reduction
   :noindex:
   :no-members:
@@ -22,8 +23,8 @@ Dimensionality Reduction
   :autosummary-members:
 
 
-Inter-rater Reliability
-++++++++++++++++++++++++++++++
+``stats.irr.<function>``
+
 .. automodule :: pewanalytics.stats.irr
   :noindex:
   :no-members:
@@ -31,8 +32,8 @@ Inter-rater Reliability
   :autosummary-members:
 
 
-Mutual Information
-++++++++++++++++++++++++++++++
+``stats.mutual_info.<function>``
+
 .. automodule :: pewanalytics.stats.mutual_info
   :noindex:
   :no-members:
@@ -40,8 +41,8 @@ Mutual Information
   :autosummary-members:
 
 
-Sampling
-++++++++++++++++++++++++++++++
+``stats.sampling.<object>``
+
 .. automodule :: pewanalytics.stats.sampling
   :noindex:
   :no-members:
@@ -49,16 +50,35 @@ Sampling
   :autosummary-members:
 
 
+Clustering
++++++++++++
+.. automodule :: pewanalytics.stats.clustering
+  :members:
+
+Dimentionality Reduction
++++++++++++++++++++++++++
+.. automodule :: pewanalytics.stats.dimensionality_reduction
+  :members:
+
+Inter-rater Reliability
+++++++++++++++++++++++++
+.. automodule :: pewanalytics.stats.irr
+  :members:
+
+Mutual Information
++++++++++++++++++++
+.. automodule :: pewanalytics.stats.mutual_info
+  :members:
+
+Sampling
++++++++++
+.. automodule :: pewanalytics.stats.sampling
+  :members:
+
 
 .. toctree::
-   :caption: **pewanalytics.stats** Module:
-   :maxdepth: 1
-
-   Clustering <clustering>
-   Inter-rater Reliability <irr>
-   Dimensionality Reduction <dimensionality_reduction>
-   Mutual Information <mutual_info>
-   Sampling <sampling>
+   :caption: Navigation
+   :maxdepth: 2
 
 Indices
 =======

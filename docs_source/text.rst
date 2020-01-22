@@ -30,6 +30,9 @@ Analyze and classify lists of documents ::
 
     from pewanalytics.text import TextDataFrame
 
+.. rubric:: Text Modules
+``text.<function>``
+
 .. automodule :: pewanalytics.text
   :noindex:
   :no-members:
@@ -39,6 +42,8 @@ Analyze and classify lists of documents ::
 
 
 .. rubric:: Text: Dates
+``text.dates.<class>``
+
 .. automodule :: pewanalytics.text.dates
   :noindex:
   :no-members:
@@ -47,6 +52,8 @@ Analyze and classify lists of documents ::
 
 
 .. rubric:: Text: Named Entity Recognition
+``text.ner.<class>``
+
 .. automodule :: pewanalytics.text.ner
   :noindex:
   :no-members:

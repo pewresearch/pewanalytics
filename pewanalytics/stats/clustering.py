@@ -9,11 +9,12 @@ from sklearn.metrics.pairwise import linear_kernel
 
 def compute_kmeans_clusters(features, k=10, return_score=False):
     """
-    Uses K-Means from scikit-learn to cluster an arbitrary set of features.
+    Uses K-Means to cluster an arbitrary set of features.
 
     :param features: TF-IDF sparse matrix or pandas DataFrame
     :param k: int, number of clusters
-    :param return_score: bool, default=False; if True, returns a tuple with the cluster assignments and the silhouette score of the clustering
+    :param return_score: bool, default=False; if True, returns a tuple with the cluster \
+    assignments and the silhouette score of the clustering
     :return: series corresponding to the cluster labels for each row
     """
 
@@ -29,8 +30,10 @@ def compute_kmeans_clusters(features, k=10, return_score=False):
 
 def compute_hdbscan_clusters(features, min_cluster_size=100, min_samples=1):
     """
-    Uses HDBSCAN clustering to automatically identify the best number of clusters and map each unit to one.
-    Rows are the units, and columns are features. Returns a series with the cluster labels for each row.
+    Uses HDBSCAN to identify the best number of clusters and map each unit to one.
+
+    | Rows are the units, and columns are features. Returns a series with the cluster labels \
+    for each row.
 
     :param features: TF-IDF sparse matrix or a Pandas DataFrame
     :param min_cluster_size: int - minimum number of documents/units that can exist in a cluster.
