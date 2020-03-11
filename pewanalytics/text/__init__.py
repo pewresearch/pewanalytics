@@ -989,6 +989,25 @@ class TextDataFrame(object):
 
         return duplicates
 
+    def find_related_keywords(self, keyword, n=25):
+
+        """
+        Given a particular keyword, looks for related terms in the corpus using mutual information.
+        :param keyword: The keyword to use
+        :param n: Number of related terms to return
+        :return: Terms associated with the keyword
+        """
+
+        self.corpus["temp"] = (
+            self.corpus[self.text_column]
+            .str.contains(r"\b{}\b".format(keyword), re.IGNORECASE)
+            .astype(int)
+        )
+        mi = self.mutual_info("temp")
+        del self.corpus["temp"]
+
+        return mi[mi["MI1"] > 0].sort_values("MI1", ascending=False)[:n].index
+
     def mutual_info(
         self, outcome_col, weight_col=None, sample_size=None, l=0, normalize=True
     ):

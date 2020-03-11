@@ -16,6 +16,25 @@ class TextTests(unittest.TestCase):
         self.doc = self.df["text"].values[0]
         random.seed(42)
 
+    def test_tdf_find_related_keywords(self):
+
+        from pewanalytics.text import TextDataFrame
+
+        tdf = TextDataFrame(
+            self.df,
+            "text",
+            min_df=10,
+            max_df=0.95,
+            use_idf=False,
+            binary=True,
+            sublinear_tf=False,
+            smooth_idf=False,
+            norm=None,
+        )
+        terms = tdf.find_related_keywords("disney", n=25)
+        for term in ["animation", "mulan", "mermaid", "hercules", "tarzan", "pixar"]:
+            self.assertIn(term, terms)
+
     def test_has_fragment(self):
         from pewanalytics.text import has_fragment
 
