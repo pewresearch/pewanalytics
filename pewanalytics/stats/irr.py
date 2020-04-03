@@ -1,4 +1,5 @@
 import math
+import copy
 import scipy
 import numpy as np
 from nltk.metrics.agreement import AnnotationTask
@@ -21,16 +22,25 @@ def kappa_sample_size_power(
 ):
 
     """
-    Translated from N.cohen.kappa: https://cran.r-project.org/web/packages/irr/irr.pdf
+    Translated from the `irr` R package, N.cohen.kappa: https://cran.r-project.org/web/packages/irr/irr.pdf
 
-    :param rate1: the probability that the first rater will record a positive diagnosis
-    :param rate2: the probability that the second rater will record a positive diagnosis
-    :param k1: the true Cohen's Kappa statistic
-    :param k0: the value of kappa under the null hypothesis
-    :param alpha: type I error of test
-    :param power: the desired power to detect the difference between true kappa and hypothetical kappa
-    :param twosided: TRUE if test is two-sided
-    :return: returns required sample size
+    :param rate1: The probability that the first rater will record a positive diagnosis
+    :type rate1: float
+    :param rate2: The probability that the second rater will record a positive diagnosis
+    :type rate2: float
+    :param k1: The true Cohen's Kappa statistic
+    :type k1: float
+    :param k0: The value of kappa under the null hypothesis
+    :type k0: float
+    :param alpha: Type I error of test
+    :type alpha: float
+    :param power: The desired power to detect the difference between true kappa and hypothetical kappa
+    :type power: float
+    :param twosided: Set this to `True` if the test is two-sided
+    :param twosided: bool
+    :return: Returns the required sample size
+    :rtype: int
+
     """
 
     if not twosided:
@@ -77,14 +87,42 @@ def kappa_sample_size_power(
 def kappa_sample_size_CI(kappa0, kappaL, props, kappaU=None, alpha=0.05):
 
     """
-    Translated from kappaSize: https://github.com/cran/kappaSize/blob/master/R/CIBinary.R
+
+    When having multiple coders code a set of documents for a binary outcome, this function can help determine \
+    whether they have coded enough documents to confirm that their Cohen's kappa is at or above a minimum threhsold. \
+    The function takes the observed kappa and proportion of positive cases from the sample, along with a lower-bound \
+    for the minimum acceptable kappa, and returns the sample size required to confirm that the coders' agreement is \
+    truly above that minimum level of kappa with 95% certainty. If the current sample size is below the required \
+    sample size returned by this function, it can provide a rough estimate of how many additional documents need \
+    to be coded - assuming that the coders continue agreeing and observing positive cases at the same rate.
+
+    Translated from the `kappaSize` R package, CIBinary: https://github.com/cran/kappaSize/blob/master/R/CIBinary.R
 
     :param kappa0: The preliminary value of kappa
-    :param kappaL: The desired expected lower bound for a two-sided 100(1 - alpha) % confidence interval for kappa. Alternatively, if kappaU is set to NA, the procedure produces the number of required subjects for a one-sided confidence interval
+    :param kappa0: float
+    :param kappaL: The desired expected lower bound for a two-sided 100(1 - alpha) % confidence interval for kappa. \
+    Alternatively, if kappaU is set to NA, the procedure produces the number of required subjects for a one-sided \
+    confidence interval
+    :type kappaL: float
     :param props: The anticipated prevalence of the desired trait
+    :type props: float
     :param kappaU: The desired expected upper confidence limit for kappa
+    :type kappaU: float
     :param alpha: The desired type I error rate
-    :return:
+    :type alpha: float
+    :return: Returns the required sample size
+
+    Usage::
+
+        from pewanalytics.stats.irr import kappa_sample_size_CI
+
+        observed_kappa = 0.8
+        desired_kappa = 0.7
+        observed_proportion = 0.5
+
+        >>> kappa_sample_size(observed_kappa, desired_kappa, observed_proportion)
+        140
+
     """
 
     if not kappaU:
@@ -132,27 +170,149 @@ def compute_scores(
     outcome_column,
     document_column,
     coder_column,
-    weight_column,
+    weight_column=None,
     pos_label=None,
 ):
 
     """
     Computes a variety of inter-rater reliability scores, including Cohen's kappa, Krippendorf's alpha, precision,
-    and recall.
+    and recall. The input data must consist of a :py:class:`pandas.DataFrame` with the following columns:
+        - A column with values that indicate the coder (like a name)
+        - A column with values that indicate the document (like an ID)
+        - A column with values that indicate the code value
+        - (Optional) A column with document weights
+
+    This function will return a dataframe with agreement scores between the two specified coders.
+
+    .. note:: If using a multi-class (non-binary) code, some scores may come back null or not compute as expected. \
+        We recommend running the function separately for each specific code value as a binary flag by providing \
+        each unique value to the `pos_label` argument. If `pos_label` is not provided for multi-class codes, \
+        this function will attempt to compute scores based on support-weighted averages.
 
     :param coder_df: A dataframe of codes
+    :type coder_df: :py:class:`pandas.DataFrame`
     :param coder1: The value in `coder_column` for rows corresponding to the first coder
+    :type coder1: str or int
     :param coder2: The value in `coder_column` for rows corresponding to the second coder
+    :type coder2: str or int
     :param outcome_column: The column that contains the codes
+    :type outcome_column: str
     :param document_column: The column that contains IDs for the documents
+    :type document_column: str
     :param coder_column: The column containing values that indicate which coder assigned the code
+    :type coder_column: str
     :param weight_column: The column that contains sampling weights
+    :type weight_column: str
     :param pos_label: The value indicating a positive label (optional)
-    :return: A dataframe of scores, with rows corresponding to the different code values.
+    :type pos_label: str or int
+    :return: A dictionary of scores
+    :rtype: dict
+
+    Usage::
+
+        from pewanalytics.stats.irr import compute_scores
+        import pandas as pd
+
+        df = pd.DataFrame([
+            {"coder": "coder1", "document": 1, "code": "2"},
+            {"coder": "coder2", "document": 1, "code": "2"},
+            {"coder": "coder1", "document": 2, "code": "1"},
+            {"coder": "coder2", "document": 2, "code": "2"},
+            {"coder": "coder1", "document": 3, "code": "0"},
+            {"coder": "coder2", "document": 3, "code": "0"},
+        ])
+
+        >>> compute_scores(df, "coder1", "coder2", "code", "document", "coder")
+        {'coder1': 'coder1',
+         'coder2': 'coder2',
+         'n': 3,
+         'outcome_column': 'code',
+         'pos_label': None,
+         'coder1_mean_unweighted': 1.0,
+         'coder1_std_unweighted': 0.5773502691896257,
+         'coder2_mean_unweighted': 1.3333333333333333,
+         'coder2_std_unweighted': 0.6666666666666666,
+         'alpha_unweighted': 0.5454545454545454,
+         'accuracy': 0.6666666666666666,
+         'f1': 0.5555555555555555,
+         'precision': 0.5,
+         'recall': 0.6666666666666666,
+         'precision_recall_min': 0.5,
+         'matthews_corrcoef': 0.6123724356957946,
+         'roc_auc': None,
+         'pct_agree_unweighted': 0.6666666666666666}
+
+        >>> compute_scores(df, "coder1", "coder2", "code", "document", "coder", pos_label="0")
+         {'coder1': 'coder1',
+         'coder2': 'coder2',
+         'n': 3,
+         'outcome_column': 'code',
+         'pos_label': '0',
+         'coder1_mean_unweighted': 0.3333333333333333,
+         'coder1_std_unweighted': 0.3333333333333333,
+         'coder2_mean_unweighted': 0.3333333333333333,
+         'coder2_std_unweighted': 0.3333333333333333,
+         'alpha_unweighted': 1.0,
+         'cohens_kappa': 1.0,
+         'accuracy': 1.0,
+         'f1': 1.0,
+         'precision': 1.0,
+         'recall': 1.0,
+         'precision_recall_min': 1.0,
+         'matthews_corrcoef': 1.0,
+         'roc_auc': 1.0,
+         'pct_agree_unweighted': 1.0}
+
+        >>> compute_scores(df, "coder1", "coder2", "code", "document", "coder", pos_label="1")
+        {'coder1': 'coder1',
+         'coder2': 'coder2',
+         'n': 3,
+         'outcome_column': 'code',
+         'pos_label': '1',
+         'coder1_mean_unweighted': 0.3333333333333333,
+         'coder1_std_unweighted': 0.3333333333333333,
+         'coder2_mean_unweighted': 0.0,
+         'coder2_std_unweighted': 0.0,
+         'alpha_unweighted': 0.0,
+         'cohens_kappa': 0.0,
+         'accuracy': 0.6666666666666666,
+         'f1': 0.0,
+         'precision': 0.0,
+         'recall': 0.0,
+         'precision_recall_min': 0.0,
+         'matthews_corrcoef': 1.0,
+         'roc_auc': None,
+         'pct_agree_unweighted': 0.6666666666666666}
+
+        >>> compute_scores(df, "coder1", "coder2", "code", "document", "coder", pos_label="2")
+        {'coder1': 'coder1',
+         'coder2': 'coder2',
+         'n': 3,
+         'outcome_column': 'code',
+         'pos_label': '2',
+         'coder1_mean_unweighted': 0.3333333333333333,
+         'coder1_std_unweighted': 0.3333333333333333,
+         'coder2_mean_unweighted': 0.6666666666666666,
+         'coder2_std_unweighted': 0.3333333333333333,
+         'alpha_unweighted': 0.4444444444444444,
+         'cohens_kappa': 0.3999999999999999,
+         'accuracy': 0.6666666666666666,
+         'f1': 0.6666666666666666,
+         'precision': 0.5,
+         'recall': 1.0,
+         'precision_recall_min': 0.5,
+         'matthews_corrcoef': 0.5,
+         'roc_auc': 0.75,
+         'pct_agree_unweighted': 0.6666666666666666}
+
+
     """
 
     old_np_settings = np.seterr(all="raise")
 
+    coder_df = copy.deepcopy(coder_df)
+    if pos_label:
+        coder_df[outcome_column] = (coder_df[outcome_column] == pos_label).astype(int)
     coder1_df = coder_df[coder_df[coder_column] == coder1]
     coder1_df.index = coder1_df[document_column]
     coder2_df = coder_df[coder_df[coder_column] == coder2]
@@ -173,31 +333,35 @@ def compute_scores(
         ("coder2", coder2_df[outcome_column]),
     ]:
 
-        if pos_label:
-            labelset = (labelset == pos_label).astype(int)
+        if weight_column:
+            try:
+                weighted_stats = DescrStatsW(labelset, weights=coder1_df[weight_column])
+                weighted_stats.mean
+            except (TypeError, ValueError):
+                try:
+                    weighted_stats = DescrStatsW(
+                        labelset.astype(int), weights=coder1_df[weight_column]
+                    )
+                    weighted_stats.mean
+                except (TypeError, ValueError):
+                    weighted_stats = None
+
+            if weighted_stats:
+                row["{}_mean".format(labelsetname)] = weighted_stats.mean
+                row["{}_std".format(labelsetname)] = weighted_stats.std_mean
 
         try:
-            weighted_stats = DescrStatsW(labelset, weights=coder1_df[weight_column])
             unweighted_stats = DescrStatsW(labelset, weights=[1.0 for x in labelset])
-            weighted_stats.mean
             unweighted_stats.mean
         except (TypeError, ValueError):
             try:
-                weighted_stats = DescrStatsW(
-                    labelset.astype(int), weights=coder1_df[weight_column]
-                )
                 unweighted_stats = DescrStatsW(
                     labelset.astype(int), weights=[1.0 for x in labelset]
                 )
-                weighted_stats.mean
                 unweighted_stats.mean
             except (TypeError, ValueError):
-                weighted_stats = None
                 unweighted_stats = None
 
-        if weighted_stats:
-            row["{}_mean".format(labelsetname)] = weighted_stats.mean
-            row["{}_std".format(labelsetname)] = weighted_stats.std_mean
         if unweighted_stats:
             row["{}_mean_unweighted".format(labelsetname)] = unweighted_stats.mean
             row["{}_std_unweighted".format(labelsetname)] = unweighted_stats.std_mean
@@ -218,7 +382,7 @@ def compute_scores(
             row["cohens_kappa"] = cohen_kappa_score(
                 coder1_df[outcome_column],
                 coder2_df[outcome_column],
-                sample_weight=coder1_df[weight_column],
+                sample_weight=coder1_df[weight_column] if weight_column else None,
                 labels=labels,
             )
         except FloatingPointError:
@@ -228,7 +392,7 @@ def compute_scores(
         row["accuracy"] = accuracy_score(
             coder1_df[outcome_column],
             coder2_df[outcome_column],
-            sample_weight=coder1_df[weight_column],
+            sample_weight=coder1_df[weight_column] if weight_column else None,
         )
     except ValueError:
         row["accuracy"] = None
@@ -237,9 +401,9 @@ def compute_scores(
         row["f1"] = f1_score(
             coder1_df[outcome_column],
             coder2_df[outcome_column],
-            pos_label=pos_label,
-            sample_weight=coder1_df[weight_column],
+            sample_weight=coder1_df[weight_column] if weight_column else None,
             labels=labels,
+            average="weighted" if not pos_label else "binary",
         )
     except ValueError:
         row["f1"] = None
@@ -248,22 +412,20 @@ def compute_scores(
         row["precision"] = precision_score(
             coder1_df[outcome_column],
             coder2_df[outcome_column],
-            pos_label=pos_label,
-            sample_weight=coder1_df[weight_column],
+            sample_weight=coder1_df[weight_column] if weight_column else None,
             labels=labels,
+            average="weighted" if not pos_label else "binary",
         )
     except ValueError:
         row["precision"] = None
 
     try:
-        row["recall"] = (
-            recall_score(
-                coder1_df[outcome_column],
-                coder2_df[outcome_column],
-                pos_label=pos_label,
-                sample_weight=coder1_df[weight_column],
-                labels=labels,
-            ),
+        row["recall"] = recall_score(
+            coder1_df[outcome_column],
+            coder2_df[outcome_column],
+            sample_weight=coder1_df[weight_column] if weight_column else None,
+            labels=labels,
+            average="weighted" if not pos_label else "binary",
         )
     except ValueError:
         row["recall"] = None
@@ -277,7 +439,7 @@ def compute_scores(
         row["matthews_corrcoef"] = matthews_corrcoef(
             coder1_df[outcome_column],
             coder2_df[outcome_column],
-            sample_weight=coder1_df[weight_column],
+            sample_weight=coder1_df[weight_column] if weight_column else None,
         )
     except ValueError:
         row["matthews_corrcoef"] = None
@@ -285,11 +447,14 @@ def compute_scores(
         row["matthews_corrcoef"] = 1.0
 
     try:
+
         row["roc_auc"] = (
             roc_auc_score(
                 coder1_df[outcome_column],
                 coder2_df[outcome_column],
-                sample_weight=coder1_df[weight_column],
+                sample_weight=coder1_df[weight_column] if weight_column else None,
+                labels=labels,
+                average="weighted" if not pos_label else None,
             )
             if len(np.unique(coder1_df[outcome_column])) > 1
             and len(np.unique(coder2_df[outcome_column])) > 1
@@ -319,13 +484,39 @@ def compute_overall_scores(coder_df, document_column, outcome_column, coder_colu
 
     """
     Computes overall inter-rater reliability scores (Krippendorf's Alpha and Fleiss' Kappa). Allows for more than two
-    coders and code values.
+    coders and code values. The input data must consist of a :py:class:`pandas.DataFrame` with the following columns:
+        - A column with values that indicate the coder (like a name)
+        - A column with values that indicate the document (like an ID)
+        - A column with values that indicate the code value
 
     :param coder_df: A dataframe of codes
+    :type coder_df: :py:class:`pandas.DataFrame`
     :param document_column: The column that contains IDs for the documents
+    :type document_column: str
     :param outcome_column: The column that contains the codes
+    :type outcome_column: str
     :param coder_column: The column containing values that indicate which coder assigned the code
+    :type coder_column: str
     :return: A dictionary containing the scores
+    :rtype: dict
+
+    Usage::
+
+        from pewanalytics.stats.irr import compute_overall_scores
+        import pandas as pd
+
+        df = pd.DataFrame([
+            {"coder": "coder1", "document": 1, "code": "2"},
+            {"coder": "coder2", "document": 1, "code": "2"},
+            {"coder": "coder1", "document": 2, "code": "1"},
+            {"coder": "coder2", "document": 2, "code": "2"},
+            {"coder": "coder1", "document": 3, "code": "0"},
+            {"coder": "coder2", "document": 3, "code": "0"},
+        ])
+
+        >>> compute_overall_scores(df, "document", "code", "coder")
+        {'alpha': 0.5454545454545454, 'fleiss_kappa': 0.4545454545454544}
+
     """
 
     alpha = AnnotationTask(

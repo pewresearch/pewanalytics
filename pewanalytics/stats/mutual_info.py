@@ -12,40 +12,77 @@ def compute_mutual_info(y, x, weights=None, col_names=None, l=0, normalize=True)
 
     """
     Computes pointwise mutual information for a set of observations partitioned into two groups. The function expects
-    `y` to correspond to a list or series of values indicating which partition an observation belongs two. `y` must
+    `y` to correspond to a list or series of values indicating which partition an observation belongs to. `y` must
     be a binary flag. `x` is a set of features (either a DataFrame or sparse matrix) where the rows correspond to
     observations and the columns represent the presence of features (you can technically run this using non-binary
     features but the results will not be as readily interpretable.) The function returns a DataFrame of metrics
-    computed for each feature, including:
+    computed for each feature, including the following columns:
 
-    - `MI1`: the feature's mutual information for the positive class
-    - `MI0`: the feature's mutual information for the negative class
-    - `total`: the total number of times a feature appeared
-    - `total_pos_with_term`: the total number of times a feature appeared in positive cases
-    - `total_neg_with_term`: the total number of times a feature appeared in negative cases
-    - `total_pos_neg_with_term_diff`: the raw difference in the number of times a feature appeared in positive cases \
+    - `MI1`: The feature's mutual information for the positive class
+    - `MI0`: The feature's mutual information for the negative class
+    - `total`: The total number of times a feature appeared
+    - `total_pos_with_term`: The total number of times a feature appeared in positive cases
+    - `total_neg_with_term`: The total number of times a feature appeared in negative cases
+    - `total_pos_neg_with_term_diff`: The raw difference in the number of times a feature appeared in positive cases \
     relative to negative cases
-    - `pct_pos_with_term`: the proportion of positive cases that had the feature
-    - `pct_neg_with_term`: the proportion of negative cases that had the feature
-    - `pct_pos_neg_with_term_ratio`: a likelihood ratio indicating the degree to which positive case was more likely to \
-    have the feature than a negative case
-    - `pct_term_pos`: of the cases that had a feature, the proportion that were in the positive class
-    - `pct_term_neg`: of the cases that had a feature, the proportion that were in the negative class
-    - `pct_term_pos_neg_diff`: the percentage point difference between the proportion of cases with the feature that \
+    - `pct_pos_with_term`: The proportion of positive cases that had the feature
+    - `pct_neg_with_term`: The proportion of negative cases that had the feature
+    - `pct_pos_neg_with_term_ratio`: A likelihood ratio indicating the degree to which a positive case was more likely \
+    to have the feature than a negative case
+    - `pct_term_pos`: Of the cases that had a feature, the proportion that were in the positive class
+    - `pct_term_neg`: Of the cases that had a feature, the proportion that were in the negative class
+    - `pct_term_pos_neg_diff`: The percentage point difference between the proportion of cases with the feature that \
     were positive vs. negative
-    - `pct_term_pos_neg_ratio`: a likelihood ratio indicating the degree to which a feature was more likely to appear \
+    - `pct_term_pos_neg_ratio`: A likelihood ratio indicating the degree to which a feature was more likely to appear \
     in a positive case relative to a negative one (may not be meaningful when classes are imbalanced)
 
-    Note that `pct_term_pos` and `pct_term_neg` may not be directly comparable if classes are imbalanced, and in such
-    cases a `pct_term_pos_neg_diff` above zero or `pct_term_pos_neg_ratio` above 1 may not indicate a true association
-    with the positive class if positive cases outnumber negative ones.
+    .. note:: Note that `pct_term_pos` and `pct_term_neg` may not be directly comparable if classes are imbalanced, \
+        and in such cases a `pct_term_pos_neg_diff` above zero or `pct_term_pos_neg_ratio` above 1 may not indicate a \
+        true association with the positive class if positive cases outnumber negative ones.
+
+    .. note:: Mutual information can be a difficult metric to explain to others. We've found that the \
+        `pct_pos_neg_with_term_ratio` can serve as a more interpretable alternative method for identifying \
+        meaningful differences between groups.
 
     :param y: An array or, preferably, a pandas.Series
     :param x: A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix
     :param col_names: The feature names associated with the columns in matrix 'x'
+    :type col_names: list
     :param l: An optional Laplace smoothing parameter
+    :type l: int or float
     :param normalize: Toggle normalization on or off (to control for feature prevalance), on by default
+    :type normalize: bool
     :return: A dataframe of features with a variety of computed metrics including mutual information.
+
+    Usage::
+
+        from pewanalytics.stats.mutual_info import compute_mutual_info
+        import nltk
+        import pandas as pd
+        from sklearn.metrics.pairwise import linear_kernel
+        from sklearn.feature_extraction.text import TfidfVectorizer
+
+        nltk.download("inaugural")
+        df = pd.DataFrame([
+            {"speech": fileid, "text": nltk.corpus.inaugural.raw(fileid)} for fileid in nltk.corpus.inaugural.fileids()
+        ])
+        df['year'] = df['speech'].map(lambda x: int(x.split("-")[0]))
+        df['21st_century'] = df['year'].map(lambda x: 1 if x >= 2000 else 0)
+
+        vec = TfidfVectorizer(min_df=10, max_df=.9).fit(df['text'])
+        tfidf = vec.transform(df['text'])
+
+        # Here are the terms most distinctive of inaugural addresses in the 21st century vs. years prior
+
+        >>> results = compute_mutual_info(df['21st_century'], tfidf, col_names=vec.get_feature_names())
+
+        >>> results.sort_values("MI1", ascending=False).index[:25]
+        Index(['america', 'thank', 'bless', 'schools', 'ideals', 'americans',
+               'meaning', 'you', 'move', 'across', 'courage', 'child', 'birth',
+               'generation', 'families', 'build', 'hard', 'promise', 'choice', 'women',
+               'guided', 'words', 'blood', 'dignity', 'because'],
+              dtype='object')
+
     """
 
     if is_not_null(weights):
@@ -153,13 +190,16 @@ def mutual_info_bar_plot(
     `plt.savefig` to display or save the plot.
 
     :param mutual_info: A mutual information table generated by `compute_mutual_info`
-    :param filter_col: The column to use when selecting top features; sorts in descending order and picks the top `top_n`
+    :param filter_col: The column to use when selecting top features; sorts in descending order and picks the \
+    top `top_n`
     :param top_n: The number of features to display
-    :param x_col: The column by which to sort the final set of top features (after they have been selected by `filter_col`
+    :param x_col: The column by which to sort the final set of top features (after they have been selected by \
+    `filter_col`
     :param color: The color of the bars
     :param title: The title of the plot
     :param width: The width of the plot
-    :return: A Matplotlib figure, which you can display via `plt.show()` or alternatively save to a file via `plt.savefig(FILEPATH)`
+    :return: A Matplotlib figure, which you can display via `plt.show()` or alternatively save to a file via \
+    `plt.savefig(FILEPATH)`
     """
 
     import seaborn as sns
@@ -213,7 +253,8 @@ def mutual_info_scatter_plot(
     call `plt.show()` or `plt.savefig` to display or save the plot.
 
     :param mutual_info: A mutual information table generated by `compute_mutual_info`
-    :param filter_col: The column to use when selecting top features; sorts in descending order and picks the top `top_n`
+    :param filter_col: The column to use when selecting top features; sorts in descending order and picks the top \
+    `top_n`
     :param top_n: The number of features to display
     :param x_col: The column to use as the x-axis
     :param xlabel: Label for the x-axis
@@ -226,7 +267,8 @@ def mutual_info_scatter_plot(
     :param size_col: The column to use to size the features
     :param title: The title of the plot
     :param figsize: The size of the plot (tuple)
-    :return: A Matplotlib figure, which you can display via `plt.show()` or alternatively save to a file via `plt.savefig(FILEPATH)`
+    :return: A Matplotlib figure, which you can display via `plt.show()` or alternatively save to a file via \
+    `plt.savefig(FILEPATH)`
     """
 
     import matplotlib.pyplot as plt
