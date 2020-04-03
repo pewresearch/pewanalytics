@@ -42,8 +42,8 @@ class StatsSamplingTests(unittest.TestCase):
         import numpy as np
         from pewanalytics.stats.sampling import SampleExtractor
 
-        all = SampleExtractor(id_col="id", sampling_strategy="all").extract(
-            self.df, None
+        all = SampleExtractor(self.df, id_col="id", seed=42).extract(
+            None, sampling_strategy="all"
         )
         self.assertTrue(len(all) == len(self.df))
 
@@ -51,9 +51,9 @@ class StatsSamplingTests(unittest.TestCase):
         import numpy as np
         from pewanalytics.stats.sampling import SampleExtractor
 
-        random = SampleExtractor(
-            id_col="id", seed=42, sampling_strategy="random"
-        ).extract(self.df, 100)
+        random = SampleExtractor(self.df, "id", seed=42).extract(
+            100, sampling_strategy="random"
+        )
         self.assertEqual(len(random), 100)
         self.assertEqual(self.df.loc[random]["flag"].mean(), 0.03)
         self.assertEqual(self.df["flag"].mean(), 0.048)
@@ -62,12 +62,9 @@ class StatsSamplingTests(unittest.TestCase):
         import numpy as np
         from pewanalytics.stats.sampling import SampleExtractor
 
-        normal_strat = SampleExtractor(
-            id_col="id",
-            seed=42,
-            stratify_by=["flag", "flag2"],
-            sampling_strategy="stratify",
-        ).extract(self.df, 100)
+        normal_strat = SampleExtractor(self.df, "id", seed=42).extract(
+            100, stratify_by=["flag", "flag2"], sampling_strategy="stratify"
+        )
         self.assertTrue(len(normal_strat) == 100)
         sample_props = (
             self.df.loc[normal_strat].groupby(["flag", "flag2"]).count()
@@ -81,12 +78,9 @@ class StatsSamplingTests(unittest.TestCase):
         self.assertEqual(sample_props[(0, 0)], 0.93)
         self.assertEqual(sample_props[(1, 1)], 0.01)
 
-        normal_strat = SampleExtractor(
-            id_col="id",
-            seed=42,
-            stratify_by=["flag", "flag2", "flag3"],
-            sampling_strategy="stratify",
-        ).extract(self.df, 100)
+        normal_strat = SampleExtractor(self.df, "id", seed=42).extract(
+            100, stratify_by=["flag", "flag2", "flag3"], sampling_strategy="stratify"
+        )
         self.assertTrue(len(normal_strat) == 100)
         sample_props = (
             self.df.loc[normal_strat].groupby(["flag", "flag2", "flag3"]).count()
@@ -103,12 +97,9 @@ class StatsSamplingTests(unittest.TestCase):
         import numpy as np
         from pewanalytics.stats.sampling import SampleExtractor
 
-        even = SampleExtractor(
-            id_col="id",
-            seed=42,
-            sampling_strategy="stratify_even",
-            stratify_by=["flag", "flag2"],
-        ).extract(self.df, 20)
+        even = SampleExtractor(self.df, "id", seed=42).extract(
+            20, sampling_strategy="stratify_even", stratify_by=["flag", "flag2"]
+        )
         self.assertEqual(len(even), 20)
         sample_props = (
             self.df.loc[even].groupby(["flag", "flag2"]).count() / len(even)
@@ -120,12 +111,9 @@ class StatsSamplingTests(unittest.TestCase):
         import numpy as np
         from pewanalytics.stats.sampling import SampleExtractor
 
-        guaranteed = SampleExtractor(
-            id_col="id",
-            seed=42,
-            sampling_strategy="stratify_guaranteed",
-            stratify_by=["flag", "flag2"],
-        ).extract(self.df, 100)
+        guaranteed = SampleExtractor(self.df, "id", seed=42).extract(
+            100, sampling_strategy="stratify_guaranteed", stratify_by=["flag", "flag2"]
+        )
         self.assertEqual(len(guaranteed), 100)
         sample_props = (
             self.df.loc[guaranteed].groupby(["flag", "flag2"]).count() / len(guaranteed)
@@ -138,12 +126,9 @@ class StatsSamplingTests(unittest.TestCase):
         self.assertEqual(sample_props[(0, 0)], 0.91)
         self.assertEqual(sample_props[(1, 1)], 0.01)
 
-        guaranteed = SampleExtractor(
-            id_col="id",
-            seed=42,
-            sampling_strategy="stratify_guaranteed",
-            stratify_by=["flag", "flag2"],
-        ).extract(self.df, 4)
+        guaranteed = SampleExtractor(self.df, "id", seed=42).extract(
+            4, sampling_strategy="stratify_guaranteed", stratify_by=["flag", "flag2"]
+        )
         self.assertEqual(len(guaranteed), 4)
         sample_props = (
             self.df.loc[guaranteed].groupby(["flag", "flag2"]).count() / len(guaranteed)
