@@ -201,71 +201,14 @@ def compute_balanced_sample_weights(sample, weight_vars, weight_column=None):
 
 class SampleExtractor(object):
     """
-    A helper class for extracting samples using various sampling methods. After specifying the sampling
-    options on the SampleExtractor, you can make multiple calls to `extract`, passing in a DataFrame from
-    which to sample, and the desired size of the sample. The available sampling methods are:
+    A helper class for extracting samples using various sampling methods.
 
-    - all: Returns all of the IDs
-    - random: Returns a random sample
-    - stratify: Proportional stratification, method from Kish, Leslie. "Survey sampling." (1965). Chapter 4.
-    - stratify_even: Sample evenly from each strata (will obviously not be representative)
-    - stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one
-        observation from each strata (if sample size is small and/or there are many small strata, the resulting sample
-        may be far from representative)
-
-    :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify,
-    stratify_even, stratify_guaranteed
-    :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on
-    :param self.id_col: column in the DataFrame to be used as the unique ID of observations
+    :param df: The sampling frame
+    :type df: :py:class:`pandas.DataFrame`
+    :param id_col: Column in the DataFrame to be used as the unique ID of observations
+    :type id_col: str
     :param verbose: Whether or not to print information during the sampling process (default=False)
     :param seed: Random seed (optional)
-
-    Usage::
-
-        from pewanalytics.stats.sampling import SampleExtractor
-        import nltk
-        import pandas as pd
-        from sklearn.metrics.pairwise import linear_kernel
-        from sklearn.feature_extraction.text import TfidfVectorizer
-
-        nltk.download("inaugural")
-        frame = pd.DataFrame([
-            {"speech": fileid, "text": nltk.corpus.inaugural.raw(fileid)} for fileid in nltk.corpus.inaugural.fileids()
-        ])
-        frame["century"] = frame['speech'].map(lambda x: "{}00".format(x.split("-")[0][:2]))
-
-        >>> sampler = SampleExtractor(frame, "speech", seed=42)
-
-        >>> sample_index = sampler.extract(12, sampling_strategy="random")
-        frame[frame["speech"].isin(sample_index)]['century'].value_counts()
-        1900    6
-        1800    5
-        1700    1
-        Name: century, dtype: int64
-
-        >>> sample_index = sampler.extract(12, sampling_strategy="stratify", stratify_by=['century'])
-        frame[frame["speech"].isin(sample_index)]['century'].value_counts()
-        1800    5
-        1900    5
-        2000    1
-        1700    1
-        Name: century, dtype: int64
-
-        >>> sample_index = sampler.extract(12, sampling_strategy="stratify_even", stratify_by=['century'])
-        frame[frame["speech"].isin(sample_index)]['century'].value_counts()
-        1800    3
-        2000    3
-        1700    3
-        1900    3
-        Name: century, dtype: int64
-
-        >>> sample_index = sampler.extract(12, sampling_strategy="stratify_guaranteed", stratify_by=['century'])
-        frame[frame["speech"].isin(sample_index)]['century'].value_counts()
-        1900    5
-        1800    4
-        1700    2
-        2000    1
-        Name: century, dtype: int64
 
     """
 
@@ -282,11 +225,71 @@ class SampleExtractor(object):
     def extract(self, sample_size, sampling_strategy="random", stratify_by=None):
 
         """
-        Extract a sample from a DataFrame
+        Extract a sample from a DataFrame using one of the following methods:
 
-        :param df: The DataFrame to sample from
+        - all: Returns all of the IDs
+        - random: Returns a random sample
+        - stratify: Proportional stratification, method from Kish, Leslie. "Survey sampling." (1965). Chapter 4.
+        - stratify_even: Sample evenly from each strata (will obviously not be representative)
+        - stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one
+            observation from each strata (if sample size is small and/or there are many small strata, the resulting sample
+            may be far from representative)
+
         :param sample_size: The desired size of the sample
+        :type sample_size: int
+        :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify,
+        stratify_even, stratify_guaranteed
+        :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on
         :return: A list of IDs reflecting the observations selected from the DataFrame during sampling
+        :rtype: list
+
+        Usage::
+
+            from pewanalytics.stats.sampling import SampleExtractor
+            import nltk
+            import pandas as pd
+            from sklearn.metrics.pairwise import linear_kernel
+            from sklearn.feature_extraction.text import TfidfVectorizer
+
+            nltk.download("inaugural")
+            frame = pd.DataFrame([
+                {"speech": fileid, "text": nltk.corpus.inaugural.raw(fileid)} for fileid in nltk.corpus.inaugural.fileids()
+            ])
+            frame["century"] = frame['speech'].map(lambda x: "{}00".format(x.split("-")[0][:2]))
+
+            >>> sampler = SampleExtractor(frame, "speech", seed=42)
+
+            >>> sample_index = sampler.extract(12, sampling_strategy="random")
+            frame[frame["speech"].isin(sample_index)]['century'].value_counts()
+            1900    6
+            1800    5
+            1700    1
+            Name: century, dtype: int64
+
+            >>> sample_index = sampler.extract(12, sampling_strategy="stratify", stratify_by=['century'])
+            frame[frame["speech"].isin(sample_index)]['century'].value_counts()
+            1800    5
+            1900    5
+            2000    1
+            1700    1
+            Name: century, dtype: int64
+
+            >>> sample_index = sampler.extract(12, sampling_strategy="stratify_even", stratify_by=['century'])
+            frame[frame["speech"].isin(sample_index)]['century'].value_counts()
+            1800    3
+            2000    3
+            1700    3
+            1900    3
+            Name: century, dtype: int64
+
+            >>> sample_index = sampler.extract(12, sampling_strategy="stratify_guaranteed", stratify_by=['century'])
+            frame[frame["speech"].isin(sample_index)]['century'].value_counts()
+            1900    5
+            1800    4
+            1700    2
+            2000    1
+            Name: century, dtype: int64
+
         """
 
         strategies = [
@@ -354,7 +357,7 @@ class SampleExtractor(object):
                 self.id_col
             ]
 
-    def _stratify_sample(self, sample_size, df=None):
+    def _stratify_sample(self, sample_size):
 
         if self.verbose:
             print("Kish-style stratification")
