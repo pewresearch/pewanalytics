@@ -97,10 +97,3 @@ To use ::
 .. toctree::
    :caption: Navigation
    :maxdepth: 2
-
-Indices
-=======
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

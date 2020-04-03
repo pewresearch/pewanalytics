@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 #
+# Configuration file for the Sphinx documentation builder.
+#
 # This file does only contain a selection of the most common options. For a
 # full list see the documentation:
 # http://www.sphinx-doc.org/en/master/config
@@ -9,20 +11,22 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
+#
 import os, sys
 
 sys.path.insert(0, os.path.abspath(".."))
 
+
 # -- Project information -----------------------------------------------------
 
 project = "pewanalytics"
-copyright = "2019, Pew Research Center"
+copyright = "2020, Pew Research Center"
 author = "Pew Research Center"
 
 # The short X.Y version
 version = ""
 # The full version, including alpha/beta/rc tags
-release = "0.0.1"
+release = "1.0.0"
 
 
 # -- General configuration ---------------------------------------------------
@@ -36,14 +40,13 @@ release = "0.0.1"
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
-    "autodocsumm",
     "sphinx.ext.intersphinx",
     "sphinx.ext.coverage",
     "sphinx.ext.mathjax",
     "sphinx.ext.ifconfig",
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
+    "autodocsumm",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -52,6 +55,7 @@ templates_path = ["_templates"]
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
+# source_suffix = ['.rst', '.md']
 source_suffix = ".rst"
 
 # The master toctree document.
@@ -72,19 +76,25 @@ exclude_patterns = []
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
 
+# Prevent autodoc to sort document members alphabetically
+autodoc_member_order = "bysource"
+
+# If true, the current module name will be prepended to all description
+# unit titles (such as .. function::).
+add_module_names = False
 
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "alabaster"
+html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {"navigation_depth": 3}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -112,13 +122,17 @@ htmlhelp_basename = "pewanalyticsdoc"
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    "papersize": "letterpaper",
+    #
+    # 'papersize': 'letterpaper',
     # The font size ('10pt', '11pt' or '12pt').
-    "pointsize": "10pt",
+    #
+    # 'pointsize': '10pt',
     # Additional stuff for the LaTeX preamble.
-    "preamble": "",
+    #
+    # 'preamble': '',
     # Latex figure (float) alignment
-    "figure_align": "htbp",
+    #
+    # 'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
@@ -127,9 +141,9 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "PewAnalytics.tex",
-        "PewAnalytics Documentation",
-        "Pew Research Center",
+        "pewanalytics.tex",
+        "pewanalytics Documentation",
+        "pew research center",
         "manual",
     )
 ]
@@ -139,7 +153,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "pewanalytics", "PewAnalytics Documentation", [author], 1)]
+man_pages = [(master_doc, "pewanalytics", "pewanalytics Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output ----------------------------------------------
@@ -150,10 +164,10 @@ man_pages = [(master_doc, "pewanalytics", "PewAnalytics Documentation", [author]
 texinfo_documents = [
     (
         master_doc,
-        "PewAnalytics",
-        "PewAnalytics Documentation",
+        "pewanalytics",
+        "pewanalytics Documentation",
         author,
-        "PewAnalytics",
+        "pewanalytics",
         "One line description of project.",
         "Miscellaneous",
     )
