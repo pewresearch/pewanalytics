@@ -11,10 +11,10 @@ class TextTopicsTests(unittest.TestCase):
         self.doc = self.df["text"].values[0]
 
     def test_scikit_lda_topic_model(self):
-        from pewanalytics.text.topics import ScikitLDATopicModel
+        from pewanalytics.text.topics import TopicModel
 
-        model = ScikitLDATopicModel(
-            self.df, "text", num_topics=5, min_df=10, max_df=0.8
+        model = TopicModel(
+            self.df, "text", "sklearn_lda", num_topics=5, min_df=10, max_df=0.8
         )
         model.fit()
         scores = model.get_score()
@@ -30,10 +30,10 @@ class TextTopicsTests(unittest.TestCase):
         self.assertEqual(doc_topics.shape, (200, 5))
 
     def test_scikit_nmf_topic_model(self):
-        from pewanalytics.text.topics import ScikitNMFTopicModel
+        from pewanalytics.text.topics import TopicModel
 
-        model = ScikitNMFTopicModel(
-            self.df, "text", num_topics=5, min_df=10, max_df=0.8
+        model = TopicModel(
+            self.df, "text", "sklearn_nmf", num_topics=5, min_df=10, max_df=0.8
         )
         model.fit()
         scores = model.get_score()
@@ -48,10 +48,10 @@ class TextTopicsTests(unittest.TestCase):
         self.assertEqual(doc_topics.shape, (200, 5))
 
     def test_gensim_lda_topic_model(self):
-        from pewanalytics.text.topics import GensimLDATopicModel
+        from pewanalytics.text.topics import TopicModel
 
-        model = GensimLDATopicModel(
-            self.df, "text", num_topics=5, min_df=10, max_df=0.8
+        model = TopicModel(
+            self.df, "text", "gensim_lda", num_topics=5, min_df=10, max_df=0.8
         )
         model.fit()
         scores = model.get_score()
@@ -66,10 +66,10 @@ class TextTopicsTests(unittest.TestCase):
         self.assertEqual(doc_topics.shape, (200, 5))
 
     def test_gensim_lda_topic_model_multicore(self):
-        from pewanalytics.text.topics import GensimLDATopicModel
+        from pewanalytics.text.topics import TopicModel
 
-        model = GensimLDATopicModel(
-            self.df, "text", num_topics=5, min_df=10, max_df=0.8
+        model = TopicModel(
+            self.df, "text", "gensim_lda", num_topics=5, min_df=10, max_df=0.8
         )
         model.fit(use_multicore=True)
         scores = model.get_score()
@@ -84,9 +84,9 @@ class TextTopicsTests(unittest.TestCase):
         self.assertEqual(doc_topics.shape, (200, 5))
 
     def test_gensim_hdp_topic_model(self):
-        from pewanalytics.text.topics import GensimHDPTopicModel
+        from pewanalytics.text.topics import TopicModel
 
-        model = GensimHDPTopicModel(self.df, "text", min_df=10, max_df=0.8)
+        model = TopicModel(self.df, "text", "gensim_hdp", min_df=10, max_df=0.8)
         model.fit()
         scores = model.get_score()
         self.assertEqual(len(scores.keys()), 0)
@@ -101,9 +101,11 @@ class TextTopicsTests(unittest.TestCase):
         self.assertEqual(doc_topics.shape, (200, num_topics))
 
     def test_corex_topic_model(self):
-        from pewanalytics.text.topics import CorExTopicModel
+        from pewanalytics.text.topics import TopicModel
 
-        model = CorExTopicModel(self.df, "text", num_topics=5, min_df=10, max_df=0.8)
+        model = TopicModel(
+            self.df, "text", "corex", num_topics=5, min_df=10, max_df=0.8
+        )
         model.fit()
         scores = model.get_score()
         self.assertIn("total_correlation", scores.keys())
