@@ -1,18 +1,86 @@
 from builtins import str
 from builtins import object
 import nltk
+import spacy
+import re
+from collections import defaultdict
+from nltk.corpus import stopwords
 from nltk import word_tokenize, pos_tag, ne_chunk
-from pewtils import decode_text
+from pewtils import decode_text, flatten_list
 
 
 class NamedEntityExtractor(object):
     """
-    A wrapper around NLTK named entity extraction. May be expanded in the future to include NER models from other
-    packages like SpaCy.
+    A wrapper around NLTK and SpaCy for named entity extraction. May be expanded to include more libraries in the \
+    future.
+
+    :param method: Specify the library to use when extracting methods. Options are 'nltk', 'spacy', 'all'. If \
+    'all' is selected, both libraries will be used and the union will be returned. (Default='spacy')
+    :type method: str
+
+    Usage::
+
+        from pewanalytics.text.ner import NamedEntityExtractor
+        import nltk
+
+        nltk.download("inaugural")
+        fileid = nltk.corpus.inaugural.fileids()[0]
+        text = nltk.corpus.inaugural.raw(fileid)
+
+        >>> ner = NamedEntityExtractor(method="nltk")
+        >>> ner.extract(text)
+        {
+            'ORGANIZATION': [
+                'Parent', 'Invisible Hand', 'Great Author', 'House', 'Constitution', 'Senate',
+                'Human Race', 'Representatives'
+            ],
+            'PERSON': ['Almighty Being'],
+            'GPE': ['Heaven', 'United States', 'American']
+        }
+
+        >>> ner = NamedEntityExtractor(method="spacy")
+        >>> ner.extract(text)
+        {
+            'ORGANIZATION': ['House of Representatives', 'Senate', 'Parent of the Human Race'],
+            'DATE': ['present month', 'every day', '14th day', 'years'],
+            'ORDINAL': ['first', 'fifth'],
+            'GPE': ['United States'],
+            'NORP': ['republican', 'American'],
+            'LAW': ['Constitution']
+        }
+
+        >>> ner = NamedEntityExtractor(method="all")
+        >>> ner.extract(text)
+        {
+            'ORGANIZATION': [
+                'Representatives', 'Great Author', 'House', 'Parent', 'House of Representatives',
+                'Parent of the Human Race', 'Invisible Hand', 'Human Race', 'Senate', 'Constitution'
+            ],
+            'PERSON': ['Almighty Being'],
+            'GPE': ['Heaven', 'United States', 'American'],
+            'DATE': ['every day', 'present month', '14th day', 'years'],
+            'ORDINAL': ['first', 'fifth'],
+            'NORP': ['republican', 'American'],
+            'LAW': ['Constitution']
+        }
+
     """
-    def __init__(self):
-        
-        pass
+
+    def __init__(self, method="spacy"):
+
+        if method not in ["nltk", "spacy", "all"]:
+            raise Exception("Available methods are: 'nltk', 'spacy', 'all'")
+        self.method = method
+
+        self.type_map = {
+            "ORG": "ORGANIZATION",
+            "PER": "PERSON",
+            "LOC": "LOCATION",
+            "FAC": "FACILITY",
+            "VEH": "VEHICLE",
+            "WEA": "WEAPON",
+            "GSP": "GPE",
+        }
 
     def extract(self, text):
 
@@ -26,59 +94,35 @@ class NamedEntityExtractor(object):
         except Exception as e:
             text = decode_text(text)
 
-        try:
-            tree = ne_chunk(pos_tag(word_tokenize(text)))
-        except LookupError:
-            nltk.download("maxent_ne_chunker")
-            nltk.download("words")
-            tree = ne_chunk(pos_tag(word_tokenize(text)))
+        roots = defaultdict(list)
 
-        roots = {}
-        for branch in tree:
-            if type(branch) is nltk.Tree:
-                try:
+        if self.method in ["nltk", "all"]:
+
+            try:
+                tree = ne_chunk(pos_tag(word_tokenize(text)))
+            except LookupError:
+                nltk.download("maxent_ne_chunker")
+                nltk.download("words")
+                tree = ne_chunk(pos_tag(word_tokenize(text)), binary=True)
+
+            for branch in tree:
+                if type(branch) is nltk.Tree:
                     leaf = [" ".join(x[0] for x in branch.leaves())]
-                    if branch.label() in list(roots.keys()):
-                        roots[branch.label()] += leaf
-                    else:
-                        roots[branch.label()] = leaf
-                except Exception as e:
-                    pass
+                    key = self.type_map.get(branch.label(), branch.label())
+                    roots[key].extend(leaf)
 
-        return roots
+        if self.method in ["spacy", "all"]:
 
-class Cooccurance:
+            # SpaCy
+            nlp = spacy.load("en_core_web_sm")
+            for entity in nlp(text).ents:
+                entity_text = re.sub(
+                    r"^({})\s".format("|".join(stopwords.words("english"))),
+                    "",
+                    entity.text,
+                )
+                key = self.type_map.get(entity.label_, entity.label_)
+                roots[key].append(entity_text)
 
-    """
-    :param text:
-    """
-
-    def __init__(self, text):
-        try:
-            text = str(text)
-        except Exceptionas e:
-            text = decode_text_brutally(text)
-
-        self.text = text
-        self.sparse_matrix = defaultdict(lambda: defaultdict(lambda: 0))
-        self.dense_matrix = numpy.zeros((lexicon_size, lexicon_size))
-
-    def sparse_matrix(self):
-        text = self.text
-        for sent in sent_tokenize(text):
-            words = word_tokenize(sent)
-            for word1 in words:
-                for word2 in words:
-                    sparse_matrix[word1][word2]+=1
-        return sparse_matrix
-
-    def mod_hash(x, m):
-        return hash(x) % m
-
-    def dense():
-        for k in sparse_matrix.iterkeys():
-            for k2 in sparse_matrix[k].iterkeys():
-                dense_matrix[mod_hash(k, lexicon_size)][mod_hash(k2, lexicon_size)] = \
-                    sparse_matrix[k][k2]
-
-        return dense_matrix
+        return {self.type_map.get(k, k): list(set(v)) for k, v in roots.items()}
+>>>>>>> 1d09c44 (made the NamedEntityExtractor more useful by integrating spacy and nltk together; updated documentation and unit tests)

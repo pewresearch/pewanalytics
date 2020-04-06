@@ -1,17 +1,30 @@
 from __future__ import print_function
 import unittest
+import nltk
+from pewtils import flatten_list
 
 
 class TextNERTests(unittest.TestCase):
     def setUp(self):
-        pass
+
+        import nltk
+
+        nltk.download("inaugural")
+        fileid = nltk.corpus.inaugural.fileids()[0]
+        self.text = nltk.corpus.inaugural.raw(fileid)
 
     def test_namedentityextractor(self):
         from pewanalytics.text.ner import NamedEntityExtractor
 
-        ner = NamedEntityExtractor()
-        entities = ner.extract("This extractor is a wrapper around NLTK.")
-        self.assertTrue("NLTK" in entities["ORGANIZATION"])
+        for method, num_types, num_entities in [
+            ("nltk", 3, 12),
+            ("spacy", 6, 13),
+            ("all", 7, 23),
+        ]:
+            ner = NamedEntityExtractor(method=method)
+            entities = ner.extract(self.text)
+            self.assertEqual(len(entities.keys()), num_types)
+            self.assertEqual(len(flatten_list(list(entities.values()))), num_entities)
 
     def tearDown(self):
         pass
