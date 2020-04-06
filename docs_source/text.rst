@@ -1,99 +1,54 @@
-****************************
-pewanalytics: Text Module
-****************************
+*************************************
+pewanalytics.text: Text Tools
+*************************************
 
+In the :py:mod:`pewanalytics.text` module, you'll find a variety of utilities for working with text data.
 
-Some simple things you can do
+General Text Processing Tools
 -----------------------------
 
-Parts of speech ::
+The main :py:mod:`pewanalytics.text` module contains a variety of general tools for processing text.
 
-    from pewanalytics.text import filter_parts_of_speech
-    df['original_text'].values[0]
-    filter_parts_of_speech(doc, filter_pos=["NN"])
-
-Tokenize sentences ::
-
-    from pewanalytics.text import SentenceTokenizer
-    SentenceTokenizer
-
-Clean text ::
-
-    from pewanalytics.text import TextCleaner
-    clean_text = TextCleaner.clean(messy_text,
-                                decode_text = True,
-                                lemmatize = True,
-                                lemmatizer = my_personal_favorite_lemmatizer)
-
-
-Analyze and classify lists of documents ::
-
-    from pewanalytics.text import TextDataFrame
-
-.. rubric:: Text Modules
-``text.<function>``
-
-.. automodule :: pewanalytics.text
+.. automodule :: pewanalytics.text.__init__
   :noindex:
   :no-members:
   :autosummary:
   :autosummary-members:
-  :autosummary-inherited-members:
+  :members:
 
+Date Extraction
+-----------------------------
 
-.. rubric:: Text: Dates
-``text.dates.<class>``
+The :py:mod:`pewanalytics.text.dates` submodule contains a helper class for extracting dates from text.
 
 .. automodule :: pewanalytics.text.dates
   :noindex:
   :no-members:
   :autosummary:
   :autosummary-members:
-
-
-.. rubric:: Text: Named Entity Recognition
-``text.ner.<class>``
-
-.. automodule :: pewanalytics.text.ner
-  :noindex:
-  :no-members:
-  :autosummary:
-  :autosummary-members:
-
-
-Text Methods
---------------
-
-.. warning ::
-    Running these functions requires text contain no special characters
-
-.. automodule :: pewanalytics.text
-    :members:
-    :show-inheritance:
-
-Dates
------
-
-.. automodule :: pewanalytics.text.dates
-    :members:
-    :show-inheritance:
-
+  :members:
 
 Named Entity Recognition
-------------------------
+-----------------------------
 
-A light-weight wrapper using `NLTK's Named Entity Recognition
-model <https://www.nltk.org/book/ch07.html>`_.
-
-To use ::
-
-  from pewanalytics.text.ner import NamedEntityExtractor
-  extractor = NamedEntityExtractor(messy_text)
-  roots = extractor.extract()
+The :py:mod:`pewanalytics.text.ner` submodule contains a helper class for extracting named entities from text.
 
 .. automodule :: pewanalytics.text.ner
-    :members:
+  :noindex:
+  :no-members:
+  :autosummary:
+  :autosummary-members:
+  :members:
 
-.. toctree::
-   :caption: Navigation
-   :maxdepth: 2
+Topic Modeling
+-----------------------------
+
+The :py:mod:`pewanalytics.text.topics` submodule contains a standardized class for training and applying \
+topic models using several different libraries.
+
+.. automodule :: pewanalytics.text.topics
+  :noindex:
+  :no-members:
+  :autosummary:
+  :autosummary-members:
+  :members:
