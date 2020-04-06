@@ -5,7 +5,8 @@ boto3>=1.4.4
 chardet>=2.3.0
 cython>=0.25.2
 future
-fuzzywuzzy>=0.15.0
+fuzzywuzzy>=0.15.0; python_version < '3.0'
+rapidfuzz>=0.6.7; python_version >= '3.0'
 gensim>=3.8.1
 lxml>=4.4.1
 hdbscan>=0.8.18

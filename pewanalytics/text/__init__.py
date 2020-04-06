@@ -13,7 +13,11 @@ from nltk.corpus import wordnet
 
 from tqdm import tqdm
 from stopit import ThreadingTimeout as Timeout
-from fuzzywuzzy import fuzz
+
+try:
+    from rapidfuzz import fuzz
+except ImportError:
+    from fuzzywuzzy import fuzz
 from difflib import SequenceMatcher
 from stopit import TimeoutException
 
