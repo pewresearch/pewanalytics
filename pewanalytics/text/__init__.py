@@ -34,22 +34,6 @@ from pewanalytics.stats.mutual_info import compute_mutual_info
 from pewanalytics.stats.dimensionality_reduction import get_lsa, get_pca
 
 
-"""
-.. _text:
-
-.. tip: Insert tip
-
-.. autosummary::
-    :toctree: _autosummary
-    :template: clean.rst
-
-    dates
-    fragments
-    ner
-    topics
-"""
-
-
 def has_fragment(text, fragment):
 
     """
@@ -57,25 +41,53 @@ def has_fragment(text, fragment):
     function to process both the text and the fragment when running this check.
 
     :param text: The text to search
+    :type text: str
     :param fragment: The fragment to search for
+    :type fragment: str
     :return: Whether or not the text contains the fragment
+    :rtype: bool
+
+    Usage::
+
+        from pewanalytics.text import has_fragment
+
+        text = "testing one two three"
+
+        >>> has_fragment(text, "one two")
+        True
+
+        >>> has_fragment(text, "four")
+        False
     """
 
-    if any([(fragment in text), (_decode_text(fragment) in _decode_text(text))]):
-        return True
-    else:
-        return False
+    return any([(fragment in text), (_decode_text(fragment) in _decode_text(text))])
 
 
 def remove_fragments(text, fragments, throw_loud_fail=False):
 
     """
-    Iteratively remove fragments from a string
+    Iteratively remove fragments from a string.
 
-    :param text: string
+    :param text: The text toremove the fragments from
+    :type text: str
     :param fragments: A list of string fragments to search for and remove
+    :type fragments: list
     :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
+    :type throw_loud_fail: bool
     :return: The original string, minus any parts that matched the fragments provided
+    :rtype: str
+
+    Usage::
+
+        from pewanalytics.text import remove_fragments
+
+        text = "testing one two three"
+
+        >>> remove_fragments(text, ["one two"])
+        "testing  three"
+
+        >>> remove_fragments(text, ["testing", "three"])
+        " one two "
     """
 
     for f in fragments:
@@ -96,15 +108,34 @@ def remove_fragments(text, fragments, throw_loud_fail=False):
 def filter_parts_of_speech(text, filter_pos=None, exclude=False):
 
     """
-    Retain words associated with parts of speech in the text if exclude = False.
-    If exclude = True, exclude words associated with parts of speech.
+    Retain words associated with parts of speech in the text if `exclude=False`.
+    If `exclude=True`, exclude words associated with parts of speech.
     Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)
 
     | The full list of POS is here: https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
 
-    :param text: string
-    :param filter_pos: array of part of speech tags (default is 'NN', 'NNP', and 'JJ')
-    :return: A string comprised solely of words that matched to the specified parts of speech
+    :param text: The string to process
+    :type text: str
+    :param filter_pos: Array of part of speech tags (default is 'NN', 'NNP', and 'JJ')
+    :type filter_pos: list
+    :param exclude: If `True`, the function will remove words that match to the specified parts of speech; by default \
+    this function *filters to* POS matches instead.
+    :return: A string comprised solely of words that matched (or did not match) to the specified parts of speech, \
+    depending on the value of `exclude`
+    :rtype: str
+
+    Usage::
+
+        from pewanalytics.text import filter_parts_of_speech
+
+        text = "This is a very exciting sentence that can serve as a functional example"
+
+        >>> filter_parts_of_speech(text, filter_pos=["NN"])
+        'sentence example'
+
+        >>> filter_parts_of_speech(text, filter_pos=["JJ"], exclude=True)
+        'This is a very sentence that can serve as a example'
+
     """
 
     if not filter_pos:
@@ -122,12 +153,28 @@ def get_fuzzy_ratio(text1, text2, throw_loud_fail=False):
 
     """
     Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares
-    to the overall length of the texts.
+    to the overall length of the texts. Uses the `fuzzywuzzy` library in Python 2, and the `rapidfuzz` library in \
+    Python 3.
 
     :param text1: First string
+    :type text1: str
     :param text2: Second string
+    :type text1: str
     :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
-    :return: The Levenshtein ratio between the two texts
+    :type throw_loud_fail: bool
+    :return: The Levenshtein ratio between the two strings
+    :rtype: float
+
+    Usage::
+
+        from pewanalytics.text import get_fuzzy_ratio
+
+        text1 = "This is a sentence."
+        text2 = "This is a slightly difference sentence."
+
+        >>> get_fuzzy_ratio(text1, text2)
+        64.28571428571428
+
     """
 
     try:
@@ -145,12 +192,28 @@ def get_fuzzy_partial_ratio(text1, text2, throw_loud_fail=False, timeout=5):
     that one text is a subset of the other; finds the largest overlap and computes the Levenshtein ratio on that.
 
     :param text1: First string
+    :type text1: str
     :param text2: Second string
+    :type text2: str
     :param timeout: The number of seconds to wait before giving up
+    :type timeout: int
     :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
+    :type throw_loud_fail: bool
     :return: The partial Levenshtein ratio between the two texts
+    :rtype: float
 
     :accepts kwarg timeout:
+
+    Usage::
+
+        from pewanalytics.text import get_partial_fuzzy_ratio
+
+        text1 = "This is a sentence."
+        text2 = "This is a sentence, but with more text."
+
+        >>> get_partial_fuzzy_ratio(text1, text2)
+        100.0
+
     """
 
     partial_ratio = None
@@ -176,6 +239,27 @@ class SentenceTokenizer(object):
         :param base_tokenizer: The tokenizer to use (default = NLTK's English Punkt tokenizer)
         :param regex_split_trailing: A compiled regex object used to define the end of sentences
         :param regex_split_leading: A compiled regex object used to define the beginning of sentences
+
+        Usage::
+
+            from pewanalytics.text import SentenceTokenizer
+            import re
+
+            text = "This is a sentence. This is another sentence - and maybe a third sentence. And yet a fourth sentence."
+
+            >>> tokenizer = SentenceTokenizer()
+            >>> tokenizer.tokenize(text)
+            ['This is a sentence.',
+             'This is another sentence - and maybe a third sentence.',
+             'And yet a fourth sentence.']
+
+            >>> tokenizer = SentenceTokenizer(regex_split_leading=re.compile(r"\-"))
+            >>> tokenizer.tokenize(text)
+            ['This is a sentence.',
+             'This is another sentence',
+             'and maybe a third sentence.',
+             'And yet a fourth sentence.']
+
         """
 
         self.base_tokenizer = (
@@ -190,10 +274,14 @@ class SentenceTokenizer(object):
 
         """
         :param text: The text to tokenize
-        :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
+        :type text: str
+        :param throw_loud_fail: Whether or not to raise an error if text decoding fails (default=False)
+        :type throw_loud_fail: bool
         :param min_length: The minimum acceptable length of a sentence (if a token is shorter than this,
-        it will be considered part of the preceding sentence)
+        it will be considered part of the preceding sentence) (default=None)
+        :type min_length: int
         :return: A list of sentences
+        :rtype: list
         """
 
         text = _decode_text(text, throw_loud_fail)
@@ -264,22 +352,33 @@ class TextOverlapExtractor(object):
         Extracts all overlapping segments of at least `min_length` characters between the two texts. If `tokenize=True`
         then only tokens that appear fully in both texts will be extracted. For example:
 
-        ```python
-        >>> text1 = "This is a sentence. This is another sentence. And a third sentence. And yet a fourth sentence."
-        >>> text2 = "This is a different sentence. This is another sentence. And a third sentence. But the fourth sentence is different too."
-        >>> extractor = TextOverlapExtractor()
-        >>> extractor.get_text_overlaps(text1, text2, min_length=10, tokenize=False)
-        [' sentence. This is another sentence. And a third sentence. ', ' fourth sentence']
-        >>> extractor.get_text_overlaps(text1, text2, min_length=10, tokenize=True)
-        ['This is another sentence.', 'And a third sentence.']
-        ```
-
         :param text1: A piece of text
+        :type text1: str
         :param text2: Another piece of text to compare against the first
+        :type text2: str
         :param min_length: The minimum size of the overlap to be considered (number of characters)
+        :type min_length: int
         :param tokenize: If True, overlapping segments will only be included if they consist of atomic tokens; overlaps
         that consist of only part of a token will be excluded (default=True)
+        :type tokenize: bool
         :return: A list of all of the identified overlapping segments
+        :rtype: list
+
+        Usage::
+
+            from pewanalytics.text import TextOverlapExtractor
+
+            text1 = "This is a sentence. This is another sentence. And a third sentence. And yet a fourth sentence."
+            text2 = "This is a different sentence. This is another sentence. And a third sentence. But the fourth sentence is different too."
+
+            >>> extractor = TextOverlapExtractor()
+
+            >>> extractor.get_text_overlaps(text1, text2, min_length=10, tokenize=False)
+            [' sentence. This is another sentence. And a third sentence. ', ' fourth sentence']
+
+            >>> extractor.get_text_overlaps(text1, text2, min_length=10, tokenize=True)
+            ['This is another sentence.', 'And a third sentence.']
+
         """
 
         if tokenize:
@@ -309,8 +408,25 @@ class TextOverlapExtractor(object):
         Returns the largest overlapping segment of text between the two texts (this doesn't use the tokenizer).
 
         :param text1: A piece of text
+        :type text1: str
         :param text2: Another piece of text to compare against the first
+        :type text2: str
         :return: The largest substring that occurs in both texts
+        :rtype: str
+
+        Usage::
+
+            from pewanalytics.text import TextOverlapExtractor
+
+            text1 = "Overlaping section, unique text another overlapping section"
+            text2 = "Overlapping section, another overlapping section"
+
+
+            >>> extractor = TextOverlapExtractor()
+
+            >>> extractor.get_largest_overlap(text1, text2)
+            ' another overlapping section'
+
         """
 
         s = SequenceMatcher(None, text1, text2)
@@ -334,26 +450,50 @@ class TextCleaner(object):
     ):
 
         """
-        A class for cleaning text up, in preparation for NLP, etc.  Attempts to decode the text.  Then lowercases,
-        expands contractions, removes punctuation, lemmatizes or stems, removes stopwords and words less than three
+        A class for cleaning text up, in preparation for NLP, etc.  Attempts to decode the text.  Then lowercases, \
+        expands contractions, removes punctuation, lemmatizes or stems, removes stopwords and words less than three \
         characters, and consolidates whitespace.
 
         :param lemmatize: Whether or not to lemmatize the tokens (default = True)
+        :type lemmatize: bool
         :param tokenizer: Tokenizer to use (default = nltk.WhitespaceTokenizer())
-        :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them
-        with. Anything passed here will be used in addition to a set of built-in replacement patterns for common
+        :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them \
+        with. Anything passed here will be used in addition to a set of built-in replacement patterns for common \
         contractions.
+        :type replacers: list
         :param process_method: Options are "lemmatize", "stem", or None (default = "lemmatize")
-        :param processor: A lemmatizer or stemmer with a "lemmatize" or "stem" function (default for
-        process_method="lemmatize" is nltk.WordNetLemmatizer(); default for process_method="stem" is
+        :type process_method: str
+        :param processor: A lemmatizer or stemmer with a "lemmatize" or "stem" function (default for \
+        process_method="lemmatize" is nltk.WordNetLemmatizer(); default for process_method="stem" is \
         nltk.SnowballStemmer())
         :param stopwords: The set of stopwords to remove (default = nltk.corpus.stopwords.words('english'))
+        :type stopwords: set
         :param lowercase: Whether or not to lowercase the string (default = True)
+        :type lowercase: bool
         :param remove_urls: Whether or not to remove URLs and links from the text (default = True)
+        :type remove_urls: bool
         :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
+        :type throw_loud_fail: bool
         :param strip_html: Whether or not to remove contents wrapped in HTML tags (default = False)
-        :param filter_pos: A list of WordNet parts-of-speech tags to keep;
+        :type strip_html: bool
+        :param filter_pos: A list of WordNet parts-of-speech tags to keep; \
         if provided, all other words will be removed (default = None)
+        :type filter_pos: list
+
+        Usage::
+
+            from pewanalytics.text import TextCleaner
+
+            text = "Here's an example sentence.</br>There are plenty of other examples we could use though."
+
+            >>> cleaner = TextCleaner(process_method="lemmatize")
+            >>> cleaner.clean(text)
+            'example sentence plenty example could use though'
+
+            >>> cleaner = TextCleaner(process_method="stem")
+            >>> cleaner.clean(text)
+            'exampl sentenc plenti exampl could use though'
+
         """
 
         self.tokenizer = tokenizer if tokenizer else nltk.WhitespaceTokenizer()
@@ -371,7 +511,7 @@ class TextCleaner(object):
                 (r"(\w+)\'d", r"\g<1> would"),
                 (r"it\'s", "it is"),
             ]
-        )
+        )  # Borrowed from NLTK cookbook
         self.replacers = [
             (re.compile(r"\b{}\b".format(regex[0])), regex[1])
             for regex in self.replacers
@@ -444,12 +584,12 @@ class TextDataFrame(object):
     def __init__(self, df, text_column, **vectorizer_kwargs):
 
         """
-        This is a class full of functions for working with dataframes of documents - it has utilities for identifying
-        potential duplicates, identifying recurring segments of text, computing metrics like mutual information,
-        extracting clusters of documents, and more. Given a DataFrame and the name of the column that contains the
-        text to be analyzed, the TextDataFrame will automatically produce a TF-IDF sparse matrix representation of the
-        text upon initialization. All other parameters are passed along to the scikit-learn TfidfVectorizer. For more
-        info on the parameters it excepts, refer to the official documentation here:
+        This is a class full of functions for working with dataframes of documents - it has utilities for identifying \
+        potential duplicates, identifying recurring segments of text, computing metrics like mutual information, \
+        extracting clusters of documents, and more. Given a DataFrame and the name of the column that contains the \
+        text to be analyzed, the TextDataFrame will automatically produce a TF-IDF sparse matrix representation of the \
+        text upon initialization. All other parameters are passed along to the scikit-learn TfidfVectorizer. For more \
+        info on the parameters it excepts, refer to the official documentation here: \
         https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html
 
         :param df: A dataframe of documents.  Must contain a column with text.
@@ -465,7 +605,7 @@ class TextDataFrame(object):
     def search_corpus(self, text):
 
         """
-        Compares the provided text against the documents in the corpus and returns the most similar documents.
+        Compares the provided text against the documents in the corpus and returns the most similar documents. \
         A new column called 'cosine_similarity' is generated, which is used to sort and return the dataframe.
 
         :param text: The text to compare documents against
