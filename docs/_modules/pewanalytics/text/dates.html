@@ -1,168 +1,268 @@
 
+
 <!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pewanalytics.text.dates &mdash; pewanalytics 1.0.0 documentation</title>
+  
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>pewanalytics.text.dates &#8212; pewanalytics 0.0.1 documentation</title>
-    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="../../../index.html" class="icon icon-home"> pewanalytics
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../stats.html">Statistical Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../text.html">Text Tools</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pewanalytics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../text.html">pewanalytics.text</a> &raquo;</li>
+        
+      <li>pewanalytics.text.dates</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for pewanalytics.text.dates</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">object</span>
+<span></span><span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">object</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="kn">import</span> <span class="n">parse</span>
-<span class="kn">from</span> <span class="nn">calendar</span> <span class="kn">import</span> <span class="n">IllegalMonthError</span>
+<span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="k">import</span> <span class="n">parse</span>
+<span class="kn">from</span> <span class="nn">calendar</span> <span class="k">import</span> <span class="n">IllegalMonthError</span>
 
 
 <div class="viewcode-block" id="DateFinder"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.dates.DateFinder">[docs]</a><span class="k">class</span> <span class="nc">DateFinder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Search bodies of text for dates</span>
+<span class="sd">    A helper class to search for dates in text using a series of regular expressions and a parser from `dateutil`. \</span>
+<span class="sd">    Verifies that `dateutil` did not auto-fill missing values in the date. Time information will be automatically \</span>
+<span class="sd">    cleared out, but you can also pass a list of additional regular expression patterns (as strings) to define other \</span>
+<span class="sd">    patterns that should be cleared out before scanning for dates.</span>
+
+<span class="sd">    :param preprocessing_patterns: Optional list of additional patterns to clear out prior to searching for dates.</span>
+<span class="sd">    :type preprocessing_patterns: list</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.text.dates import DateFinder</span>
+
+<span class="sd">        text = &quot;January 1, 2018 and 02/01/2019 and Mar. 1st 2020&quot;</span>
+<span class="sd">        low_bound = datetime.datetime(2017, 1, 1)</span>
+<span class="sd">        high_bound = datetime.datetime(2021, 1, 1)</span>
+
+<span class="sd">        &gt;&gt;&gt; finder = DateFinder()</span>
+<span class="sd">        &gt;&gt;&gt; dates = finder.find_dates(text, low_bound, high_bound)</span>
+<span class="sd">        &gt;&gt;&gt; dates</span>
+<span class="sd">        [</span>
+<span class="sd">            (datetime.datetime(2018, 1, 1, 0, 0), &#39;January 1, 2018 &#39;),</span>
+<span class="sd">            (datetime.datetime(2020, 3, 1, 0, 0), &#39;Mar. 1st 2020&#39;),</span>
+<span class="sd">            (datetime.datetime(2019, 2, 1, 0, 0), &#39;02/01/2019 &#39;)</span>
+<span class="sd">        ]</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Searches bodies of text for dates using a series of regular expressions and a parser from `dateutil`.</span>
-<span class="sd">        Verifies that `dateutil` did not auto-fill missing values in the date.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preprocessing_patterns</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="c1"># A generally permissive date regex, also fairly prone to false positives</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">general_date_regex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compile_permissive_date_regex</span><span class="p">()</span>
-
-        <span class="c1"># A regex to identify reference to sermon &quot;parts&quot; (part 1...), which we remove because those trip up the dates.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">part_regex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compile_part_regex</span><span class="p">()</span>
-
-        <span class="c1"># Removing times, because those also trip up dates</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">standard_time_regex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compile_time_regex</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">_compile_part_regex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :return: regex that breaks dates into component parts</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">part_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-            <span class="sa">r</span><span class="sd">&quot;&quot;&quot;(?ix)             # case-insensitive, verbose regex</span>
-<span class="sd">            \b                    # match a word boundary</span>
-<span class="sd">            (?:(?:part|pt\.|pt|p\.)[a-z]*)</span>
-<span class="sd">             [\s]+                 # followed by whitespace</span>
-<span class="sd">             \d+                   # Then a number,</span>
-<span class="sd">            \b &quot;&quot;&quot;</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">part_regex</span>
-
-    <span class="k">def</span> <span class="nf">_compile_permissive_date_regex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :return: regex looking for dates</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">general_date_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-            <span class="sa">r</span><span class="sd">&quot;&quot;&quot;(?=((?ix)             # case-insensitive, verbose regex</span>
-<span class="sd">            \b                    # match a word boundary</span>
-<span class="sd">            (?:                   # match the following three times:</span>
-<span class="sd">             (?:                  # either</span>
-<span class="sd">              \d+                 # a number,</span>
-<span class="sd">              (?:\.|st|nd|rd|th|,)* # followed by a dot, st, nd, rd, a comma, or th (optional)</span>
-<span class="sd">              |                   # or a month name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+            <span class="sa">r</span><span class="sd">&quot;&quot;&quot;(?=((?ix)                       # case-insensitive, verbose regex</span>
+<span class="sd">            \b                                  # match a word boundary</span>
+<span class="sd">            (?:                                 # match the following three times:</span>
+<span class="sd">             (?:                                # either</span>
+<span class="sd">              \d+                               # a number,</span>
+<span class="sd">              (?:\.|st|nd|rd|th|,)*             # followed by a dot, st, nd, rd, a comma, or th (optional)</span>
+<span class="sd">              |                                 # or a month name</span>
 <span class="sd">              (?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*)</span>
 <span class="sd">             )</span>
-<span class="sd">             [\s./-]*             # followed by a date separator or whitespace (optional)</span>
-<span class="sd">            ){3}                  # do this three times</span>
+<span class="sd">             [\s./-]*                           # followed by a date separator or whitespace (optional)</span>
+<span class="sd">            ){3}                                # do this three times</span>
 <span class="sd">            \b)) &quot;&quot;&quot;</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">general_date_regex</span>
+        <span class="c1"># Always remove times, because those trip up dates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessing_patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;((?:\d\d|\d):[0-9][0-9])&quot;</span><span class="p">)]</span>
+        <span class="c1"># Add in any additional patterns to clear out, as provided by the user</span>
+        <span class="k">if</span> <span class="n">preprocessing_patterns</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preprocessing_patterns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">preprocessing_patterns</span><span class="p">]</span>
+            <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_compile_time_regex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :return: regex that searches for times</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">standard_time_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;((?:\d\d|\d):[0-9][0-9])&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">standard_time_regex</span>
-
-    <span class="k">def</span> <span class="nf">_remove_part_and_time_references</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the text without any references to &quot;parts&quot; or specific times.</span>
 
 <span class="sd">        :param text: A string to be cleaned that contains a date</span>
-<span class="sd">        :return: A cleaned string without additional time info</span>
+<span class="sd">        :return: A cleaned string without additional time info and other boilerplate</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">part_references</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">part_regex</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">reference</span> <span class="ow">in</span> <span class="n">part_references</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-        <span class="n">time_references</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">standard_time_regex</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">reference</span> <span class="ow">in</span> <span class="n">time_references</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessing_patterns</span><span class="p">:</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">text</span>
 
 <div class="viewcode-block" id="DateFinder.find_dates"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.dates.DateFinder.find_dates">[docs]</a>    <span class="k">def</span> <span class="nf">find_dates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">cutoff_date_start</span><span class="p">,</span> <span class="n">cutoff_date_end</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return all of the dates (in text form and as datetime) in the text variable,</span>
-<span class="sd">        but none before or after the start and end cutoff dates.</span>
+<span class="sd">        Return all of the dates (in text form and as datetime) in the text variable that fall within the specified \</span>
+<span class="sd">        window of dates (inclusive).</span>
 
-<span class="sd">        :param text: the text to scan for dates</span>
-<span class="sd">        :param cutoff_date_start: no dates will be found before this date</span>
-<span class="sd">        :param cutoff_date_end: no dates will be returned after this date</span>
+<span class="sd">        :param text: The text to scan for dates</span>
+<span class="sd">        :type text: str</span>
+<span class="sd">        :param cutoff_date_start: No dates will be returned if they fall before this date</span>
+<span class="sd">        :type cutoff_date_start: `datetime.date`</span>
+<span class="sd">        :param cutoff_date_end: No dates will be returned if they fall after this date</span>
+<span class="sd">        :type cutoff_date_end: `datetime.date`</span>
 <span class="sd">        :return: A list of tuples containing (datetime object, raw date text)</span>
+<span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">final_dates</span><span class="p">,</span> <span class="n">suspected_dates</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
 
-        <span class="c1"># Start by stripping out all references to parts, like &quot;pt. 1&quot; from the text, as well as times like &quot;March 12 2018, 8:00. These</span>
-        <span class="c1"># confuse the date regex, and will lead to text snippets that can&#39;t be parsed into dates. Worse, if the snippet containing &quot;pt 1&quot;</span>
-        <span class="c1"># overlaps with a real date, those dates will be excluded because the regex is non-overlapping.</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_part_and_time_references</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="c1"># Start by stripping out time info, which can confuse the date regex and will lead to text snippets that \</span>
+        <span class="c1"># can&#39;t be parsed into dates.</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocess</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
         <span class="c1"># Now find all of the plausible dates in the text. Many of these will be false positives.</span>
-        <span class="n">date_text_list</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">general_date_regex</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+        <span class="n">date_text_list</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date_regex</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">date_raw_text</span> <span class="ow">in</span> <span class="n">date_text_list</span><span class="p">:</span>
             <span class="n">suspected_dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date_raw_text</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">date_raw_text</span> <span class="ow">in</span> <span class="n">suspected_dates</span><span class="p">:</span>
-            <span class="c1"># The date parser fills in missing date components with the current days&#39; date, or with a default date you can pass it.</span>
-            <span class="c1"># This is annoying, because partial dates could show up in bulk, leading to odd clumps of dates on the same date that you parsed.</span>
-            <span class="c1"># Our solution is to use the two cutoff dates as default dates, parsing each date twice. If the two dates are the same, then</span>
-            <span class="c1"># the default date was not used.</span>
 
-            <span class="c1"># The contents of these dates don&#39;t matter much. However, they cannot have a month, day OR year in common, otherwise</span>
-            <span class="c1"># this won&#39;t work.</span>
+            <span class="c1"># The dateutil parser fills in missing date components with the current day&#39;s date, or with a default \</span>
+            <span class="c1"># date you can pass it. This is annoying, because partial dates could show up in bulk, leading to odd \</span>
+            <span class="c1"># clumps of dates on the same date that you parsed. Our solution is to use the two cutoff dates as default \</span>
+            <span class="c1"># dates, parsing each date twice. If the two dates are the same, then the default date was not used. \</span>
+            <span class="c1"># The contents of these dates don&#39;t matter much. However, they cannot have a month, day OR year in common, \</span>
+            <span class="c1"># otherwise this won&#39;t work.</span>
             <span class="n">default_date_1</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="mi">2020</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
             <span class="n">default_date_2</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="mi">1999</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 
@@ -171,7 +271,7 @@
                 <span class="n">datetime_2</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">date_raw_text</span><span class="p">,</span> <span class="n">fuzzy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_date_2</span><span class="p">)</span>
                 <span class="k">if</span> <span class="p">(</span>
                     <span class="n">datetime_1</span> <span class="o">==</span> <span class="n">datetime_2</span>
-                    <span class="ow">and</span> <span class="n">cutoff_date_start</span> <span class="o">&lt;</span> <span class="n">datetime_1</span> <span class="o">&lt;</span> <span class="n">cutoff_date_end</span>
+                    <span class="ow">and</span> <span class="n">cutoff_date_start</span> <span class="o">&lt;=</span> <span class="n">datetime_1</span> <span class="o">&lt;=</span> <span class="n">cutoff_date_end</span>
                 <span class="p">):</span>
                     <span class="n">date</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime_1</span><span class="p">,</span> <span class="n">date_raw_text</span><span class="p">)</span>
                     <span class="n">final_dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
@@ -181,72 +281,43 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">final_dates</span><span class="p">))</span></div></div>
 </pre></div>
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../../index.html">pewanalytics</a></h1>
+          <footer>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Pew Research Center
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Navigation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../text.html">Text</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../stats.html">Stats</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../../index.html">Documentation overview</a><ul>
-  <li><a href="../../index.html">Module code</a><ul>
-  <li><a href="../text.html">pewanalytics.text</a><ul>
-  </ul></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Pew Research Center.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>
