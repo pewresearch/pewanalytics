@@ -595,6 +595,30 @@ class TextDataFrame(object):
         :param df: A dataframe of documents.  Must contain a column with text.
         :param text_column: The name of the column in the dataframe that contains the text
         :param vectorizer_kwargs: All remaining keyword arguments are passed to TfidfVectorizer
+
+        Usage::
+            from pewanalytics.text import TextDataFrame
+            import pandas as pd
+
+            text_df = pd.DataFrame({'text_id': list(range(1,5)),
+                            'text': ["I am reading this sentence",
+                                    "This sentence contains meanings",
+                                    "Hello nice to meet you",
+                                    "I'm doing fine and you"]
+                           })
+
+            >>> tdf = TextDataFrame(text_df,
+                                    "text",
+                                    stop_words="english",
+                                    ngram_range=(1, 1)
+                                    )
+            >>> tdf_dense = pd.DataFrame(tdf.tfidf.todense(), columns=tdf.vectorizer.get_feature_names())
+                hello      meet      nice   reading
+            0  0.000000  0.000000  0.000000  1.000000
+            1  0.000000  0.000000  0.629228  0.777221
+            2  0.702035  0.553492  0.448100  0.000000
+            3  0.000000  0.777221  0.629228  0.000000
+
         """
 
         self.corpus = df
@@ -610,6 +634,16 @@ class TextDataFrame(object):
 
         :param text: The text to compare documents against
         :return: The corpus dataframe sorted by cosine similarity
+
+        Usage::
+
+            >>> tdf.search_corpus('Hello how are you')
+               text_id                    text  search_cosine_similarity
+            2        3  Hello nice to meet you                  0.702035
+            0        1            I am reading                  0.000000
+            1        2         Reading is nice                  0.000000
+            3        4    Nice to meet you too                  0.000000
+
         """
 
         similarities = cosine_similarity(self.vectorizer.transform([text]), self.tfidf)
