@@ -482,6 +482,7 @@ class TextCleaner(object):
         'exampl sentenc plenti exampl could use though'
 
     """
+
     def __init__(
         self,
         throw_loud_fail=False,
@@ -628,6 +629,7 @@ class TextDataFrame(object):
         4	0.000000	0.000000	0.000000	       0.000000	...      0.026539	   0.026539	0.000000	0.026539
 
     """
+
     def __init__(self, df, text_column, **vectorizer_kwargs):
         self.corpus = df
         self.text_column = text_column
