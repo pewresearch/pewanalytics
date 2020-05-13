@@ -600,24 +600,28 @@ class TextDataFrame(object):
             from pewanalytics.text import TextDataFrame
             import pandas as pd
 
-            text_df = pd.DataFrame({'text_id': list(range(1,5)),
-                            'text': ["I am reading this sentence",
-                                    "This sentence contains meanings",
-                                    "Hello nice to meet you",
-                                    "I'm doing fine and you"]
-                           })
+            nltk.download("inaugural")
+            df = pd.DataFrame([
+                {"speech": fileid, "text": nltk.corpus.inaugural.raw(fileid)} for fileid in nltk.corpus.inaugural.fileids()
+            ])
+            df['year'] = df['speech'].map(lambda x: int(x.split("-")[0]))
+            df['21st_century'] = df['year'].map(lambda x: 1 if x >= 2000 else 0)
+            df = df.append(df.tail(2))
 
             >>> tdf = TextDataFrame(text_df,
                                     "text",
                                     stop_words="english",
-                                    ngram_range=(1, 1)
+                                    ngram_range=(1, 2)
                                     )
-            >>> tdf_dense = pd.DataFrame(tdf.tfidf.todense(), columns=tdf.vectorizer.get_feature_names())
-                hello      meet      nice   reading
-            0  0.000000  0.000000  0.000000  1.000000
-            1  0.000000  0.000000  0.629228  0.777221
-            2  0.702035  0.553492  0.448100  0.000000
-            3  0.000000  0.777221  0.629228  0.000000
+
+            >>> tdf_dense = pd.DataFrame(tdf.tfidf.todense(), columns=tdf.vectorizer.get_feature_names()).head(5)
+            >>> tdf_dense.loc[:, (tdf_dense != 0).any(axis=0)]
+            	14th	14th day	abandon	     abandon government	... zeal inspires	zeal purity	zeal rely	zeal wisdom
+            0	0.034014	0.034014	0.000000	       0.000000	...      0.000000	   0.000000	0.000000	0.000000
+            1	0.000000	0.000000	0.000000	       0.000000	...      0.000000	   0.000000	0.000000	0.000000
+            2	0.000000	0.000000	0.000000	       0.000000	...      0.000000	   0.000000	0.000000	0.000000
+            3	0.000000	0.000000	0.020984	       0.030686	...      0.000000	   0.000000	0.030686	0.000000
+            4	0.000000	0.000000	0.000000	       0.000000	...      0.026539	   0.026539	0.000000	0.026539
 
         """
 
@@ -637,12 +641,18 @@ class TextDataFrame(object):
 
         Usage::
 
-            >>> tdf.search_corpus('Hello how are you')
-               text_id                    text  search_cosine_similarity
-            2        3  Hello nice to meet you                  0.702035
-            0        1            I am reading                  0.000000
-            1        2         Reading is nice                  0.000000
-            3        4    Nice to meet you too                  0.000000
+            >>> tdf.search_corpus('upright zeal')[:10]
+            	speech	                                                        text	year	21st_century	search_cosine_similarity
+            4	1805-Jefferson.txt	Proceeding, fellow citizens, to that qualifica...	1805	0	              0.030670
+            8	1821-Monroe.txt	    Fellow citizens, I shall not attempt to descri...	1821	0	              0.025051
+            9	1825-Adams.txt	    In compliance with an usage coeval with the ex...	1825	0	              0.024875
+            27	1897-McKinley.txt	Fellow citizens, In obedience to the will of t...	1897	0	              0.021133
+            10	1829-Jackson.txt	Fellow citizens, about to undertake the arduou...	1829	0	              0.014707
+            3	1801-Jefferson.txt	Friends and Fellow Citizens:\n\nCalled upon to...	1801	0	              0.011821
+            24	1885-Cleveland.txt	Fellow citizens, in the presence of this vast ...	1885	0	              0.011510
+            2	1797-Adams.txt	    When it was first perceived, in early times, t...	1797	0	              0.009757
+            7	1817-Monroe.txt	    I should be destitute of feeling if I was not ...	1817	0	              0.007950
+            43	1961-Kennedy.txt	Vice President Johnson, Mr. Speaker, Mr. Chief...	1961	0	              0.000000
 
         """
 
@@ -662,6 +672,7 @@ class TextDataFrame(object):
         their best match in match_list.  If False (default), only the first row will be matched.
         :param min_similarity: Minimum cosine similarity required for any match to be made.
         :return: Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity
+
         """
         similarities = cosine_similarity(
             self.tfidf, self.vectorizer.transform(match_list)
@@ -777,6 +788,25 @@ class TextDataFrame(object):
         whether the two documents should be considered duplicates.
         :return: A list of lists, containing groups of duplicate documents (represented as rows from the corpus
         dataframe)
+
+        Usage::
+
+            >>> tdf.find_duplicates()
+            [            speech                                               text  year  \
+             56  2013-Obama.txt  Thank you. Thank you so much.\n\nVice Presiden...  2013
+             56  2013-Obama.txt  Thank you. Thank you so much.\n\nVice Presiden...  2013
+
+                 21st_century
+             56             1
+             56             1  ,
+                         speech                                               text  year  \
+             57  2017-Trump.txt  Chief Justice Roberts, President Carter, Presi...  2017
+             57  2017-Trump.txt  Chief Justice Roberts, President Carter, Presi...  2017
+
+                 21st_century
+             57             1
+             57             1  ]
+
         """
 
         text = self.corpus[self.text_column]
@@ -851,6 +881,18 @@ class TextDataFrame(object):
         :param l: An optional Laplace smoothing parameter
         :param normalize: Toggle normalization on or off (to control for feature prevalence), on by default
         :return: A DataFrame of ngrams and various metrics about them, including mutual information
+
+        Usage::
+            >>> results = tdf.mutual_info('21st_century')
+            >>> results.sort_values("MI1", ascending=False).index[:25]
+            Index(['journey complete', 'jobs', 'make america', 've', 'obama', 'workers',
+                   'xand', 'states america', 'america best', 'debates', 'clinton',
+                   'president clinton', 'trillions', 'stops right', 'transferring',
+                   'president obama', 'stops', 'protected protected', 'transferring power',
+                   'nation capital', 'american workers', 'politicians', 'people believe',
+                   'borders', 'victories'],
+                   dtype='object')
+
         """
 
         if sample_size:
@@ -886,6 +928,20 @@ class TextDataFrame(object):
         "kmeans".
 
         :param k: The number of clusters to extract
+
+        Usage::
+
+            >>> tdf.kmeans_clusters(5)
+            KMeans: n_clusters 5, score is 0.0051332807589337314
+            KMeans clusters saved to self.corpus['kmeans']
+
+            >>> df['kmeans'].value_counts()
+            2    26
+            3    15
+            4    11
+            0     5
+            1     3
+            Name: kmeans, dtype: int64
         """
 
         self.corpus["kmeans"] = compute_kmeans_clusters(
@@ -902,6 +958,12 @@ class TextDataFrame(object):
 
         :param min_cluster_size: The minimum number of documents that a cluster must contain.
         :param min_samples: An HDBSCAN parameter; refer to the documentation for more information
+
+        Usage::
+
+            >>> tdf.hdbscan_clusters(min_cluster_size=10)
+            HDBSCAN: n_clusters 2
+            HDBSCAN clusters saved to self.corpus['hdbscan']
         """
 
         self.corpus["hdbscan"] = compute_hdbscan_clusters(
@@ -919,6 +981,21 @@ class TextDataFrame(object):
         :param min_size: Ignore clusters that have fewer than this number of documents
         :param top_n: The number of top terms to identify for each cluster
         :return: A dictionary; keys are the cluster IDs and values are the top terms for the cluster
+
+        Usage::
+
+            >>> tdf.top_cluster_terms('kmeans', min_size=10)
+            {2: array(['constitution', 'general government', 'union', 'sentiments',
+                       'object', 'administration government', 'confederacy', 'whilst',
+                       'magistrate', 'chief magistrate'],
+                       dtype=object),
+             3: array(['peoples', 'shall strive', 'realization', 'tasks', 'offenses',
+                       'woe', 'leadership', 'wished', 'profit', 'structure'],
+                       dtype=object),
+             4: array(['america', 'make america', 'jobs', 'journey', 'journey complete',
+                       've', 'obama', 'new century', 'land new', 'technology'],
+                       dtype=object)}
+
         """
 
         dummies = pd.get_dummies(self.corpus[cluster_col], prefix=cluster_col)
