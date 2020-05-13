@@ -612,7 +612,7 @@ class TextDataFrame(object):
         df['21st_century'] = df['year'].map(lambda x: 1 if x >= 2000 else 0)
 
         # Create artificial duplicates in the dataset
-        df = df.append(df.tail(2))
+        df = df.append(df.tail(2)).reset_index()
 
         >>> tdf = TextDataFrame(text_df,
                                 "text",
@@ -750,6 +750,7 @@ class TextDataFrame(object):
         :param scan_top_n_matches_per_doc: The number of other documents to compare each document against.
         :param min_fragment_length: The minimum character length a fragment must have to be extracted.
         :return: A list of fragments that were found.
+
         """
 
         text_overlap_extractor = TextOverlapExtractor()
@@ -1060,7 +1061,21 @@ class TextDataFrame(object):
 
         Usage::
 
-            >>>
+            >>> pca_df = tdf.pca_components(2)
+            Decomposition explained variance ratio: 0.07488529151231405
+            Component 0: ['america' 'today' 'americans' 'world' 'new' 'freedom' 'thank' 'nation'
+             'god' 'journey']
+            Component 1: ['america' 'make america' 'dreams' 'protected' 'obama' 'borders'
+             'factories' 'american' 'transferring' 'stops']
+            Top PCA dimensions saved as clusters to self.corpus['pca']
+
+            >>> df.sample(5)
+            	             speech	                                             text	year	21st_century	pca_0	     pca_1	      pca
+            0	1789-Washington.txt	Fellow-Citizens of the Senate and of the House...	1789	0	            -0.129094	0.016984	pca_1
+            21	1873-Grant.txt	    Fellow-Citizens:\n\nUnder Providence I have be...	1873	0	            -0.097430	0.009559	pca_1
+            49	1985-Reagan.txt  	Senator Mathias, Chief Justice Burger, Vice Pr...	1985	0	            0.163833	-0.020259	pca_0
+            2	1797-Adams.txt    	When it was first perceived, in early times, t...	1797	0	            -0.140250	0.024844	pca_1
+            20	1869-Grant.txt   	Citizens of the United States:\n\nYour suffrag...	1869	0	            -0.114444	0.014419	pca_1
         """
 
         for col in self.corpus.columns:
@@ -1084,6 +1099,24 @@ class TextDataFrame(object):
 
         :param k: Number of dimensions to extract
         :return: A dataframe of (features x components)
+
+        Usage::
+
+            >>> lsa_df = tdf.lsa_components(2)
+            Decomposition explained variance ratio: 0.04723119670308432
+            Component 0: ['government' 'people' 'america' 'states' 'world' 'nation' 'shall'
+             'country' 'great' 'peace']
+            Component 1: ['america' 'today' 'americans' 'world' 'new' 'freedom' 'thank' 'nation'
+             'god' 'make america']
+            Top LSA dimensions saved as clusters to self.corpus['lsa']
+
+            >>> df.sample(5)
+            	            speech	text	                                            year	21st_century	lsa_0	   lsa_1	lsa
+            37	1937-Roosevelt.txt	When four years ago we met to inaugurate a Pre...	1937	0	         0.293068	0.040802	lsa_0
+            8	1821-Monroe.txt	    Fellow citizens, I shall not attempt to descri...	1821	0	         0.348465	-0.212382	lsa_0
+            7	1817-Monroe.txt	    I should be destitute of feeling if I was not ...	1817	0	         0.369249	-0.237231	lsa_0
+            26	1893-Cleveland.txt	My Fellow citizens, in obedience of the mandat...	1893	0	         0.275778	-0.128497	lsa_0
+            59	2017-Trump.txt	    Chief Justice Roberts, President Carter, Presi...	2017	1	         0.342111	0.511687	lsa_1
         """
 
         for col in self.corpus.columns:
@@ -1107,6 +1140,16 @@ class TextDataFrame(object):
         :param top_n: Number of documents to return for each component
         :return: A dictionary where keys are the component, and values are the text values for the component's `top_n`
         documents
+
+        Usage::
+
+            >>> lsa_topdoc = tdf.get_top_documents("lsa")
+            >>> {key: len(value) for key, value in lsa_topdoc.items()}
+            {'lsa_0': 5, 'lsa_1': 4}
+
+            >>> lsa_topdoc['lsa_1'][0]
+            'Chief Justice Roberts, President Carter, President Clinton, President Bush, President Obama, fellow Americans, \
+            and people of the world: Thank you.\n\nWe, the citizens of America...'
         """
 
         top_docs = {}
