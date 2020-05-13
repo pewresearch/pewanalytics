@@ -632,7 +632,7 @@ class TextDataFrame(object):
     """
 
     def __init__(self, df, text_column, **vectorizer_kwargs):
-        self.corpus = copy.deepcopy(df)
+        self.corpus = df
         self.text_column = text_column
         self.vectorizer = TfidfVectorizer(decode_error="ignore", **vectorizer_kwargs)
         self.tfidf = self.vectorizer.fit_transform(df[text_column])
@@ -659,8 +659,9 @@ class TextDataFrame(object):
         """
 
         similarities = cosine_similarity(self.vectorizer.transform([text]), self.tfidf)
-        self.corpus["search_cosine_similarity"] = similarities[0]
-        return self.corpus.sort_values("search_cosine_similarity", ascending=False)
+        corpus = copy.deepcopy(self.corpus[[self.text_column]])
+        corpus["search_cosine_similarity"] = similarities[0]
+        return corpus.sort_values("search_cosine_similarity", ascending=False)
 
     def match_text_to_corpus(
         self, match_list, allow_multiple=False, min_similarity=0.9
@@ -670,8 +671,9 @@ class TextDataFrame(object):
         be matched to the value in the list to which it is most similar, based on cosine similarity.
 
         :param match_list: A list of strings (other documents) to be matched to documents in the dataframe
-        :param allow_multiple: If set to True and your corpus contains duplicates, they will all be matched to
-        their best match in match_list.  If False (default), only the first row will be matched.
+        :param allow_multiple: If set to True, each document in your corpus will be matched with its closes valid \
+        match in the list. If set to False (default), documents in the list will only be matched to their best match \
+        in the corpus.
         :param min_similarity: Minimum cosine similarity required for any match to be made.
         :return: Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity
 
@@ -679,46 +681,62 @@ class TextDataFrame(object):
         similarities = cosine_similarity(
             self.tfidf, self.vectorizer.transform(match_list)
         )
-        self.corpus["match_text"] = None
-        self.corpus["match_index"] = None
-        self.corpus["cosine_similarity"] = None
 
-        for index, row in tqdm(self.corpus.iterrows(), desc="Matching items to corpus"):
-            row = self.corpus.iloc[index]
+        corpus = copy.deepcopy(self.corpus[[self.text_column]])
+        corpus["match_text"] = None
+        corpus["match_index"] = None
+        corpus["cosine_similarity"] = None
+
+        for index, row in tqdm(corpus.iterrows(), desc="Matching items to corpus"):
+            row = corpus.iloc[index]
             if is_null(row["match_index"]):
                 for i, sim in [
                     s
                     for s in sorted(
                         zip(
-                            list(range(0, len(match_list))),
-                            similarities[self.corpus.index.get_loc(index)],
+                            list(range(0, len(match_list) + 1)),
+                            similarities[corpus.index.get_loc(index)],
                         ),
                         key=lambda x: x[1],
                         reverse=True,
                     )
                     if s[1] >= min_similarity
                 ]:
-                    if i not in self.corpus["match_index"].unique():
-                        if allow_multiple:
-                            self.corpus.loc[
-                                self.corpus[self.text_column] == row[self.text_column],
-                                "match_index",
-                            ] = i
-                            self.corpus.loc[
-                                self.corpus[self.text_column] == row[self.text_column],
-                                "match_text",
-                            ] = match_list[i]
-                            self.corpus.loc[
-                                self.corpus[self.text_column] == row[self.text_column],
-                                "cosine_similarity",
-                            ] = sim
+                    match = True
+                    if (
+                        not allow_multiple
+                        and i
+                        in corpus[~corpus["match_index"].isnull()][
+                            "match_index"
+                        ].unique()
+                    ):
+                        current_best = corpus.loc[corpus["match_index"] == i][
+                            "cosine_similarity"
+                        ].max()
+                        if sim >= current_best:
+                            corpus.loc[corpus["match_index"] == i, "match_text"] = None
+                            corpus.loc[
+                                corpus["match_index"] == i, "cosine_similarity"
+                            ] = None
+                            corpus.loc[corpus["match_index"] == i, "match_index"] = None
                         else:
-                            self.corpus.loc[index, "match_index"] = i
-                            self.corpus.loc[index, "match_text"] = match_list[i]
-                            self.corpus.loc[index, "cosine_similarity"] = sim
+                            match = False
+                    if match:
+                        corpus.loc[
+                            corpus[self.text_column] == row[self.text_column],
+                            "match_index",
+                        ] = i
+                        corpus.loc[
+                            corpus[self.text_column] == row[self.text_column],
+                            "match_text",
+                        ] = match_list[i]
+                        corpus.loc[
+                            corpus[self.text_column] == row[self.text_column],
+                            "cosine_similarity",
+                        ] = sim
                         break
 
-        return self.corpus
+        return corpus
 
     def extract_corpus_fragments(
         self, scan_top_n_matches_per_doc=20, min_fragment_length=15
@@ -811,7 +829,7 @@ class TextDataFrame(object):
 
         """
 
-        text = self.corpus[self.text_column]
+        text = copy.deepcopy(self.corpus[self.text_column])
         if decode_text:
             text = text.map(_decode_text)
 
@@ -898,14 +916,14 @@ class TextDataFrame(object):
 
         """
 
-        if sample_size:
-            df = self.corpus.sample(n=sample_size).reset_index()
-        else:
-            df = self.corpus
+        keep_columns = [self.text_column, outcome_col]
         if weight_col:
-            df = df.dropna(
-                subset=[self.text_column, outcome_col, weight_col]
-            ).reset_index()
+            keep_columns.append(weight_col)
+        df = copy.deepcopy(self.corpus[keep_columns])
+        if sample_size:
+            df = df.sample(n=sample_size).reset_index()
+        if weight_col:
+            df = df.dropna().reset_index()
         else:
             df = df.dropna(subset=[self.text_column, outcome_col]).reset_index()
         y = df[outcome_col]
@@ -1045,12 +1063,15 @@ class TextDataFrame(object):
             >>>
         """
 
+        for col in self.corpus.columns:
+            if col.startswith("pca_"):
+                del self.corpus[col]
         components, documents = get_pca(
             self.tfidf, feature_names=self.vectorizer.get_feature_names(), k=k
         )
         for col in documents.columns:
             self.corpus[col] = documents[col]
-        print("Top PCA dimensions saved as clusters to self.corpus['pca']")
+        print("Top PCA dimensions saved as clusters to self.corpus['pca_'] columns")
         return components
 
     def lsa_components(self, k=20):
@@ -1065,12 +1086,15 @@ class TextDataFrame(object):
         :return: A dataframe of (features x components)
         """
 
+        for col in self.corpus.columns:
+            if col.startswith("lsa_"):
+                del self.corpus[col]
         components, documents = get_lsa(
             self.tfidf, feature_names=self.vectorizer.get_feature_names(), k=k
         )
         for col in documents.columns:
             self.corpus[col] = documents[col]
-        print("Top LSA dimensions saved as clusters to self.corpus['lsa']")
+        print("Top LSA dimensions saved as clusters to self.corpus['lsa_'] columns")
         return components
 
     def get_top_documents(self, component_prefix="cluster", top_n=5):

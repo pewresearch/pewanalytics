@@ -179,20 +179,47 @@ class TextTests(unittest.TestCase):
     def test_tdf_match_text_to_corpus(self):
         from pewanalytics.text import TextDataFrame
 
-        tdf = TextDataFrame(self.df[:100], "text")
-        self.df["alt_text"] = self.df["text"].map(lambda x: x[:-100])
-        matches = tdf.match_text_to_corpus(self.df["alt_text"][:100])
-        for i, j in zip(self.df[:100].index.values, matches["match_index"].values):
-            self.assertEqual(i, j)
-        tdf.corpus.loc[tdf.corpus.index[1:10], "text"] = "plot"
-        matches = tdf.match_text_to_corpus(
-            self.df["alt_text"][:100], allow_multiple=True, min_similarity=0.05
+        tdf = TextDataFrame(
+            pd.DataFrame(
+                [
+                    {"text": "I read books"},
+                    {"text": "I like reading"},
+                    {"text": "I read books"},
+                    {"text": "reading is nice"},
+                    {"text": "reading"},
+                    {"text": "books"},
+                ]
+            ),
+            "text",
         )
-        self.assertEqual(matches["match_index"].value_counts().max(), 9)
         matches = tdf.match_text_to_corpus(
-            self.df["alt_text"][:100], allow_multiple=False, min_similarity=0.05
+            ["books", "reading"], min_similarity=0.1, allow_multiple=True
         )
-        self.assertEqual(matches["match_index"].value_counts().max(), 1)
+        self.assertEqual(
+            list(matches["match_text"].values),
+            ["books", "reading", "books", "reading", "reading", "books"],
+        )
+        matches = tdf.match_text_to_corpus(
+            ["books", "reading"], min_similarity=0.5, allow_multiple=True
+        )
+        self.assertEqual(
+            list(matches["match_text"].values),
+            ["books", "reading", "books", None, "reading", "books"],
+        )
+        matches = tdf.match_text_to_corpus(
+            ["books", "reading"], min_similarity=0.6, allow_multiple=True
+        )
+        self.assertEqual(
+            list(matches["match_text"].values),
+            ["books", None, "books", None, "reading", "books"],
+        )
+        matches = tdf.match_text_to_corpus(
+            ["books", "reading"], min_similarity=0.5, allow_multiple=False
+        )
+        self.assertEqual(
+            list(matches["match_text"].values),
+            [None, None, None, None, "reading", "books"],
+        )
 
     def test_tdf_extract_corpus_fragments(self):
         from pewanalytics.text import TextDataFrame
