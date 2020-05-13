@@ -435,6 +435,53 @@ class TextOverlapExtractor(object):
 
 
 class TextCleaner(object):
+
+    """
+    A class for cleaning text up, in preparation for NLP, etc.  Attempts to decode the text.  Then lowercases, \
+    expands contractions, removes punctuation, lemmatizes or stems, removes stopwords and words less than three \
+    characters, and consolidates whitespace.
+
+    :param lemmatize: Whether or not to lemmatize the tokens (default = True)
+    :type lemmatize: bool
+    :param tokenizer: Tokenizer to use (default = nltk.WhitespaceTokenizer())
+    :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them \
+    with. Anything passed here will be used in addition to a set of built-in replacement patterns for common \
+    contractions.
+    :type replacers: list
+    :param process_method: Options are "lemmatize", "stem", or None (default = "lemmatize")
+    :type process_method: str
+    :param processor: A lemmatizer or stemmer with a "lemmatize" or "stem" function (default for \
+    process_method="lemmatize" is nltk.WordNetLemmatizer(); default for process_method="stem" is \
+    nltk.SnowballStemmer())
+    :param stopwords: The set of stopwords to remove (default = nltk.corpus.stopwords.words('english'))
+    :type stopwords: set
+    :param lowercase: Whether or not to lowercase the string (default = True)
+    :type lowercase: bool
+    :param remove_urls: Whether or not to remove URLs and links from the text (default = True)
+    :type remove_urls: bool
+    :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
+    :type throw_loud_fail: bool
+    :param strip_html: Whether or not to remove contents wrapped in HTML tags (default = False)
+    :type strip_html: bool
+    :param filter_pos: A list of WordNet parts-of-speech tags to keep; \
+    if provided, all other words will be removed (default = None)
+    :type filter_pos: list
+
+    Usage::
+
+        from pewanalytics.text import TextCleaner
+
+        text = "Here's an example sentence.</br>There are plenty of other examples we could use though."
+
+        >>> cleaner = TextCleaner(process_method="lemmatize")
+        >>> cleaner.clean(text)
+        'example sentence plenty example could use though'
+
+        >>> cleaner = TextCleaner(process_method="stem")
+        >>> cleaner.clean(text)
+        'exampl sentenc plenti exampl could use though'
+
+    """
     def __init__(
         self,
         throw_loud_fail=False,
@@ -448,53 +495,6 @@ class TextCleaner(object):
         strip_html=False,
         tokenizer=None,
     ):
-
-        """
-        A class for cleaning text up, in preparation for NLP, etc.  Attempts to decode the text.  Then lowercases, \
-        expands contractions, removes punctuation, lemmatizes or stems, removes stopwords and words less than three \
-        characters, and consolidates whitespace.
-
-        :param lemmatize: Whether or not to lemmatize the tokens (default = True)
-        :type lemmatize: bool
-        :param tokenizer: Tokenizer to use (default = nltk.WhitespaceTokenizer())
-        :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them \
-        with. Anything passed here will be used in addition to a set of built-in replacement patterns for common \
-        contractions.
-        :type replacers: list
-        :param process_method: Options are "lemmatize", "stem", or None (default = "lemmatize")
-        :type process_method: str
-        :param processor: A lemmatizer or stemmer with a "lemmatize" or "stem" function (default for \
-        process_method="lemmatize" is nltk.WordNetLemmatizer(); default for process_method="stem" is \
-        nltk.SnowballStemmer())
-        :param stopwords: The set of stopwords to remove (default = nltk.corpus.stopwords.words('english'))
-        :type stopwords: set
-        :param lowercase: Whether or not to lowercase the string (default = True)
-        :type lowercase: bool
-        :param remove_urls: Whether or not to remove URLs and links from the text (default = True)
-        :type remove_urls: bool
-        :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
-        :type throw_loud_fail: bool
-        :param strip_html: Whether or not to remove contents wrapped in HTML tags (default = False)
-        :type strip_html: bool
-        :param filter_pos: A list of WordNet parts-of-speech tags to keep; \
-        if provided, all other words will be removed (default = None)
-        :type filter_pos: list
-
-        Usage::
-
-            from pewanalytics.text import TextCleaner
-
-            text = "Here's an example sentence.</br>There are plenty of other examples we could use though."
-
-            >>> cleaner = TextCleaner(process_method="lemmatize")
-            >>> cleaner.clean(text)
-            'example sentence plenty example could use though'
-
-            >>> cleaner = TextCleaner(process_method="stem")
-            >>> cleaner.clean(text)
-            'exampl sentenc plenti exampl could use though'
-
-        """
 
         self.tokenizer = tokenizer if tokenizer else nltk.WhitespaceTokenizer()
         self.replacers = replacers if replacers else []
@@ -581,50 +581,54 @@ class TextCleaner(object):
 
 
 class TextDataFrame(object):
+
+    """
+    This is a class full of functions for working with dataframes of documents - it has utilities for identifying \
+    potential duplicates, identifying recurring segments of text, computing metrics like mutual information, \
+    extracting clusters of documents, and more. Given a DataFrame and the name of the column that contains the \
+    text to be analyzed, the TextDataFrame will automatically produce a TF-IDF sparse matrix representation of the \
+    text upon initialization. All other parameters are passed along to the scikit-learn TfidfVectorizer. For more \
+    info on the parameters it excepts, refer to the official documentation here: \
+    https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html
+
+    :param df: A dataframe of documents.  Must contain a column with text.
+    :param text_column: The name of the column in the dataframe that contains the text
+    :param vectorizer_kwargs: All remaining keyword arguments are passed to TfidfVectorizer
+
+    Usage::
+
+        from pewanalytics.text import TextDataFrame
+        import pandas as pd
+
+        nltk.download("inaugural")
+        df = pd.DataFrame([
+            {"speech": fileid, "text": nltk.corpus.inaugural.raw(fileid)} for fileid in nltk.corpus.inaugural.fileids()
+        ])
+
+        # Create additional outcome grouping variable to identify mutual information within group
+        df['year'] = df['speech'].map(lambda x: int(x.split("-")[0]))
+        df['21st_century'] = df['year'].map(lambda x: 1 if x >= 2000 else 0)
+
+        # Create artificial duplicates in the dataset
+        df = df.append(df.tail(2))
+
+        >>> tdf = TextDataFrame(text_df,
+                                "text",
+                                stop_words="english",
+                                ngram_range=(1, 2)
+                                )
+
+        >>> tdf_dense = pd.DataFrame(tdf.tfidf.todense(), columns=tdf.vectorizer.get_feature_names()).head(5)
+        >>> tdf_dense.loc[:, (tdf_dense != 0).any(axis=0)]
+        	14th	14th day	abandon	     abandon government	... zeal inspires	zeal purity	zeal rely	zeal wisdom
+        0	0.034014	0.034014	0.000000	       0.000000	...      0.000000	   0.000000	0.000000	0.000000
+        1	0.000000	0.000000	0.000000	       0.000000	...      0.000000	   0.000000	0.000000	0.000000
+        2	0.000000	0.000000	0.000000	       0.000000	...      0.000000	   0.000000	0.000000	0.000000
+        3	0.000000	0.000000	0.020984	       0.030686	...      0.000000	   0.000000	0.030686	0.000000
+        4	0.000000	0.000000	0.000000	       0.000000	...      0.026539	   0.026539	0.000000	0.026539
+
+    """
     def __init__(self, df, text_column, **vectorizer_kwargs):
-
-        """
-        This is a class full of functions for working with dataframes of documents - it has utilities for identifying \
-        potential duplicates, identifying recurring segments of text, computing metrics like mutual information, \
-        extracting clusters of documents, and more. Given a DataFrame and the name of the column that contains the \
-        text to be analyzed, the TextDataFrame will automatically produce a TF-IDF sparse matrix representation of the \
-        text upon initialization. All other parameters are passed along to the scikit-learn TfidfVectorizer. For more \
-        info on the parameters it excepts, refer to the official documentation here: \
-        https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html
-
-        :param df: A dataframe of documents.  Must contain a column with text.
-        :param text_column: The name of the column in the dataframe that contains the text
-        :param vectorizer_kwargs: All remaining keyword arguments are passed to TfidfVectorizer
-
-        Usage::
-            from pewanalytics.text import TextDataFrame
-            import pandas as pd
-
-            nltk.download("inaugural")
-            df = pd.DataFrame([
-                {"speech": fileid, "text": nltk.corpus.inaugural.raw(fileid)} for fileid in nltk.corpus.inaugural.fileids()
-            ])
-            df['year'] = df['speech'].map(lambda x: int(x.split("-")[0]))
-            df['21st_century'] = df['year'].map(lambda x: 1 if x >= 2000 else 0)
-            df = df.append(df.tail(2))
-
-            >>> tdf = TextDataFrame(text_df,
-                                    "text",
-                                    stop_words="english",
-                                    ngram_range=(1, 2)
-                                    )
-
-            >>> tdf_dense = pd.DataFrame(tdf.tfidf.todense(), columns=tdf.vectorizer.get_feature_names()).head(5)
-            >>> tdf_dense.loc[:, (tdf_dense != 0).any(axis=0)]
-            	14th	14th day	abandon	     abandon government	... zeal inspires	zeal purity	zeal rely	zeal wisdom
-            0	0.034014	0.034014	0.000000	       0.000000	...      0.000000	   0.000000	0.000000	0.000000
-            1	0.000000	0.000000	0.000000	       0.000000	...      0.000000	   0.000000	0.000000	0.000000
-            2	0.000000	0.000000	0.000000	       0.000000	...      0.000000	   0.000000	0.000000	0.000000
-            3	0.000000	0.000000	0.020984	       0.030686	...      0.000000	   0.000000	0.030686	0.000000
-            4	0.000000	0.000000	0.000000	       0.000000	...      0.026539	   0.026539	0.000000	0.026539
-
-        """
-
         self.corpus = df
         self.text_column = text_column
         self.vectorizer = TfidfVectorizer(decode_error="ignore", **vectorizer_kwargs)
@@ -642,17 +646,12 @@ class TextDataFrame(object):
         Usage::
 
             >>> tdf.search_corpus('upright zeal')[:10]
-            	speech	                                                        text	year	21st_century	search_cosine_similarity
-            4	1805-Jefferson.txt	Proceeding, fellow citizens, to that qualifica...	1805	0	              0.030670
-            8	1821-Monroe.txt	    Fellow citizens, I shall not attempt to descri...	1821	0	              0.025051
-            9	1825-Adams.txt	    In compliance with an usage coeval with the ex...	1825	0	              0.024875
-            27	1897-McKinley.txt	Fellow citizens, In obedience to the will of t...	1897	0	              0.021133
-            10	1829-Jackson.txt	Fellow citizens, about to undertake the arduou...	1829	0	              0.014707
-            3	1801-Jefferson.txt	Friends and Fellow Citizens:\n\nCalled upon to...	1801	0	              0.011821
-            24	1885-Cleveland.txt	Fellow citizens, in the presence of this vast ...	1885	0	              0.011510
-            2	1797-Adams.txt	    When it was first perceived, in early times, t...	1797	0	              0.009757
-            7	1817-Monroe.txt	    I should be destitute of feeling if I was not ...	1817	0	              0.007950
-            43	1961-Kennedy.txt	Vice President Johnson, Mr. Speaker, Mr. Chief...	1961	0	              0.000000
+            	speech	                                                        text	year
+            4	1805-Jefferson.txt	Proceeding, fellow citizens, to that qualifica...	1805
+            8	1821-Monroe.txt	    Fellow citizens, I shall not attempt to descri...	1821
+            9	1825-Adams.txt	    In compliance with an usage coeval with the ex...	1825
+            27	1897-McKinley.txt	Fellow citizens, In obedience to the will of t...	1897
+            10	1829-Jackson.txt	Fellow citizens, about to undertake the arduou...	1829
 
         """
 
@@ -792,20 +791,20 @@ class TextDataFrame(object):
         Usage::
 
             >>> tdf.find_duplicates()
-            [            speech                                               text  year  \
-             56  2013-Obama.txt  Thank you. Thank you so much.\n\nVice Presiden...  2013
-             56  2013-Obama.txt  Thank you. Thank you so much.\n\nVice Presiden...  2013
+            [           speech                                               text  year
+            56  2013-Obama.txt  Thank you. Thank you so much.    Vice Presiden...  2013
+            56  2013-Obama.txt  Thank you. Thank you so much.    Vice Presiden...  2013
 
-                 21st_century
-             56             1
-             56             1  ,
-                         speech                                               text  year  \
-             57  2017-Trump.txt  Chief Justice Roberts, President Carter, Presi...  2017
-             57  2017-Trump.txt  Chief Justice Roberts, President Carter, Presi...  2017
+                21st_century
+            56             1
+            56             1  ,
+                        speech                                               text  year
+            57  2017-Trump.txt  Chief Justice Roberts, President Carter, Presi...  2017
+            57  2017-Trump.txt  Chief Justice Roberts, President Carter, Presi...  2017
 
-                 21st_century
-             57             1
-             57             1  ]
+                21st_century
+            57             1
+            57             1  ]
 
         """
 
@@ -884,6 +883,7 @@ class TextDataFrame(object):
 
         Usage::
             >>> results = tdf.mutual_info('21st_century')
+
             >>> results.sort_values("MI1", ascending=False).index[:25]
             Index(['journey complete', 'jobs', 'make america', 've', 'obama', 'workers',
                    'xand', 'states america', 'america best', 'debates', 'clinton',
@@ -1036,6 +1036,10 @@ class TextDataFrame(object):
 
         :param k: Number of dimensions to extract
         :return: A dataframe of (features x components)
+
+        Usage::
+
+            >>>
         """
 
         components, documents = get_pca(
@@ -1103,6 +1107,13 @@ class TextDataFrame(object):
         :param max_frequency: The maximum proportion of documents containing a term allowed to include the term
         :return: A matrix of (terms x terms) whose values indicate the number of documents in which two terms
         co-occurred
+
+        Usage::
+
+            >>> wcm = tdf.make_word_cooccurrence_matrix(min_frequency=25, normalize=True)
+            # Find the top cooccurring pair of words
+            >>> wcm.stack().index[np.argmax(wcm.values)]
+            ('protection', 'policy')
         """
 
         text = self.corpus[self.text_column]
@@ -1137,6 +1148,21 @@ class TextDataFrame(object):
 
         :param normalize: If True, will be normalized
         :return: A matrix of (documents x documents) whose values indicate the number of terms they had in common
+
+        Usage::
+
+            >>> dcm = tdf.make_document_cooccurrence_matrix(normalize=True)
+
+            # Remove artifical duplicates and insert document names
+            >>> dcm = dcm.iloc[:-2, :-2]
+            >>> dcm.rename(columns=df['speech'][:-2],
+                           index=df['speech'][:-2],
+                           inplace=True)
+
+            # Find documents with the highest coocurrence score
+            >>> dcm.stack().index[np.argmax(dcm.values)]
+            ('1793-Washington.txt', '1841-Harrison.txt')
+
         """
 
         text = self.corpus[self.text_column]
