@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import re
+import copy
 import pandas as pd
 import numpy as np
 import scipy.sparse as sp
@@ -631,7 +632,7 @@ class TextDataFrame(object):
     """
 
     def __init__(self, df, text_column, **vectorizer_kwargs):
-        self.corpus = df
+        self.corpus = copy.deepcopy(df)
         self.text_column = text_column
         self.vectorizer = TfidfVectorizer(decode_error="ignore", **vectorizer_kwargs)
         self.tfidf = self.vectorizer.fit_transform(df[text_column])
