@@ -14,7 +14,6 @@ FCC comments on net neutrality <link here>_`.
 
    Statistical Tools <stats>
    Text Tools <text>
-   Examples <examples>
 
 Installation
 ---------------
