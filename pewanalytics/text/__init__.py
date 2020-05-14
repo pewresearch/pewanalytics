@@ -648,13 +648,13 @@ class TextDataFrame(object):
 
         Usage::
 
-            >>> tdf.search_corpus('upright zeal')[:10]
-            	speech	                                                        text	year
-            4	1805-Jefferson.txt	Proceeding, fellow citizens, to that qualifica...	1805
-            8	1821-Monroe.txt	    Fellow citizens, I shall not attempt to descri...	1821
-            9	1825-Adams.txt	    In compliance with an usage coeval with the ex...	1825
-            27	1897-McKinley.txt	Fellow citizens, In obedience to the will of t...	1897
-            10	1829-Jackson.txt	Fellow citizens, about to undertake the arduou...	1829
+            >>> tdf.search_corpus('upright zeal')[:5]
+                                                            text	search_cosine_similarity
+            4	Proceeding, fellow citizens, to that qualifica...	0.030856
+            8	Fellow citizens, I shall not attempt to descri...	0.025041
+            9	In compliance with an usage coeval with the ex...	0.024922
+            27	Fellow citizens, In obedience to the will of t...	0.021272
+            10	Fellow citizens, about to undertake the arduou...	0.014791
 
         """
 
@@ -676,6 +676,14 @@ class TextDataFrame(object):
         in the corpus.
         :param min_similarity: Minimum cosine similarity required for any match to be made.
         :return: Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity
+
+        Usage::
+
+            >>> match_df = tdf.match_text_to_corpus(test_excerpt, min_similarity=0.05)
+            >>> match_df.sort_values('cosine_similarity')[:2]
+                                                             text	                                       match_text	match_index	cosine_similarity
+            48	Senator Hatfield, Mr. Chief Justice, Mr. Presi...	In this present crisis, government is not the ...	1	        0.0699283
+            43	Vice President Johnson, Mr. Speaker, Mr. Chief...	And so, my fellow Americans: ask not what your...	0	        0.166681
 
         """
         similarities = cosine_similarity(
@@ -750,6 +758,11 @@ class TextDataFrame(object):
         :param scan_top_n_matches_per_doc: The number of other documents to compare each document against.
         :param min_fragment_length: The minimum character length a fragment must have to be extracted.
         :return: A list of fragments that were found.
+
+        Usage::
+
+            >>> tdf.extract_corpus_fragmentsts()
+            []
 
         """
 
@@ -954,7 +967,7 @@ class TextDataFrame(object):
         Usage::
 
             >>> tdf.kmeans_clusters(5)
-            KMeans: n_clusters 5, score is 0.0051332807589337314
+            KMeans: n_clusters 5, score is 0.019735248210503934
             KMeans clusters saved to self.corpus['kmeans']
 
             >>> df['kmeans'].value_counts()
@@ -1006,17 +1019,13 @@ class TextDataFrame(object):
 
         Usage::
 
-            >>> tdf.top_cluster_terms('kmeans', min_size=10)
-            {2: array(['constitution', 'general government', 'union', 'sentiments',
-                       'object', 'administration government', 'confederacy', 'whilst',
-                       'magistrate', 'chief magistrate'],
-                       dtype=object),
-             3: array(['peoples', 'shall strive', 'realization', 'tasks', 'offenses',
-                       'woe', 'leadership', 'wished', 'profit', 'structure'],
-                       dtype=object),
-             4: array(['america', 'make america', 'jobs', 'journey', 'journey complete',
-                       've', 'obama', 'new century', 'land new', 'technology'],
-                       dtype=object)}
+            >>> df_top_cluster = tdf.top_cluster_terms('kmeans', min_size=10)
+            Cluster #2, 26 documents: ['constitution' 'union' 'states' 'friendly' 'liberal' 'revenue'
+             'general government' 'confederacy' 'whilst' 'authorities']
+            Cluster #4, 10 documents: ['shall strive' 'let sides' 'woe' 'offenses' 'breeze' 'war let'
+             'nuclear weapons' 'learned live' 'mistakes' 'mr speaker']
+            Cluster #0, 12 documents: ['activities' 'realization' 'interstate' 'wished' 'industrial' 'major'
+             'counsel action' 'conditions' 'natural resources' 'eighteenth amendment']
 
         """
 
@@ -1061,7 +1070,7 @@ class TextDataFrame(object):
 
         Usage::
 
-            >>> pca_df = tdf.pca_components(2)
+            >>> df_pca = tdf.pca_components(2)
             Decomposition explained variance ratio: 0.07488529151231405
             Component 0: ['america' 'today' 'americans' 'world' 'new' 'freedom' 'thank' 'nation'
              'god' 'journey']
@@ -1072,10 +1081,10 @@ class TextDataFrame(object):
             >>> df.sample(5)
             	             speech	                                             text	year	21st_century	pca_0	     pca_1	      pca
             0	1789-Washington.txt	Fellow-Citizens of the Senate and of the House...	1789	0	            -0.129094	0.016984	pca_1
-            21	1873-Grant.txt	    Fellow-Citizens:\n\nUnder Providence I have be...	1873	0	            -0.097430	0.009559	pca_1
+            21	1873-Grant.txt	    Fellow-Citizens:    Under Providence I have be...	1873	0	            -0.097430	0.009559	pca_1
             49	1985-Reagan.txt  	Senator Mathias, Chief Justice Burger, Vice Pr...	1985	0	            0.163833	-0.020259	pca_0
             2	1797-Adams.txt    	When it was first perceived, in early times, t...	1797	0	            -0.140250	0.024844	pca_1
-            20	1869-Grant.txt   	Citizens of the United States:\n\nYour suffrag...	1869	0	            -0.114444	0.014419	pca_1
+            20	1869-Grant.txt   	Citizens of the United States:    Your suffrag...	1869	0	            -0.114444	0.014419	pca_1
         """
 
         for col in self.corpus.columns:
@@ -1103,12 +1112,13 @@ class TextDataFrame(object):
         Usage::
 
             >>> lsa_df = tdf.lsa_components(2)
-            Decomposition explained variance ratio: 0.04723119670308432
+            Decomposition explained variance ratio: 0.04722850124656694
+            Top features:
             Component 0: ['government' 'people' 'america' 'states' 'world' 'nation' 'shall'
              'country' 'great' 'peace']
             Component 1: ['america' 'today' 'americans' 'world' 'new' 'freedom' 'thank' 'nation'
-             'god' 'make america']
-            Top LSA dimensions saved as clusters to self.corpus['lsa']
+             'god' 'journey']
+            Top LSA dimensions saved as clusters to self.corpus['lsa_'] columns
 
             >>> df.sample(5)
             	            speech	text	                                            year	21st_century	lsa_0	   lsa_1	lsa
@@ -1149,7 +1159,7 @@ class TextDataFrame(object):
 
             >>> lsa_topdoc['lsa_1'][0]
             'Chief Justice Roberts, President Carter, President Clinton, President Bush, President Obama, fellow Americans, \
-            and people of the world: Thank you.\n\nWe, the citizens of America...'
+            and people of the world: Thank you.  We, the citizens of America...'
         """
 
         top_docs = {}
