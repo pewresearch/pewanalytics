@@ -119,10 +119,8 @@ def filter_parts_of_speech(text, filter_pos=None, exclude=False):
     :type text: str
     :param filter_pos: Array of part of speech tags (default is 'NN', 'NNP', and 'JJ')
     :type filter_pos: list
-    :param exclude: If `True`, the function will remove words that match to the specified parts of speech; by default \
-    this function *filters to* POS matches instead.
-    :return: A string comprised solely of words that matched (or did not match) to the specified parts of speech, \
-    depending on the value of `exclude`
+    :param exclude: If `True`, the function will remove words that match to the specified parts of speech; by default this function *filters to* POS matches instead.
+    :return: A string comprised solely of words that matched (or did not match) to the specified parts of speech, depending on the value of `exclude`
     :rtype: str
 
     Usage::
@@ -230,39 +228,39 @@ def get_fuzzy_partial_ratio(text1, text2, throw_loud_fail=False, timeout=5):
 
 
 class SentenceTokenizer(object):
+
+    """
+    Initializes a tokenizer that can be be used to break text into tokens using the `tokenize` function
+
+    :param base_tokenizer: The tokenizer to use (default = NLTK's English Punkt tokenizer)
+    :param regex_split_trailing: A compiled regex object used to define the end of sentences
+    :param regex_split_leading: A compiled regex object used to define the beginning of sentences
+
+    Usage::
+
+        from pewanalytics.text import SentenceTokenizer
+        import re
+
+        text = "This is a sentence. This is another sentence - and maybe a third sentence. And yet a fourth sentence."
+
+        >>> tokenizer = SentenceTokenizer()
+        >>> tokenizer.tokenize(text)
+        ['This is a sentence.',
+         'This is another sentence - and maybe a third sentence.',
+         'And yet a fourth sentence.']
+
+        >>> tokenizer = SentenceTokenizer(regex_split_leading=re.compile(r"\-"))
+        >>> tokenizer.tokenize(text)
+        ['This is a sentence.',
+         'This is another sentence',
+         'and maybe a third sentence.',
+         'And yet a fourth sentence.']
+
+    """
+
     def __init__(
         self, base_tokenizer=None, regex_split_trailing=None, regex_split_leading=None
     ):
-
-        """
-        Initializes a tokenizer that can be be used to break text into tokens using the `tokenize` function
-
-        :param base_tokenizer: The tokenizer to use (default = NLTK's English Punkt tokenizer)
-        :param regex_split_trailing: A compiled regex object used to define the end of sentences
-        :param regex_split_leading: A compiled regex object used to define the beginning of sentences
-
-        Usage::
-
-            from pewanalytics.text import SentenceTokenizer
-            import re
-
-            text = "This is a sentence. This is another sentence - and maybe a third sentence. And yet a fourth sentence."
-
-            >>> tokenizer = SentenceTokenizer()
-            >>> tokenizer.tokenize(text)
-            ['This is a sentence.',
-             'This is another sentence - and maybe a third sentence.',
-             'And yet a fourth sentence.']
-
-            >>> tokenizer = SentenceTokenizer(regex_split_leading=re.compile(r"\-"))
-            >>> tokenizer.tokenize(text)
-            ['This is a sentence.',
-             'This is another sentence',
-             'and maybe a third sentence.',
-             'And yet a fourth sentence.']
-
-        """
-
         self.base_tokenizer = (
             base_tokenizer
             if base_tokenizer
@@ -278,8 +276,7 @@ class SentenceTokenizer(object):
         :type text: str
         :param throw_loud_fail: Whether or not to raise an error if text decoding fails (default=False)
         :type throw_loud_fail: bool
-        :param min_length: The minimum acceptable length of a sentence (if a token is shorter than this,
-        it will be considered part of the preceding sentence) (default=None)
+        :param min_length: The minimum acceptable length of a sentence (if a token is shorter than this, it will be considered part of the preceding sentence) (default=None)
         :type min_length: int
         :return: A list of sentences
         :rtype: list
@@ -334,13 +331,14 @@ class SentenceTokenizer(object):
 
 
 class TextOverlapExtractor(object):
+
+    """
+    A helper class designed to identify overlapping sections between two strings.
+
+    :param tokenizer: The tokenizer to use (default = SentenceTokenizer())
+    """
+
     def __init__(self, tokenizer=None):
-
-        """
-        A helper class designed to identify overlapping sections between two strings.
-
-        :param tokenizer: The tokenizer to use (default = SentenceTokenizer())
-        """
 
         if not tokenizer:
             self.tokenizer = SentenceTokenizer()
@@ -359,8 +357,7 @@ class TextOverlapExtractor(object):
         :type text2: str
         :param min_length: The minimum size of the overlap to be considered (number of characters)
         :type min_length: int
-        :param tokenize: If True, overlapping segments will only be included if they consist of atomic tokens; overlaps
-        that consist of only part of a token will be excluded (default=True)
+        :param tokenize: If True, overlapping segments will only be included if they consist of atomic tokens; overlaps that consist of only part of a token will be excluded (default=True)
         :type tokenize: bool
         :return: A list of all of the identified overlapping segments
         :rtype: list
@@ -445,15 +442,11 @@ class TextCleaner(object):
     :param lemmatize: Whether or not to lemmatize the tokens (default = True)
     :type lemmatize: bool
     :param tokenizer: Tokenizer to use (default = nltk.WhitespaceTokenizer())
-    :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them \
-    with. Anything passed here will be used in addition to a set of built-in replacement patterns for common \
-    contractions.
+    :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them with. Anything passed here will be used in addition to a set of built-in replacement patterns for common contractions.
     :type replacers: list
     :param process_method: Options are "lemmatize", "stem", or None (default = "lemmatize")
     :type process_method: str
-    :param processor: A lemmatizer or stemmer with a "lemmatize" or "stem" function (default for \
-    process_method="lemmatize" is nltk.WordNetLemmatizer(); default for process_method="stem" is \
-    nltk.SnowballStemmer())
+    :param processor: A lemmatizer or stemmer with a "lemmatize" or "stem" function (default for process_method="lemmatize" is nltk.WordNetLemmatizer(); default for process_method="stem" is nltk.SnowballStemmer())
     :param stopwords: The set of stopwords to remove (default = nltk.corpus.stopwords.words('english'))
     :type stopwords: set
     :param lowercase: Whether or not to lowercase the string (default = True)
@@ -671,9 +664,7 @@ class TextDataFrame(object):
         be matched to the value in the list to which it is most similar, based on cosine similarity.
 
         :param match_list: A list of strings (other documents) to be matched to documents in the dataframe
-        :param allow_multiple: If set to True, each document in your corpus will be matched with its closes valid \
-        match in the list. If set to False (default), documents in the list will only be matched to their best match \
-        in the corpus.
+        :param allow_multiple: If set to True, each document in your corpus will be matched with its closes valid match in the list. If set to False (default), documents in the list will only be matched to their best match in the corpus.
         :param min_similarity: Minimum cosine similarity required for any match to be made.
         :return: Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity
 
@@ -817,11 +808,8 @@ class TextDataFrame(object):
 
         :param tfidf_threshold: Minimum cosine similarity for two documents to be considered potential dupes.
         :param fuzzy_ratio_threshold: The required Levenshtein ratio to consider two documents duplicates.
-        :param filter_function: An optional function that allows for more complex filtering.  The function must accept
-        the following parameters: text1, text2, cosine_similarity, fuzzy_ratio.  Must return True or False, indicating
-        whether the two documents should be considered duplicates.
-        :return: A list of lists, containing groups of duplicate documents (represented as rows from the corpus
-        dataframe)
+        :param filter_function: An optional function that allows for more complex filtering. The function must accept the following parameters: text1, text2, cosine_similarity, fuzzy_ratio.  Must return True or False, indicating whether the two documents should be considered duplicates.
+        :return: A list of lists, containing groups of duplicate documents (represented as rows from the corpus dataframe)
 
         Usage::
 
@@ -917,6 +905,7 @@ class TextDataFrame(object):
         :return: A DataFrame of ngrams and various metrics about them, including mutual information
 
         Usage::
+
             >>> results = tdf.mutual_info('21st_century')
 
             >>> results.sort_values("MI1", ascending=False).index[:25]
@@ -1081,7 +1070,7 @@ class TextDataFrame(object):
             >>> df.sample(5)
             	             speech	                                             text	year	21st_century	pca_0	     pca_1	      pca
             0	1789-Washington.txt	Fellow-Citizens of the Senate and of the House...	1789	0	            -0.129094	0.016984	pca_1
-            21	1873-Grant.txt	    Fellow-Citizens:    Under Providence I have be...	1873	0	            -0.097430	0.009559	pca_1
+            21	1873-Grant.txt       Fellow-Citizens:    Under Providence I have be...	1873	0	            -0.097430	0.009559	pca_1
             49	1985-Reagan.txt  	Senator Mathias, Chief Justice Burger, Vice Pr...	1985	0	            0.163833	-0.020259	pca_0
             2	1797-Adams.txt    	When it was first perceived, in early times, t...	1797	0	            -0.140250	0.024844	pca_1
             20	1869-Grant.txt   	Citizens of the United States:    Your suffrag...	1869	0	            -0.114444	0.014419	pca_1
@@ -1122,11 +1111,12 @@ class TextDataFrame(object):
 
             >>> df.sample(5)
             	            speech	text	                                            year	21st_century	lsa_0	   lsa_1	lsa
-            37	1937-Roosevelt.txt	When four years ago we met to inaugurate a Pre...	1937	0	         0.293068	0.040802	lsa_0
-            8	1821-Monroe.txt	    Fellow citizens, I shall not attempt to descri...	1821	0	         0.348465	-0.212382	lsa_0
-            7	1817-Monroe.txt	    I should be destitute of feeling if I was not ...	1817	0	         0.369249	-0.237231	lsa_0
-            26	1893-Cleveland.txt	My Fellow citizens, in obedience of the mandat...	1893	0	         0.275778	-0.128497	lsa_0
-            59	2017-Trump.txt	    Chief Justice Roberts, President Carter, Presi...	2017	1	         0.342111	0.511687	lsa_1
+            37	1937-Roosevelt.txt	When four years ago we met to inaugurate a Pre...	1937	           0 0.293068	0.040802	lsa_0
+            8	1821-Monroe.txt     Fellow citizens, I shall not attempt to descri...	1821	           0 0.348465	-0.212382	lsa_0
+            7	1817-Monroe.txt	    I should be destitute of feeling if I was not ...	1817	           0 0.369249	-0.237231	lsa_0
+            26	1893-Cleveland.txt	My Fellow citizens, in obedience of the mandat...	1893	           0 0.275778	-0.128497	lsa_0
+            59	2017-Trump.txt	    Chief Justice Roberts, President Carter, Presi...	2017	           1 0.342111	0.511687	lsa_1
+
         """
 
         for col in self.corpus.columns:
@@ -1148,8 +1138,7 @@ class TextDataFrame(object):
 
         :param component_prefix: 'lsa' or 'pca' (you must first run get_pca_components or get_lsa_components)
         :param top_n: Number of documents to return for each component
-        :return: A dictionary where keys are the component, and values are the text values for the component's `top_n`
-        documents
+        :return: A dictionary where keys are the component, and values are the text values for the component's `top_n` documents
 
         Usage::
 
@@ -1160,6 +1149,7 @@ class TextDataFrame(object):
             >>> lsa_topdoc['lsa_1'][0]
             'Chief Justice Roberts, President Carter, President Clinton, President Bush, President Obama, fellow Americans, \
             and people of the world: Thank you.  We, the citizens of America...'
+
         """
 
         top_docs = {}
@@ -1185,8 +1175,7 @@ class TextDataFrame(object):
         :param normalize: If True, will be normalized
         :param min_frequency: The minimum document frequency required for a term to be included
         :param max_frequency: The maximum proportion of documents containing a term allowed to include the term
-        :return: A matrix of (terms x terms) whose values indicate the number of documents in which two terms
-        co-occurred
+        :return: A matrix of (terms x terms) whose values indicate the number of documents in which two terms co-occurred
 
         Usage::
 
@@ -1194,6 +1183,7 @@ class TextDataFrame(object):
             # Find the top cooccurring pair of words
             >>> wcm.stack().index[np.argmax(wcm.values)]
             ('protection', 'policy')
+
         """
 
         text = self.corpus[self.text_column]

@@ -10,7 +10,9 @@ from pewtils import decode_text, flatten_list
 
 
 class NamedEntityExtractor(object):
+
     """
+
     A wrapper around NLTK and SpaCy for named entity extraction. May be expanded to include more libraries in the \
     future.
 

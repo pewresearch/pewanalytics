@@ -26,8 +26,7 @@ class TopicModel(object):
     :param df: Pandas DataFrame
     :param text_col: Name of the column containing text
     :type text_col: str
-    :param method: The topic model implementation to use. Options are: sklearn_lda, sklearn_nmf, gensim_lda, \
-    gensim_hdp, corex
+    :param method: The topic model implementation to use. Options are: sklearn_lda, sklearn_nmf, gensim_lda, gensim_hdp, corex
     :type method: str
     :param num_topics: The number of topics to extract. Required for every method except `gensim_hdp`.
     :type num_topics: int
@@ -269,14 +268,8 @@ class TopicModel(object):
         available parameters, please refer to the official documentation: https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.LatentDirichletAllocation.html
 
         :param df: The dataframe to train the model on (must contain `self.text_col`)
-        :param alpha: Represents document-topic density. When values are higher, documents will be comprised of more \
-        topics; when values are lower, documents will be primarily comprised of only a few topics. This parameter \
-        is used instead of the doc_topic_prior sklearn parameter, and will be passed along to sklearn using the \
-        formula: `doc_topic_prior = alpha / num_topics`
-        :param beta: Represents topic-word density. When values are higher, topics will be comprised of more words; \
-        when values are lower, only a few words will be loaded onto each topic. This parameter is used instead of the \
-        topic_word_prior sklearn parameter, and will be passed along to sklearn using the formula: \
-        `topic_word_prior = beta / num_topics`.
+        :param alpha: Represents document-topic density. When values are higher, documents will be comprised of more topics; when values are lower, documents will be primarily comprised of only a few topics. This parameter is used instead of the doc_topic_prior sklearn parameter, and will be passed along to sklearn using the formula: `doc_topic_prior = alpha / num_topics`
+        :param beta: Represents topic-word density. When values are higher, topics will be comprised of more words; when values are lower, only a few words will be loaded onto each topic. This parameter is used instead of the topic_word_prior sklearn parameter, and will be passed along to sklearn using the formula:`topic_word_prior = beta / num_topics`.
         :param learning_decay: See sklearn documentation.
         :param learning_offset: See sklearn documentation.
         :param learning_method: See sklearn documentation.
@@ -298,21 +291,15 @@ class TopicModel(object):
 
         **gensim_lda**
 
-        Fits an LDA model using :py:class:`gensim.models.LdaModel` or \
-        :py:class:`gensim.models.ldamulticore.LdaMulticore`. When `use_multicore` is set to `True`, the multicore \
-        implementation will be used, otherwise the standard LDA implementation will be used. For more information on \
-        available parameters, please refer to the official documentation:
+        Fits an LDA model using :py:class:`gensim.models.LdaModel` or :py:class:`gensim.models.ldamulticore.LdaMulticore`. \
+        When `use_multicore` is set to `True`, the multicore implementation will be used, otherwise the standard LDA implementation will be used. \
+        For more information on available parameters, please refer to the official documentation :
             - use_multicore=True: https://radimrehurek.com/gensim/models/ldamulticore.html
             - use_multicore=False: https://radimrehurek.com/gensim/models/ldamodel.html
 
         :param df: The dataframe to train the model on (must contain `self.text_col`)
-        :param alpha: Represents document-topic density. When values are higher, documents will be comprised of more \
-        topics; when values are lower, documents will be primarily comprised of only a few topics. Gensim options are \
-        a bit different than sklearn though; refer to the documentation for the accepted values here.
-        :param beta: Represents topic-word density. When values are higher, topics will be comprised of more words; \
-        when values are lower, only a few words will be loaded onto each topic. Gensim options are a bit different \
-        than sklearn though; refer to the documentation for the accepted values here. Gensim calls this parameter \
-        `eta`. We renamed it to be consistent with the sklearn implementations.
+        :param alpha: Represents document-topic density. When values are higher, documents will be comprised of more topics; when values are lower, documents will be primarily comprised of only a few topics. Gensim options are a bit different than sklearn though; refer to the documentation for the accepted values here.
+        :param beta: Represents topic-word density. When values are higher, topics will be comprised of more words; when values are lower, only a few words will be loaded onto each topic. Gensim options are a bit different than sklearn though; refer to the documentation for the accepted values here. Gensim calls this parameter `eta`. We renamed it to be consistent with the sklearn implementations.
         :param chunksize: See gensim documentation.
         :param passes: See gensim documentation.
         :param decay: See gensim documentation.
@@ -350,7 +337,8 @@ class TopicModel(object):
         Fits a CorEx topic model. Anchors can be provided in the form of a list of lists, with each item
         corresponding to a set of words to be used to seed a topic. For example:
 
-        .. codeblock:: python
+        .. code-block:: python
+
             anchors=[
                 ['cat', 'kitten'],
                 ['dog', 'puppy']
@@ -458,8 +446,7 @@ class TopicModel(object):
         Takes a DataFrame and returns a document-topic DataFrame (rows=documents, columns=topics)
 
         :param df: The DataFrame to process (must have `self.text_col` in it)
-        :param min_probability: (gensim_lda use_multicore=False only) Topics with a probability lower than this \
-        threshold will be filtered out (Default=0.0)
+        :param min_probability: (gensim_lda use_multicore=False only) Topics with a probability lower than this threshold will be filtered out (Default=0.0)
         :type min_probability: float
         :return: A document-topic matrix
         """
