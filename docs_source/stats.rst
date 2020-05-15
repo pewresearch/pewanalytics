@@ -12,8 +12,6 @@ The :py:mod:`pewanalytics.stats.clustering` submodule contains several functions
 clusters from your data.
 
 .. automodule :: pewanalytics.stats.clustering
-  :noindex:
-  :no-members:
   :autosummary:
   :autosummary-members:
   :members:
@@ -27,8 +25,6 @@ collapsing your data into underlying dimensions using methods like PCA and corre
 analysis.
 
 .. automodule :: pewanalytics.stats.dimensionality_reduction
-  :noindex:
-  :no-members:
   :autosummary:
   :autosummary-members:
   :members:
@@ -42,8 +38,6 @@ inter-rater reliability and model performance, including Cohen's Kappa, Krippend
 precision, recall, and much more.
 
 .. automodule :: pewanalytics.stats.irr
-  :noindex:
-  :no-members:
   :autosummary:
   :autosummary-members:
   :members:
@@ -58,8 +52,6 @@ classes. This can be a great method for identifying features that are most disti
 of one group versus another.
 
 .. automodule :: pewanalytics.stats.mutual_info
-  :noindex:
-  :no-members:
   :autosummary:
   :autosummary-members:
   :members:
@@ -72,8 +64,6 @@ The :py:mod:`pewanalytics.stats.sampling` submodule contains utilities for extra
 weighting samples based on a known sampling frame.
 
 .. automodule :: pewanalytics.stats.sampling
-  :noindex:
-  :no-members:
   :autosummary:
   :autosummary-members:
   :members:

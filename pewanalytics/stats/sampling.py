@@ -98,7 +98,7 @@ def compute_balanced_sample_weights(sample, weight_vars, weight_column=None):
     combination of values in the weighting columns are balanced (when weighted, the sum of the observations with each
     combination will be equal to one another.) Useful for balancing important groups in training datasets, etc.
 
-    .. notes:: All weight variables must be binary flags (1 or 0); if you want to weight using a non-binary variable, \
+    .. note:: All weight variables must be binary flags (1 or 0); if you want to weight using a non-binary variable, \
         you should convert it into a set of dummy variables and then pass those in as multiple columns.
 
     :param sample: DataFrame (must contain all of the columns specified in `weight_vars`)
@@ -231,14 +231,13 @@ class SampleExtractor(object):
         - random: Returns a random sample
         - stratify: Proportional stratification, method from Kish, Leslie. "Survey sampling." (1965). Chapter 4.
         - stratify_even: Sample evenly from each strata (will obviously not be representative)
-        - stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one
-            observation from each strata (if sample size is small and/or there are many small strata, the resulting sample
+        - stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one \
+            observation from each strata (if sample size is small and/or there are many small strata, the resulting sample \
             may be far from representative)
 
         :param sample_size: The desired size of the sample
         :type sample_size: int
-        :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify,
-        stratify_even, stratify_guaranteed
+        :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify, stratify_even, stratify_guaranteed
         :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on
         :return: A list of IDs reflecting the observations selected from the DataFrame during sampling
         :rtype: list

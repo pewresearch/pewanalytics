@@ -483,7 +483,7 @@ def compute_scores(
 def compute_overall_scores(coder_df, document_column, outcome_column, coder_column):
 
     """
-    Computes overall inter-rater reliability scores (Krippendorf's Alpha and Fleiss' Kappa). Allows for more than two
+    Computes overall inter-rater reliability scores (Krippendorf's Alpha and Fleiss' Kappa). Allows for more than two \
     coders and code values. The input data must consist of a :py:class:`pandas.DataFrame` with the following columns:
         - A column with values that indicate the coder (like a name)
         - A column with values that indicate the document (like an ID)
