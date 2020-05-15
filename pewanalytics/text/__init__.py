@@ -615,12 +615,12 @@ class TextDataFrame(object):
 
         >>> tdf_dense = pd.DataFrame(tdf.tfidf.todense(), columns=tdf.vectorizer.get_feature_names()).head(5)
         >>> tdf_dense.loc[:, (tdf_dense != 0).any(axis=0)]
-        	14th	14th day	abandon	     abandon government	... zeal inspires	zeal purity	zeal rely	zeal wisdom
-        0	0.034014	0.034014	0.000000	       0.000000	...      0.000000	   0.000000	0.000000	0.000000
-        1	0.000000	0.000000	0.000000	       0.000000	...      0.000000	   0.000000	0.000000	0.000000
-        2	0.000000	0.000000	0.000000	       0.000000	...      0.000000	   0.000000	0.000000	0.000000
-        3	0.000000	0.000000	0.020984	       0.030686	...      0.000000	   0.000000	0.030686	0.000000
-        4	0.000000	0.000000	0.000000	       0.000000	...      0.026539	   0.026539	0.000000	0.026539
+        	14th	    14th day	abandon	     abandon government	... zeal inspires	zeal purity	zeal rely	zeal wisdom
+        0	0.034014	0.034014	0.000000	       0.000000	...      0.000000	     0.000000	0.000000	0.000000
+        1	0.000000	0.000000	0.000000	       0.000000	...      0.000000	     0.000000	0.000000	0.000000
+        2	0.000000	0.000000	0.000000	       0.000000	...      0.000000	     0.000000	0.000000	0.000000
+        3	0.000000	0.000000	0.020984	       0.030686	...      0.000000	     0.000000	0.030686	0.000000
+        4	0.000000	0.000000	0.000000	       0.000000	...      0.026539	     0.026539	0.000000	0.026539
 
     """
 
@@ -761,6 +761,7 @@ class TextDataFrame(object):
 
         similarity_matrix = cosine_similarity(self.tfidf)
         min_similarity = np.average([np.average(row) for row in similarity_matrix])
+        print(min_similarity)
 
         combos = []
         for i in range(0, len(self.corpus.index)):
@@ -1100,7 +1101,7 @@ class TextDataFrame(object):
 
         Usage::
 
-            >>> lsa_df = tdf.lsa_components(2)
+            >>> df_lsa = tdf.lsa_components(2)
             Decomposition explained variance ratio: 0.04722850124656694
             Top features:
             Component 0: ['government' 'people' 'america' 'states' 'world' 'nation' 'shall'
@@ -1142,7 +1143,7 @@ class TextDataFrame(object):
 
         Usage::
 
-            >>> lsa_topdoc = tdf.get_top_documents("lsa")
+            >>> df_lsa_topdoc = tdf.get_top_documents("lsa")
             >>> {key: len(value) for key, value in lsa_topdoc.items()}
             {'lsa_0': 5, 'lsa_1': 4}
 
