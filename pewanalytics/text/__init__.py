@@ -615,12 +615,12 @@ class TextDataFrame(object):
 
         >>> tdf_dense = pd.DataFrame(tdf.tfidf.todense(), columns=tdf.vectorizer.get_feature_names()).head(5)
         >>> tdf_dense.loc[:, (tdf_dense != 0).any(axis=0)]
-        	14th	    14th day	abandon	     abandon government	... zeal inspires	zeal purity	zeal rely	zeal wisdom
-        0	0.034014	0.034014	0.000000	       0.000000	...      0.000000	     0.000000	0.000000	0.000000
-        1	0.000000	0.000000	0.000000	       0.000000	...      0.000000	     0.000000	0.000000	0.000000
-        2	0.000000	0.000000	0.000000	       0.000000	...      0.000000	     0.000000	0.000000	0.000000
-        3	0.000000	0.000000	0.020984	       0.030686	...      0.000000	     0.000000	0.030686	0.000000
-        4	0.000000	0.000000	0.000000	       0.000000	...      0.026539	     0.026539	0.000000	0.026539
+        	    14th	14th day	 abandon  abandon government... zeal inspires	zeal purity	zeal rely	zeal wisdom
+        0	0.034014	0.034014	0.000000	       0.000000	...      0.000000	   0.000000	 0.000000	   0.000000
+        1	0.000000	0.000000	0.000000	       0.000000	...      0.000000	   0.000000	 0.000000	   0.000000
+        2	0.000000	0.000000	0.000000	       0.000000	...      0.000000	   0.000000	 0.000000	   0.000000
+        3	0.000000	0.000000	0.020984	       0.030686	...      0.000000	   0.000000	 0.030686	   0.000000
+        4	0.000000	0.000000	0.000000	       0.000000	...      0.026539	   0.026539	 0.000000	   0.026539
 
     """
 
@@ -761,7 +761,6 @@ class TextDataFrame(object):
 
         similarity_matrix = cosine_similarity(self.tfidf)
         min_similarity = np.average([np.average(row) for row in similarity_matrix])
-        print(min_similarity)
 
         combos = []
         for i in range(0, len(self.corpus.index)):
@@ -1069,9 +1068,9 @@ class TextDataFrame(object):
             Top PCA dimensions saved as clusters to self.corpus['pca']
 
             >>> df.sample(5)
-            	             speech	                                             text	year	21st_century	pca_0	     pca_1	      pca
+            	             speech	                                             text	year	21st_century	    pca_0      pca_1	  pca
             0	1789-Washington.txt	Fellow-Citizens of the Senate and of the House...	1789	0	            -0.129094	0.016984	pca_1
-            21	1873-Grant.txt       Fellow-Citizens:    Under Providence I have be...	1873	0	            -0.097430	0.009559	pca_1
+            21	1873-Grant.txt      Fellow-Citizens: Under Providence I have been ...	1873	0	            -0.097430	0.009559	pca_1
             49	1985-Reagan.txt  	Senator Mathias, Chief Justice Burger, Vice Pr...	1985	0	            0.163833	-0.020259	pca_0
             2	1797-Adams.txt    	When it was first perceived, in early times, t...	1797	0	            -0.140250	0.024844	pca_1
             20	1869-Grant.txt   	Citizens of the United States:    Your suffrag...	1869	0	            -0.114444	0.014419	pca_1
@@ -1111,12 +1110,12 @@ class TextDataFrame(object):
             Top LSA dimensions saved as clusters to self.corpus['lsa_'] columns
 
             >>> df.sample(5)
-            	            speech	text	                                            year	21st_century	lsa_0	   lsa_1	lsa
-            37	1937-Roosevelt.txt	When four years ago we met to inaugurate a Pre...	1937	           0 0.293068	0.040802	lsa_0
-            8	1821-Monroe.txt     Fellow citizens, I shall not attempt to descri...	1821	           0 0.348465	-0.212382	lsa_0
-            7	1817-Monroe.txt	    I should be destitute of feeling if I was not ...	1817	           0 0.369249	-0.237231	lsa_0
-            26	1893-Cleveland.txt	My Fellow citizens, in obedience of the mandat...	1893	           0 0.275778	-0.128497	lsa_0
-            59	2017-Trump.txt	    Chief Justice Roberts, President Carter, Presi...	2017	           1 0.342111	0.511687	lsa_1
+            	            speech                                                 text    year	21st_century	lsa_0	   lsa_1	  lsa
+            37	1937-Roosevelt.txt    When four years ago we met to inaugurate a Pre...    1937	           0 0.293068	0.040802	lsa_0
+            8	1821-Monroe.txt       Fellow citizens, I shall not attempt to descri...    1821	           0 0.348465	-0.212382	lsa_0
+            7	1817-Monroe.txt       I should be destitute of feeling if I was not ...    1817	           0 0.369249	-0.237231	lsa_0
+            26	1893-Cleveland.txt    My Fellow citizens, in obedience of the mandat...    1893	           0 0.275778	-0.128497	lsa_0
+            59	2017-Trump.txt        Chief Justice Roberts, President Carter, Presi...    2017	           1 0.342111	0.511687	lsa_1
 
         """
 
