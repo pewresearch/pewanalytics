@@ -96,10 +96,7 @@ def compute_balanced_sample_weights(sample, weight_vars, weight_column=None):
     """
     Takes a DataFrame and one or more column names (`weight_vars`) and computes weights such that every unique
     combination of values in the weighting columns are balanced (when weighted, the sum of the observations with each
-    combination will be equal to one another.) Useful for balancing important groups in training datasets, etc.
-
-    .. note:: All weight variables must be binary flags (1 or 0); if you want to weight using a non-binary variable, \
-        you should convert it into a set of dummy variables and then pass those in as multiple columns.
+    combination will be equal to one another). Useful for balancing important groups in training datasets, etc.
 
     :param sample: DataFrame (must contain all of the columns specified in `weight_vars`)
     :param weight_vars: The names of the columns to use when computing weights.
@@ -108,6 +105,9 @@ def compute_balanced_sample_weights(sample, weight_vars, weight_column=None):
     :type weight_column: str
     :return: A Series containing the weights for each row in the `sample`
 
+    .. note:: All weight variables must be binary flags (1 or 0); if you want to weight using a non-binary variable, \
+        you should convert it into a set of dummy variables and then pass those in as multiple columns.
+        
     Usage::
 
         from pewanalytics.stats.sampling import compute_balanced_sample_weights

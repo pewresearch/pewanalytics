@@ -56,7 +56,9 @@ def get_pca(features, feature_names=None, k=20):
 
     """
     Performs PCA on a set of features. This function expects input data where the rows are units \
-    and columns are features. For more information about how PCA is implemented, visit the \
+    and columns are features.
+
+    For more information about how PCA is implemented, visit the \
     `Scikit-Learn Documentation <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html>`__.
 
     :param features: A dataframe or sparse matrix where rows are units/observations and columns are features
@@ -107,7 +109,9 @@ def get_lsa(features, feature_names=None, k=20):
 
     """
     Performs LSA on a set of features. This function expects input data where the rows are units \
-    and columns are features. For more information about how LSA is implemented, visit the \
+    and columns are features.
+
+    For more information about how LSA is implemented, visit the \
     `Scikit-Learn Documentation <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html>`__.
 
     :param features: A dataframe or sparse matrix with rows are units/observations and columns are features
@@ -157,11 +161,11 @@ def get_lsa(features, feature_names=None, k=20):
 def correspondence_analysis(edges, n=1):
 
     """
-    Performs correspondence analysis on a set of features. Expects a dataframe where the rows and columns are of \
-    equal length and correspond to units/observations. Values should be some sort of similarity metric, such as \
-    correlations, cosine similarity, or frequency counts. This is most useful in the context of network analysis, \
-    where you might wish to, for example, identify the underlying dimension in a network of Twitter users by using \
-    a matrix representing whether or not they follow one another (when news and political accounts are included, the \
+    Performs correspondence analysis on a set of features.
+
+    Most useful in the context of network analysis, where you might wish to, for example, \
+    identify the underlying dimension in a network of Twitter users by using a matrix representing whether \
+    or not they follow one another (when news and political accounts are included, the \
     underlying dimension often appears to approximate the left-right political spectrum.)
 
     :param edges: A dataframe of NxN where both the rows and columns are "nodes" and the values are some sort of closeness or similarity measure (like a cosine similarity matrix)

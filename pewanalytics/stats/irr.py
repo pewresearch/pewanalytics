@@ -22,7 +22,9 @@ def kappa_sample_size_power(
 ):
 
     """
-    Translated from the `irr` R package, N.cohen.kappa: https://cran.r-project.org/web/packages/irr/irr.pdf
+    Python translation of the `N.cohen.kappa` function from the `irr` R package.
+
+    Source: https://cran.r-project.org/web/packages/irr/irr.pdf
 
     :param rate1: The probability that the first rater will record a positive diagnosis
     :type rate1: float
@@ -88,9 +90,10 @@ def kappa_sample_size_CI(kappa0, kappaL, props, kappaU=None, alpha=0.05):
 
     """
 
-    When having multiple coders code a set of documents for a binary outcome, this function can help determine \
-    whether they have coded enough documents to confirm that their Cohen's kappa is at or above a minimum threhsold. \
-    The function takes the observed kappa and proportion of positive cases from the sample, along with a lower-bound \
+    Helps determine the required document sample size to confirm that Cohen's Kappa between coders is at or \
+    above a minimum threhsold. Useful in situations where multiple coders code a set of documents for a binary outcome.
+
+    This function takes the observed kappa and proportion of positive cases from the sample, along with a lower-bound \
     for the minimum acceptable kappa, and returns the sample size required to confirm that the coders' agreement is \
     truly above that minimum level of kappa with 95% certainty. If the current sample size is below the required \
     sample size returned by this function, it can provide a rough estimate of how many additional documents need \
@@ -184,11 +187,6 @@ def compute_scores(
 
     This function will return a dataframe with agreement scores between the two specified coders.
 
-    .. note:: If using a multi-class (non-binary) code, some scores may come back null or not compute as expected. \
-        We recommend running the function separately for each specific code value as a binary flag by providing \
-        each unique value to the `pos_label` argument. If `pos_label` is not provided for multi-class codes, \
-        this function will attempt to compute scores based on support-weighted averages.
-
     :param coder_df: A dataframe of codes
     :type coder_df: :py:class:`pandas.DataFrame`
     :param coder1: The value in `coder_column` for rows corresponding to the first coder
@@ -207,6 +205,11 @@ def compute_scores(
     :type pos_label: str or int
     :return: A dictionary of scores
     :rtype: dict
+
+    .. note:: If using a multi-class (non-binary) code, some scores may come back null or not compute as expected. \
+        We recommend running the function separately for each specific code value as a binary flag by providing \
+        each unique value to the `pos_label` argument. If `pos_label` is not provided for multi-class codes, \
+        this function will attempt to compute scores based on support-weighted averages.
 
     Usage::
 

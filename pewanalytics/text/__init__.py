@@ -435,9 +435,19 @@ class TextOverlapExtractor(object):
 class TextCleaner(object):
 
     """
-    A class for cleaning text up, in preparation for NLP, etc.  Attempts to decode the text.  Then lowercases, \
-    expands contractions, removes punctuation, lemmatizes or stems, removes stopwords and words less than three \
-    characters, and consolidates whitespace.
+    A class for cleaning text up, in preparation for NLP, etc.  Attempts to decode the text.
+
+    This function performs for the following cleaning tasks :
+
+        - Converts text to lowercase
+        - Expands contractions
+        - Removes punctuation
+        - Lemmatizes or stems
+        - Removes stopwords and words less than three characters
+        - Consolidates whitespace
+        - Replaces specified stings
+        - Remove HTML/URL string
+        - Filters out part of speech
 
     :param lemmatize: Whether or not to lemmatize the tokens (default = True)
     :type lemmatize: bool
@@ -460,6 +470,7 @@ class TextCleaner(object):
     :param filter_pos: A list of WordNet parts-of-speech tags to keep; \
     if provided, all other words will be removed (default = None)
     :type filter_pos: list
+
 
     Usage::
 
@@ -578,14 +589,15 @@ class TextCleaner(object):
 class TextDataFrame(object):
 
     """
-    This is a class full of functions for working with dataframes of documents - it has utilities for identifying \
+    This is a class full of functions for working with dataframes of documents. It contains utilities for identifying \
     potential duplicates, identifying recurring segments of text, computing metrics like mutual information, \
-    extracting clusters of documents, and more. Given a DataFrame and the name of the column that contains the \
-    text to be analyzed, the TextDataFrame will automatically produce a TF-IDF sparse matrix representation of the \
-    text upon initialization. All other parameters are passed along to the scikit-learn TfidfVectorizer. For more \
-    info on the parameters it excepts, refer to the official documentation here: \
-    https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html
+    extracting clusters of documents, and more.
 
+    Given a DataFrame and the name of the column that contains the text to be analyzed, the TextDataFrame will \
+    automatically produce a TF-IDF sparse matrix representation of the text upon initialization. All other \
+    parameters are passed along to the scikit-learn TfidfVectorizer.
+
+    .. tip:: For more info on the parameters it excepts, refer to the official scikit-learn `Tfidf vectorizer documentation <https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html>`_.
     :param df: A dataframe of documents.  Must contain a column with text.
     :param text_column: The name of the column in the dataframe that contains the text
     :param vectorizer_kwargs: All remaining keyword arguments are passed to TfidfVectorizer

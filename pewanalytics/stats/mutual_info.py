@@ -11,12 +11,23 @@ from pewtils import is_not_null, scale_range
 def compute_mutual_info(y, x, weights=None, col_names=None, l=0, normalize=True):
 
     """
-    Computes pointwise mutual information for a set of observations partitioned into two groups. The function expects
-    `y` to correspond to a list or series of values indicating which partition an observation belongs to. `y` must
-    be a binary flag. `x` is a set of features (either a DataFrame or sparse matrix) where the rows correspond to
-    observations and the columns represent the presence of features (you can technically run this using non-binary
-    features but the results will not be as readily interpretable.) The function returns a DataFrame of metrics
-    computed for each feature, including the following columns:
+    Computes pointwise mutual information for a set of observations partitioned into two groups.
+
+    :param y: An array or, preferably, a pandas.Series
+    :param x: A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix
+    :param col_names: The feature names associated with the columns in matrix 'x'
+    :type col_names: list
+    :param l: An optional Laplace smoothing parameter
+    :type l: int or float
+    :param normalize: Toggle normalization on or off (to control for feature prevalance), on by default
+    :type normalize: bool
+    :return: A dataframe of features with a variety of computed metrics including mutual information.
+
+    The function expects `y` to correspond to a list or series of values indicating which partition an observation \
+    belongs to. `y` must be a binary flag. `x` is a set of features (either a DataFrame or sparse matrix) where the
+    rows correspond to observations and the columns represent the presence of features (you can technically run
+    this using non-binary features but the results will not be as readily interpretable.) The function returns
+    a DataFrame of metrics computed for each feature, including the following columns:
 
     - `MI1`: The feature's mutual information for the positive class
     - `MI0`: The feature's mutual information for the negative class
@@ -43,16 +54,6 @@ def compute_mutual_info(y, x, weights=None, col_names=None, l=0, normalize=True)
     .. note:: Mutual information can be a difficult metric to explain to others. We've found that the \
         `pct_pos_neg_with_term_ratio` can serve as a more interpretable alternative method for identifying \
         meaningful differences between groups.
-
-    :param y: An array or, preferably, a pandas.Series
-    :param x: A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix
-    :param col_names: The feature names associated with the columns in matrix 'x'
-    :type col_names: list
-    :param l: An optional Laplace smoothing parameter
-    :type l: int or float
-    :param normalize: Toggle normalization on or off (to control for feature prevalance), on by default
-    :type normalize: bool
-    :return: A dataframe of features with a variety of computed metrics including mutual information.
 
     Usage::
 
