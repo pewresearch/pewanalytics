@@ -82,6 +82,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../stats.html">Statistical Tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../text.html">Text Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 
             
@@ -259,7 +260,8 @@
 <span class="sd">    and columns are features.</span>
 
 <span class="sd">    For more information about how LSA is implemented, visit the \</span>
-<span class="sd">    `Scikit-Learn Documentation &lt;https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html&gt;`__.</span>
+<span class="sd">    `Scikit-Learn Documentation \</span>
+<span class="sd">    &lt;https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html&gt;`__.</span>
 
 <span class="sd">    :param features: A dataframe or sparse matrix with rows are units/observations and columns are features</span>
 <span class="sd">    :param feature_names: An optional list of feature names (for sparse matrices)</span>
@@ -315,7 +317,8 @@
 <span class="sd">    or not they follow one another (when news and political accounts are included, the \</span>
 <span class="sd">    underlying dimension often appears to approximate the left-right political spectrum.)</span>
 
-<span class="sd">    :param edges: A dataframe of NxN where both the rows and columns are &quot;nodes&quot; and the values are some sort of closeness or similarity measure (like a cosine similarity matrix)</span>
+<span class="sd">    :param edges: A dataframe of NxN where both the rows and columns are &quot;nodes&quot; and the values are some sort of \</span>
+<span class="sd">    closeness or similarity measure (like a cosine similarity matrix)</span>
 <span class="sd">    :param n: The number of dimensions to extract</span>
 <span class="sd">    :type n: int</span>
 <span class="sd">    :return: A dataframe where rows are the units and the columns correspond to the extracted dimensions.</span>

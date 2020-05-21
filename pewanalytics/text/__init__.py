@@ -10,7 +10,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 import nltk
-from nltk.corpus import wordnet
 
 from tqdm import tqdm
 from stopit import ThreadingTimeout as Timeout
@@ -119,8 +118,10 @@ def filter_parts_of_speech(text, filter_pos=None, exclude=False):
     :type text: str
     :param filter_pos: Array of part of speech tags (default is 'NN', 'NNP', and 'JJ')
     :type filter_pos: list
-    :param exclude: If `True`, the function will remove words that match to the specified parts of speech; by default this function *filters to* POS matches instead.
-    :return: A string comprised solely of words that matched (or did not match) to the specified parts of speech, depending on the value of `exclude`
+    :param exclude: If `True`, the function will remove words that match to the specified parts of speech; by default \
+    this function *filters to* POS matches instead.
+    :return: A string comprised solely of words that matched (or did not match) to the specified parts of speech, \
+    depending on the value of `exclude`
     :rtype: str
 
     Usage::
@@ -272,11 +273,14 @@ class SentenceTokenizer(object):
     def tokenize(self, text, throw_loud_fail=False, min_length=None):
 
         """
+        Tokenizes the text.
+
         :param text: The text to tokenize
         :type text: str
         :param throw_loud_fail: Whether or not to raise an error if text decoding fails (default=False)
         :type throw_loud_fail: bool
-        :param min_length: The minimum acceptable length of a sentence (if a token is shorter than this, it will be considered part of the preceding sentence) (default=None)
+        :param min_length: The minimum acceptable length of a sentence (if a token is shorter than this, it will be \
+        considered part of the preceding sentence) (default=None)
         :type min_length: int
         :return: A list of sentences
         :rtype: list
@@ -357,7 +361,8 @@ class TextOverlapExtractor(object):
         :type text2: str
         :param min_length: The minimum size of the overlap to be considered (number of characters)
         :type min_length: int
-        :param tokenize: If True, overlapping segments will only be included if they consist of atomic tokens; overlaps that consist of only part of a token will be excluded (default=True)
+        :param tokenize: If True, overlapping segments will only be included if they consist of atomic tokens; \
+        overlaps that consist of only part of a token will be excluded (default=True)
         :type tokenize: bool
         :return: A list of all of the identified overlapping segments
         :rtype: list
@@ -367,7 +372,8 @@ class TextOverlapExtractor(object):
             from pewanalytics.text import TextOverlapExtractor
 
             text1 = "This is a sentence. This is another sentence. And a third sentence. And yet a fourth sentence."
-            text2 = "This is a different sentence. This is another sentence. And a third sentence. But the fourth sentence is different too."
+            text2 = "This is a different sentence. This is another sentence. And a third sentence. But the fourth \
+            sentence is different too."
 
             >>> extractor = TextOverlapExtractor()
 
@@ -379,6 +385,7 @@ class TextOverlapExtractor(object):
 
         """
 
+        valid_tokens = None
         if tokenize:
             valid_tokens = [
                 t.strip() for t in self.tokenizer.tokenize(". ".join([text1, text2]))
@@ -393,7 +400,7 @@ class TextOverlapExtractor(object):
                         overlap, min_length=min_length
                     ):
                         token = token.strip()
-                        if token in valid_tokens:
+                        if not valid_tokens or token in valid_tokens:
                             fragments.append(token)
                 elif len(overlap) >= min_length:
                     fragments.append(overlap)
@@ -454,11 +461,13 @@ class TextCleaner(object):
     :param lemmatize: Whether or not to lemmatize the tokens (default = True)
     :type lemmatize: bool
     :param tokenizer: Tokenizer to use (default = nltk.WhitespaceTokenizer())
-    :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them with. Anything passed here will be used in addition to a set of built-in replacement patterns for common contractions.
+    :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them with. \
+    Anything passed here will be used in addition to a set of built-in replacement patterns for common contractions.
     :type replacers: list
     :param process_method: Options are "lemmatize", "stem", or None (default = "lemmatize")
     :type process_method: str
-    :param processor: A lemmatizer or stemmer with a "lemmatize" or "stem" function (default for process_method="lemmatize" is nltk.WordNetLemmatizer(); default for process_method="stem" is nltk.SnowballStemmer())
+    :param processor: A lemmatizer or stemmer with a "lemmatize" or "stem" function (default for \
+    process_method="lemmatize" is nltk.WordNetLemmatizer(); default for process_method="stem" is nltk.SnowballStemmer())
     :param stopwords: The set of stopwords to remove (default = nltk.corpus.stopwords.words('english'))
     :type stopwords: set
     :param lowercase: Whether or not to lowercase the string (default = True)
@@ -552,7 +561,9 @@ class TextCleaner(object):
 
     def clean(self, text):
         """
-        :param string: The string to clean
+        Cleans the text.
+
+        :param text: The string to clean
         :return: The cleaned string
         """
 
@@ -599,7 +610,9 @@ class TextDataFrame(object):
     automatically produce a TF-IDF sparse matrix representation of the text upon initialization. All other \
     parameters are passed along to the scikit-learn TfidfVectorizer.
 
-    .. tip:: For more info on the parameters it excepts, refer to the official scikit-learn `Tfidf vectorizer documentation <https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html>`_.
+    .. tip:: For more info on the parameters it excepts, refer to the official scikit-learn `Tfidf vectorizer \
+    documentation \
+    <https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html>`_.
 
     :param df: A dataframe of documents.  Must contain a column with text.
     :param text_column: The name of the column in the dataframe that contains the text
@@ -679,7 +692,8 @@ class TextDataFrame(object):
         be matched to the value in the list to which it is most similar, based on cosine similarity.
 
         :param match_list: A list of strings (other documents) to be matched to documents in the dataframe
-        :param allow_multiple: If set to True, each document in your corpus will be matched with its closes valid match in the list. If set to False (default), documents in the list will only be matched to their best match in the corpus.
+        :param allow_multiple: If set to True, each document in your corpus will be matched with its closes valid \
+        match in the list. If set to False (default), documents in the list will only be matched to their best match in the corpus.
         :param min_similarity: Minimum cosine similarity required for any match to be made.
         :return: Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity
 
@@ -789,7 +803,7 @@ class TextDataFrame(object):
                         ),
                         reverse=True,
                     )
-                    if cos_similarity[1] < 0.997 and cos_similarity[1] >= min_similarity
+                    if min_similarity <= cos_similarity[1] < 0.997
                 ][:scan_top_n_matches_per_doc]
             )
         fragments = []
@@ -823,8 +837,15 @@ class TextDataFrame(object):
 
         :param tfidf_threshold: Minimum cosine similarity for two documents to be considered potential dupes.
         :param fuzzy_ratio_threshold: The required Levenshtein ratio to consider two documents duplicates.
-        :param filter_function: An optional function that allows for more complex filtering. The function must accept the following parameters: text1, text2, cosine_similarity, fuzzy_ratio.  Must return True or False, indicating whether the two documents should be considered duplicates.
-        :return: A list of lists, containing groups of duplicate documents (represented as rows from the corpus dataframe)
+        :param allow_partial: Whether or not to allow a partial ratio (if False, absolute ratios will be used)
+        :param max_partial_diff: The maximum partial ratio difference allowed for a potential duplicate pair
+        :param filter_function: An optional function that allows for more complex filtering. The function must accept \
+        the following parameters: text1, text2, cosine_similarity, fuzzy_ratio.  Must return True or False, \
+        indicating whether the two documents should be considered duplicates.
+        :param partial_ratio_timeout: How long, in seconds, that the partial ratio is allowed to compute
+        :param decode_text: Whether to decode the text prior to making comparisons
+        :return: A list of lists, containing groups of duplicate documents (represented as rows from the corpus \
+        dataframe)
 
         Usage::
 
@@ -915,6 +936,8 @@ class TextDataFrame(object):
 
         :param outcome_col: The name of the column with the binary outcome variable
         :param weight_col: (Optional) Name of the column to use in weighting
+        :param sample_size: (Optional) If provided, a random sample of this size will be used instead of the full \
+            dataframe
         :param l: An optional Laplace smoothing parameter
         :param normalize: Toggle normalization on or off (to control for feature prevalence), on by default
         :return: A DataFrame of ngrams and various metrics about them, including mutual information
@@ -1153,7 +1176,8 @@ class TextDataFrame(object):
 
         :param component_prefix: 'lsa' or 'pca' (you must first run get_pca_components or get_lsa_components)
         :param top_n: Number of documents to return for each component
-        :return: A dictionary where keys are the component, and values are the text values for the component's `top_n` documents
+        :return: A dictionary where keys are the component, and values are the text values for the component's \
+        `top_n` documents
 
         Usage::
 
@@ -1162,8 +1186,8 @@ class TextDataFrame(object):
             {'lsa_0': 5, 'lsa_1': 4}
 
             >>> lsa_topdoc['lsa_1'][0]
-            'Chief Justice Roberts, President Carter, President Clinton, President Bush, President Obama, fellow Americans, \
-            and people of the world: Thank you.  We, the citizens of America...'
+            'Chief Justice Roberts, President Carter, President Clinton, President Bush, President Obama, fellow \
+            Americans, and people of the world: Thank you.  We, the citizens of America...'
 
         """
 

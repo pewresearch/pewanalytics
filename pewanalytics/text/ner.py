@@ -6,7 +6,7 @@ import re
 from collections import defaultdict
 from nltk.corpus import stopwords
 from nltk import word_tokenize, pos_tag, ne_chunk
-from pewtils import decode_text, flatten_list
+from pewtils import decode_text
 
 
 class NamedEntityExtractor(object):
@@ -127,4 +127,3 @@ class NamedEntityExtractor(object):
                 roots[key].append(entity_text)
 
         return {self.type_map.get(k, k): list(set(v)) for k, v in roots.items()}
->>>>>>> 1d09c44 (made the NamedEntityExtractor more useful by integrating spacy and nltk together; updated documentation and unit tests)

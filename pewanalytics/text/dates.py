@@ -1,7 +1,6 @@
 from builtins import object
 import re
 import datetime
-import numpy as np
 
 from dateutil.parser import parse
 from calendar import IllegalMonthError

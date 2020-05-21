@@ -112,7 +112,8 @@ def get_lsa(features, feature_names=None, k=20):
     and columns are features.
 
     For more information about how LSA is implemented, visit the \
-    `Scikit-Learn Documentation <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html>`__.
+    `Scikit-Learn Documentation \
+    <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html>`__.
 
     :param features: A dataframe or sparse matrix with rows are units/observations and columns are features
     :param feature_names: An optional list of feature names (for sparse matrices)
@@ -168,7 +169,8 @@ def correspondence_analysis(edges, n=1):
     or not they follow one another (when news and political accounts are included, the \
     underlying dimension often appears to approximate the left-right political spectrum.)
 
-    :param edges: A dataframe of NxN where both the rows and columns are "nodes" and the values are some sort of closeness or similarity measure (like a cosine similarity matrix)
+    :param edges: A dataframe of NxN where both the rows and columns are "nodes" and the values are some sort of \
+    closeness or similarity measure (like a cosine similarity matrix)
     :param n: The number of dimensions to extract
     :type n: int
     :return: A dataframe where rows are the units and the columns correspond to the extracted dimensions.

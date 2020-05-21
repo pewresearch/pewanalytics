@@ -1,6 +1,3 @@
-"""
-
-"""
 from __future__ import print_function
 from __future__ import division
 from builtins import zip
@@ -8,7 +5,6 @@ from builtins import range
 from builtins import object
 import random
 import numpy as np
-import pandas as pd
 
 
 def compute_sample_weights_from_frame(frame, sample, weight_vars):
@@ -232,12 +228,13 @@ class SampleExtractor(object):
         - stratify: Proportional stratification, method from Kish, Leslie. "Survey sampling." (1965). Chapter 4.
         - stratify_even: Sample evenly from each strata (will obviously not be representative)
         - stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one \
-            observation from each strata (if sample size is small and/or there are many small strata, the resulting sample \
-            may be far from representative)
+            observation from each strata (if sample size is small and/or there are many small strata, the resulting \
+            sample may be far from representative)
 
         :param sample_size: The desired size of the sample
         :type sample_size: int
-        :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify, stratify_even, stratify_guaranteed
+        :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify, \
+        stratify_even, stratify_guaranteed
         :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on
         :return: A list of IDs reflecting the observations selected from the DataFrame during sampling
         :rtype: list

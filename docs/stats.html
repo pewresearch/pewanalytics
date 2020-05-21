@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pewanalytics.text: Text Tools" href="text.html" />
-    <link rel="prev" title="Getting Started" href="index.html" /> 
+    <link rel="prev" title="Pew Analytics" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,6 +93,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="text.html">Text Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
             
@@ -385,7 +386,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>edges</strong> – A dataframe of NxN where both the rows and columns are “nodes” and the values are some sort of closeness or similarity measure (like a cosine similarity matrix)</p></li>
+<li><p><strong>edges</strong> – A dataframe of NxN where both the rows and columns are “nodes” and the values are some sort of     closeness or similarity measure (like a cosine similarity matrix)</p></li>
 <li><p><strong>n</strong> (<em>int</em>) – The number of dimensions to extract</p></li>
 </ul>
 </dd>
@@ -733,7 +734,8 @@ and recall. The input data must consist of a <code class="xref py py-class docut
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>y</strong> – An array or, preferably, a pandas.Series</p></li>
-<li><p><strong>x</strong> – A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix</p></li>
+<li><p><strong>x</strong> – A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix’</p></li>
+<li><p><strong>weights</strong> – (Optional) An array of weights corresponding to each observation</p></li>
 <li><p><strong>col_names</strong> (<em>list</em>) – The feature names associated with the columns in matrix ‘x’</p></li>
 <li><p><strong>l</strong> (<em>int</em><em> or </em><em>float</em>) – An optional Laplace smoothing parameter</p></li>
 <li><p><strong>normalize</strong> (<em>bool</em>) – Toggle normalization on or off (to control for feature prevalance), on by default</p></li>
@@ -1029,13 +1031,13 @@ combination will be equal to one another). Useful for balancing important groups
 <li><p>random: Returns a random sample</p></li>
 <li><p>stratify: Proportional stratification, method from Kish, Leslie. “Survey sampling.” (1965). Chapter 4.</p></li>
 <li><p>stratify_even: Sample evenly from each strata (will obviously not be representative)</p></li>
-<li><p>stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one             observation from each strata (if sample size is small and/or there are many small strata, the resulting sample             may be far from representative)</p></li>
+<li><p>stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one             observation from each strata (if sample size is small and/or there are many small strata, the resulting             sample may be far from representative)</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sample_size</strong> (<em>int</em>) – The desired size of the sample</p></li>
-<li><p><strong>sampling_strategy</strong> – The method to be used to extract samples. Options are: all, random, stratify, stratify_even, stratify_guaranteed</p></li>
+<li><p><strong>sampling_strategy</strong> – The method to be used to extract samples. Options are: all, random, stratify,         stratify_even, stratify_guaranteed</p></li>
 <li><p><strong>stratify_by</strong> – Optional name of a column or list of columns in the DataFrame to stratify on</p></li>
 </ul>
 </dd>
@@ -1113,7 +1115,7 @@ combination will be equal to one another). Useful for balancing important groups
         <a href="text.html" class="btn btn-neutral float-right" title="pewanalytics.text: Text Tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Pew Analytics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

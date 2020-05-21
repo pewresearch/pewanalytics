@@ -14,7 +14,8 @@ def compute_mutual_info(y, x, weights=None, col_names=None, l=0, normalize=True)
     Computes pointwise mutual information for a set of observations partitioned into two groups.
 
     :param y: An array or, preferably, a pandas.Series
-    :param x: A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix
+    :param x: A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix'
+    :param weights: (Optional) An array of weights corresponding to each observation
     :param col_names: The feature names associated with the columns in matrix 'x'
     :type col_names: list
     :param l: An optional Laplace smoothing parameter

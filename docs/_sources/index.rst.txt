@@ -1,12 +1,11 @@
-Getting Started
+Pew Analytics
 ===================================================================
 
 
-Pewanalytics is a package containing many of the text and statistics utilities developed \
-at the Pew Research Center over the years. We've seperated things out into a text and a stats \
-submodule to text processing tasks including using `topic models to analyze survey open ends <link here>_`
-and using `cosine similarity and fuzzy matching to identify duplicates in the
-FCC comments on net neutrality <link here>_`.
+Pew Analytics is a package containing many of the text and statistics utilities developed \
+at the Pew Research Center over the years. Many of our research projects involve routine tasks specifically related \
+to processing and analyzing data: things like cleaning up text documents, de-duplicating records, and looking for \
+hidden clusters and groups. This package contains a collection of tools designed to make these tasks easier.
 
 .. toctree::
    :maxdepth: 1
@@ -14,6 +13,7 @@ FCC comments on net neutrality <link here>_`.
 
    Statistical Tools <stats>
    Text Tools <text>
+   Examples <examples>
 
 Installation
 ---------------

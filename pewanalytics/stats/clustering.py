@@ -1,10 +1,8 @@
 from __future__ import print_function
 import hdbscan
-import pandas as pd
 
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
-from sklearn.metrics.pairwise import linear_kernel
 
 
 def compute_kmeans_clusters(features, k=10, return_score=False):
@@ -87,9 +85,7 @@ def compute_hdbscan_clusters(features, min_cluster_size=100, min_samples=1, **kw
     """
 
     clusterer = hdbscan.HDBSCAN(
-        min_cluster_size=min_cluster_size,
-        min_samples=min_samples,
-        **kwargs
+        min_cluster_size=min_cluster_size, min_samples=min_samples, **kwargs
     )
     clusterer.fit(features)
     print("HDBSCAN: n_clusters {}".format(clusterer.labels_.max() + 1))

@@ -340,13 +340,11 @@ def compute_scores(
         if weight_column:
             try:
                 weighted_stats = DescrStatsW(labelset, weights=coder1_df[weight_column])
-                weighted_stats.mean
             except (TypeError, ValueError):
                 try:
                     weighted_stats = DescrStatsW(
                         labelset.astype(int), weights=coder1_df[weight_column]
                     )
-                    weighted_stats.mean
                 except (TypeError, ValueError):
                     weighted_stats = None
 
@@ -356,13 +354,11 @@ def compute_scores(
 
         try:
             unweighted_stats = DescrStatsW(labelset, weights=[1.0 for x in labelset])
-            unweighted_stats.mean
         except (TypeError, ValueError):
             try:
                 unweighted_stats = DescrStatsW(
                     labelset.astype(int), weights=[1.0 for x in labelset]
                 )
-                unweighted_stats.mean
             except (TypeError, ValueError):
                 unweighted_stats = None
 
@@ -464,6 +460,21 @@ def compute_scores(
             and len(np.unique(coder2_df[outcome_column])) > 1
             else None
         )
+    except TypeError:
+        try:
+            row["roc_auc"] = (
+                roc_auc_score(
+                    coder1_df[outcome_column],
+                    coder2_df[outcome_column],
+                    sample_weight=coder1_df[weight_column] if weight_column else None,
+                    average="weighted" if not pos_label else None,
+                )
+                if len(np.unique(coder1_df[outcome_column])) > 1
+                and len(np.unique(coder2_df[outcome_column])) > 1
+                else None
+            )
+        except (ValueError, TypeError):
+            row["roc_auc"] = None
     except (ValueError, TypeError):
         row["roc_auc"] = None
 

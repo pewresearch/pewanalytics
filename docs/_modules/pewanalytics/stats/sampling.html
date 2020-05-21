@@ -82,6 +82,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../stats.html">Statistical Tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../text.html">Text Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 
             
@@ -145,17 +146,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pewanalytics.stats.sampling</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">zip</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">range</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">object</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
 <div class="viewcode-block" id="compute_sample_weights_from_frame"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.sampling.compute_sample_weights_from_frame">[docs]</a><span class="k">def</span> <span class="nf">compute_sample_weights_from_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">weight_vars</span><span class="p">):</span>
@@ -379,12 +376,13 @@
 <span class="sd">        - stratify: Proportional stratification, method from Kish, Leslie. &quot;Survey sampling.&quot; (1965). Chapter 4.</span>
 <span class="sd">        - stratify_even: Sample evenly from each strata (will obviously not be representative)</span>
 <span class="sd">        - stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one \</span>
-<span class="sd">            observation from each strata (if sample size is small and/or there are many small strata, the resulting sample \</span>
-<span class="sd">            may be far from representative)</span>
+<span class="sd">            observation from each strata (if sample size is small and/or there are many small strata, the resulting \</span>
+<span class="sd">            sample may be far from representative)</span>
 
 <span class="sd">        :param sample_size: The desired size of the sample</span>
 <span class="sd">        :type sample_size: int</span>
-<span class="sd">        :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify, stratify_even, stratify_guaranteed</span>
+<span class="sd">        :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify, \</span>
+<span class="sd">        stratify_even, stratify_guaranteed</span>
 <span class="sd">        :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on</span>
 <span class="sd">        :return: A list of IDs reflecting the observations selected from the DataFrame during sampling</span>
 <span class="sd">        :rtype: list</span>
