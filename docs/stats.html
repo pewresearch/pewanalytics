@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pewanalytics: Text Module" href="text.html" />
+    <link rel="next" title="pewanalytics.text: Text Tools" href="text.html" />
     <link rel="prev" title="Getting Started" href="index.html" /> 
 </head>
 
@@ -162,25 +162,25 @@
 <p>In the <code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats</span></code> module, you’ll find a variety of statistical utilities for weighting, clustering, dimensionality reduction, and inter-rater reliability.</p>
 <div class="section" id="clustering">
 <h2>Clustering<a class="headerlink" href="#clustering" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.clustering</span></code> submodule contains several functions for extracting clusters from your data.</p>
-<p><strong>Functions</strong></p>
+<p>The <a class="reference internal" href="#module-pewanalytics.stats.clustering" title="pewanalytics.stats.clustering"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.clustering</span></code></a> submodule contains several functions for extracting clusters from your data.</p>
+<span class="target" id="module-pewanalytics.stats.clustering"></span><p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_hdbscan_clusters</span></code>(features[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.clustering.compute_hdbscan_clusters" title="pewanalytics.stats.clustering.compute_hdbscan_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_hdbscan_clusters</span></code></a>(features[, …])</p></td>
 <td><p>Uses HDBSCAN* to identify the best number of clusters and map each unit to one.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_kmeans_clusters</span></code>(features[, k, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.stats.clustering.compute_kmeans_clusters" title="pewanalytics.stats.clustering.compute_kmeans_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_kmeans_clusters</span></code></a>(features[, k, …])</p></td>
 <td><p>Uses K-Means to cluster an arbitrary set of features.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
-<dt>
-<code class="sig-name descname">compute_kmeans_clusters</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">k=10</em>, <em class="sig-param">return_score=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/clustering.html#compute_kmeans_clusters"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.stats.clustering.compute_kmeans_clusters">
+<code class="sig-name descname">compute_kmeans_clusters</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">k=10</em>, <em class="sig-param">return_score=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/clustering.html#compute_kmeans_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.clustering.compute_kmeans_clusters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses K-Means to cluster an arbitrary set of features. This function expects input data where the rows are units     and columns are features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -219,8 +219,8 @@
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">compute_hdbscan_clusters</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">min_cluster_size=100</em>, <em class="sig-param">min_samples=1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/clustering.html#compute_hdbscan_clusters"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.stats.clustering.compute_hdbscan_clusters">
+<code class="sig-name descname">compute_hdbscan_clusters</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">min_cluster_size=100</em>, <em class="sig-param">min_samples=1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/clustering.html#compute_hdbscan_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.clustering.compute_hdbscan_clusters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses HDBSCAN* to identify the best number of clusters and map each unit to one. This function expects input data     where the rows are units and columns are features. Additional keyword arguments are passed to HDBSCAN. Check     out the official documentation for more: <a class="reference external" href="https://hdbscan.readthedocs.io/en/latest">https://hdbscan.readthedocs.io/en/latest</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -256,29 +256,30 @@
 </div>
 <div class="section" id="dimensionality-reduction">
 <h2>Dimensionality Reduction<a class="headerlink" href="#dimensionality-reduction" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.dimensionality_reduction</span></code> submodule contains functions for collapsing your data into underlying dimensions using methods like PCA and correspondence analysis.</p>
-<p><strong>Functions</strong></p>
+<p>The <a class="reference internal" href="#module-pewanalytics.stats.dimensionality_reduction" title="pewanalytics.stats.dimensionality_reduction"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.dimensionality_reduction</span></code></a> submodule contains functions for collapsing your data into underlying dimensions using methods like PCA and correspondence analysis.</p>
+<span class="target" id="module-pewanalytics.stats.dimensionality_reduction"></span><p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">correspondence_analysis</span></code>(edges[, n])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.dimensionality_reduction.correspondence_analysis" title="pewanalytics.stats.dimensionality_reduction.correspondence_analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correspondence_analysis</span></code></a>(edges[, n])</p></td>
 <td><p>Performs correspondence analysis on a set of features.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_lsa</span></code>(features[, feature_names, k])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.stats.dimensionality_reduction.get_lsa" title="pewanalytics.stats.dimensionality_reduction.get_lsa"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_lsa</span></code></a>(features[, feature_names, k])</p></td>
 <td><p>Performs LSA on a set of features.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pca</span></code>(features[, feature_names, k])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.dimensionality_reduction.get_pca" title="pewanalytics.stats.dimensionality_reduction.get_pca"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pca</span></code></a>(features[, feature_names, k])</p></td>
 <td><p>Performs PCA on a set of features.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
-<dt>
-<code class="sig-name descname">get_pca</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">feature_names=None</em>, <em class="sig-param">k=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/dimensionality_reduction.html#get_pca"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Performs PCA on a set of features. This function expects input data where the rows are units     and columns are features. For more information about how PCA is implemented, visit the     <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html">Scikit-Learn Documentation</a>.</p>
+<dt id="pewanalytics.stats.dimensionality_reduction.get_pca">
+<code class="sig-name descname">get_pca</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">feature_names=None</em>, <em class="sig-param">k=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/dimensionality_reduction.html#get_pca"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.dimensionality_reduction.get_pca" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs PCA on a set of features. This function expects input data where the rows are units     and columns are features.</p>
+<p>For more information about how PCA is implemented, visit the     <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html">Scikit-Learn Documentation</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -326,9 +327,10 @@
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">get_lsa</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">feature_names=None</em>, <em class="sig-param">k=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/dimensionality_reduction.html#get_lsa"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Performs LSA on a set of features. This function expects input data where the rows are units     and columns are features. For more information about how LSA is implemented, visit the     <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html">Scikit-Learn Documentation</a>.</p>
+<dt id="pewanalytics.stats.dimensionality_reduction.get_lsa">
+<code class="sig-name descname">get_lsa</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">feature_names=None</em>, <em class="sig-param">k=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/dimensionality_reduction.html#get_lsa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.dimensionality_reduction.get_lsa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs LSA on a set of features. This function expects input data where the rows are units     and columns are features.</p>
+<p>For more information about how LSA is implemented, visit the     <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html">Scikit-Learn Documentation</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -376,13 +378,14 @@
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">correspondence_analysis</code><span class="sig-paren">(</span><em class="sig-param">edges</em>, <em class="sig-param">n=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/dimensionality_reduction.html#correspondence_analysis"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Performs correspondence analysis on a set of features. Expects a dataframe where the rows and columns are of     equal length and correspond to units/observations. Values should be some sort of similarity metric, such as     correlations, cosine similarity, or frequency counts. This is most useful in the context of network analysis,     where you might wish to, for example, identify the underlying dimension in a network of Twitter users by using     a matrix representing whether or not they follow one another (when news and political accounts are included, the     underlying dimension often appears to approximate the left-right political spectrum.)</p>
+<dt id="pewanalytics.stats.dimensionality_reduction.correspondence_analysis">
+<code class="sig-name descname">correspondence_analysis</code><span class="sig-paren">(</span><em class="sig-param">edges</em>, <em class="sig-param">n=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/dimensionality_reduction.html#correspondence_analysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.dimensionality_reduction.correspondence_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs correspondence analysis on a set of features.</p>
+<p>Most useful in the context of network analysis, where you might wish to, for example,     identify the underlying dimension in a network of Twitter users by using a matrix representing whether     or not they follow one another (when news and political accounts are included, the     underlying dimension often appears to approximate the left-right political spectrum.)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>edges</strong> – A dataframe of NxN where both the rows and columns are “nodes” and the values are some sort of     closeness or similarity measure (like a cosine similarity matrix)</p></li>
+<li><p><strong>edges</strong> – A dataframe of NxN where both the rows and columns are “nodes” and the values are some sort of closeness or similarity measure (like a cosine similarity matrix)</p></li>
 <li><p><strong>n</strong> (<em>int</em>) – The number of dimensions to extract</p></li>
 </ul>
 </dd>
@@ -434,32 +437,33 @@
 </div>
 <div class="section" id="inter-rater-reliability">
 <h2>Inter-Rater Reliability<a class="headerlink" href="#inter-rater-reliability" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.irr</span></code> submodule contains functions for computing measures of inter-rater reliability and model performance, including Cohen’s Kappa, Krippendorf’s Alpha, precision, recall, and much more.</p>
-<p><strong>Functions</strong></p>
+<p>The <a class="reference internal" href="#module-pewanalytics.stats.irr" title="pewanalytics.stats.irr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.irr</span></code></a> submodule contains functions for computing measures of inter-rater reliability and model performance, including Cohen’s Kappa, Krippendorf’s Alpha, precision, recall, and much more.</p>
+<span class="target" id="module-pewanalytics.stats.irr"></span><p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_overall_scores</span></code>(coder_df, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.irr.compute_overall_scores" title="pewanalytics.stats.irr.compute_overall_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_overall_scores</span></code></a>(coder_df, …)</p></td>
 <td><p>Computes overall inter-rater reliability scores (Krippendorf’s Alpha and Fleiss’ Kappa).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_scores</span></code>(coder_df, coder1, coder2, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.stats.irr.compute_scores" title="pewanalytics.stats.irr.compute_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_scores</span></code></a>(coder_df, coder1, coder2, …)</p></td>
 <td><p>Computes a variety of inter-rater reliability scores, including Cohen’s kappa, Krippendorf’s alpha, precision, and recall.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kappa_sample_size_CI</span></code>(kappa0, kappaL, props)</p></td>
-<td><p>When having multiple coders code a set of documents for a binary outcome, this function can help determine     whether they have coded enough documents to confirm that their Cohen’s kappa is at or above a minimum threhsold.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.irr.kappa_sample_size_CI" title="pewanalytics.stats.irr.kappa_sample_size_CI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kappa_sample_size_CI</span></code></a>(kappa0, kappaL, props)</p></td>
+<td><p>Helps determine the required document sample size to confirm that Cohen’s Kappa between coders is at or     above a minimum threhsold.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kappa_sample_size_power</span></code>(rate1, rate2, k1, k0)</p></td>
-<td><p>Translated from the <cite>irr</cite> R package, N.cohen.kappa: <a class="reference external" href="https://cran.r-project.org/web/packages/irr/irr.pdf">https://cran.r-project.org/web/packages/irr/irr.pdf</a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.stats.irr.kappa_sample_size_power" title="pewanalytics.stats.irr.kappa_sample_size_power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kappa_sample_size_power</span></code></a>(rate1, rate2, k1, k0)</p></td>
+<td><p>Python translation of the <cite>N.cohen.kappa</cite> function from the <cite>irr</cite> R package.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
-<dt>
-<code class="sig-name descname">kappa_sample_size_power</code><span class="sig-paren">(</span><em class="sig-param">rate1</em>, <em class="sig-param">rate2</em>, <em class="sig-param">k1</em>, <em class="sig-param">k0</em>, <em class="sig-param">alpha=0.05</em>, <em class="sig-param">power=0.8</em>, <em class="sig-param">twosided=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#kappa_sample_size_power"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Translated from the <cite>irr</cite> R package, N.cohen.kappa: <a class="reference external" href="https://cran.r-project.org/web/packages/irr/irr.pdf">https://cran.r-project.org/web/packages/irr/irr.pdf</a></p>
+<dt id="pewanalytics.stats.irr.kappa_sample_size_power">
+<code class="sig-name descname">kappa_sample_size_power</code><span class="sig-paren">(</span><em class="sig-param">rate1</em>, <em class="sig-param">rate2</em>, <em class="sig-param">k1</em>, <em class="sig-param">k0</em>, <em class="sig-param">alpha=0.05</em>, <em class="sig-param">power=0.8</em>, <em class="sig-param">twosided=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#kappa_sample_size_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.irr.kappa_sample_size_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Python translation of the <cite>N.cohen.kappa</cite> function from the <cite>irr</cite> R package.</p>
+<p>Source: <a class="reference external" href="https://cran.r-project.org/web/packages/irr/irr.pdf">https://cran.r-project.org/web/packages/irr/irr.pdf</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -483,9 +487,10 @@
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">kappa_sample_size_CI</code><span class="sig-paren">(</span><em class="sig-param">kappa0</em>, <em class="sig-param">kappaL</em>, <em class="sig-param">props</em>, <em class="sig-param">kappaU=None</em>, <em class="sig-param">alpha=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#kappa_sample_size_CI"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>When having multiple coders code a set of documents for a binary outcome, this function can help determine     whether they have coded enough documents to confirm that their Cohen’s kappa is at or above a minimum threhsold.     The function takes the observed kappa and proportion of positive cases from the sample, along with a lower-bound     for the minimum acceptable kappa, and returns the sample size required to confirm that the coders’ agreement is     truly above that minimum level of kappa with 95% certainty. If the current sample size is below the required     sample size returned by this function, it can provide a rough estimate of how many additional documents need     to be coded - assuming that the coders continue agreeing and observing positive cases at the same rate.</p>
+<dt id="pewanalytics.stats.irr.kappa_sample_size_CI">
+<code class="sig-name descname">kappa_sample_size_CI</code><span class="sig-paren">(</span><em class="sig-param">kappa0</em>, <em class="sig-param">kappaL</em>, <em class="sig-param">props</em>, <em class="sig-param">kappaU=None</em>, <em class="sig-param">alpha=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#kappa_sample_size_CI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.irr.kappa_sample_size_CI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helps determine the required document sample size to confirm that Cohen’s Kappa between coders is at or     above a minimum threhsold. Useful in situations where multiple coders code a set of documents for a binary outcome.</p>
+<p>This function takes the observed kappa and proportion of positive cases from the sample, along with a lower-bound     for the minimum acceptable kappa, and returns the sample size required to confirm that the coders’ agreement is     truly above that minimum level of kappa with 95% certainty. If the current sample size is below the required     sample size returned by this function, it can provide a rough estimate of how many additional documents need     to be coded - assuming that the coders continue agreeing and observing positive cases at the same rate.</p>
 <p>Translated from the <cite>kappaSize</cite> R package, CIBinary: <a class="reference external" href="https://github.com/cran/kappaSize/blob/master/R/CIBinary.R">https://github.com/cran/kappaSize/blob/master/R/CIBinary.R</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -516,8 +521,8 @@
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">compute_scores</code><span class="sig-paren">(</span><em class="sig-param">coder_df</em>, <em class="sig-param">coder1</em>, <em class="sig-param">coder2</em>, <em class="sig-param">outcome_column</em>, <em class="sig-param">document_column</em>, <em class="sig-param">coder_column</em>, <em class="sig-param">weight_column=None</em>, <em class="sig-param">pos_label=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#compute_scores"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.stats.irr.compute_scores">
+<code class="sig-name descname">compute_scores</code><span class="sig-paren">(</span><em class="sig-param">coder_df</em>, <em class="sig-param">coder1</em>, <em class="sig-param">coder2</em>, <em class="sig-param">outcome_column</em>, <em class="sig-param">document_column</em>, <em class="sig-param">coder_column</em>, <em class="sig-param">weight_column=None</em>, <em class="sig-param">pos_label=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#compute_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.irr.compute_scores" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes a variety of inter-rater reliability scores, including Cohen’s kappa, Krippendorf’s alpha, precision,
 and recall. The input data must consist of a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> with the following columns:</p>
 <blockquote>
@@ -529,10 +534,6 @@ and recall. The input data must consist of a <code class="xref py py-class docut
 </ul>
 </div></blockquote>
 <p>This function will return a dataframe with agreement scores between the two specified coders.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If using a multi-class (non-binary) code, some scores may come back null or not compute as expected.         We recommend running the function separately for each specific code value as a binary flag by providing         each unique value to the <cite>pos_label</cite> argument. If <cite>pos_label</cite> is not provided for multi-class codes,         this function will attempt to compute scores based on support-weighted averages.</p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -553,6 +554,10 @@ and recall. The input data must consist of a <code class="xref py py-class docut
 <dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If using a multi-class (non-binary) code, some scores may come back null or not compute as expected.         We recommend running the function separately for each specific code value as a binary flag by providing         each unique value to the <cite>pos_label</cite> argument. If <cite>pos_label</cite> is not provided for multi-class codes,         this function will attempt to compute scores based on support-weighted averages.</p>
+</div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.stats.irr</span> <span class="k">import</span> <span class="n">compute_scores</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -653,17 +658,16 @@ and recall. The input data must consist of a <code class="xref py py-class docut
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">compute_overall_scores</code><span class="sig-paren">(</span><em class="sig-param">coder_df</em>, <em class="sig-param">document_column</em>, <em class="sig-param">outcome_column</em>, <em class="sig-param">coder_column</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#compute_overall_scores"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Computes overall inter-rater reliability scores (Krippendorf’s Alpha and Fleiss’ Kappa). Allows for more than two
-coders and code values. The input data must consist of a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> with the following columns:</p>
-<blockquote>
-<div><ul class="simple">
+<dt id="pewanalytics.stats.irr.compute_overall_scores">
+<code class="sig-name descname">compute_overall_scores</code><span class="sig-paren">(</span><em class="sig-param">coder_df</em>, <em class="sig-param">document_column</em>, <em class="sig-param">outcome_column</em>, <em class="sig-param">coder_column</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#compute_overall_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.irr.compute_overall_scores" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Computes overall inter-rater reliability scores (Krippendorf’s Alpha and Fleiss’ Kappa). Allows for more than two     coders and code values. The input data must consist of a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> with the following columns:</dt><dd><ul class="simple">
 <li><p>A column with values that indicate the coder (like a name)</p></li>
 <li><p>A column with values that indicate the document (like an ID)</p></li>
 <li><p>A column with values that indicate the code value</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -702,34 +706,47 @@ coders and code values. The input data must consist of a <code class="xref py py
 </div>
 <div class="section" id="mutual-information">
 <h2>Mutual Information<a class="headerlink" href="#mutual-information" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.mutual_info</span></code> submodule provides a function for extracting pointwise mutual information for features in your data based on a binary split into two classes. This can be a great method for identifying features that are most distinctive of one group versus another.</p>
-<p><strong>Functions</strong></p>
+<p>The <a class="reference internal" href="#module-pewanalytics.stats.mutual_info" title="pewanalytics.stats.mutual_info"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.mutual_info</span></code></a> submodule provides a function for extracting pointwise mutual information for features in your data based on a binary split into two classes. This can be a great method for identifying features that are most distinctive of one group versus another.</p>
+<span class="target" id="module-pewanalytics.stats.mutual_info"></span><p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_mutual_info</span></code>(y, x[, weights, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.mutual_info.compute_mutual_info" title="pewanalytics.stats.mutual_info.compute_mutual_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_mutual_info</span></code></a>(y, x[, weights, …])</p></td>
 <td><p>Computes pointwise mutual information for a set of observations partitioned into two groups.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutual_info_bar_plot</span></code>(mutual_info[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.stats.mutual_info.mutual_info_bar_plot" title="pewanalytics.stats.mutual_info.mutual_info_bar_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutual_info_bar_plot</span></code></a>(mutual_info[, …])</p></td>
 <td><p>Takes a mutual information table generated by <cite>compute_mutual_info</cite>, generates a bar plot of top features.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutual_info_scatter_plot</span></code>(mutual_info[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.mutual_info.mutual_info_scatter_plot" title="pewanalytics.stats.mutual_info.mutual_info_scatter_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutual_info_scatter_plot</span></code></a>(mutual_info[, …])</p></td>
 <td><p>Takes a mutual information table generated by <cite>compute_mutual_info</cite>, generates a scatter plot of top features.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
-<dt>
-<code class="sig-name descname">compute_mutual_info</code><span class="sig-paren">(</span><em class="sig-param">y</em>, <em class="sig-param">x</em>, <em class="sig-param">weights=None</em>, <em class="sig-param">col_names=None</em>, <em class="sig-param">l=0</em>, <em class="sig-param">normalize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/mutual_info.html#compute_mutual_info"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Computes pointwise mutual information for a set of observations partitioned into two groups. The function expects
-<cite>y</cite> to correspond to a list or series of values indicating which partition an observation belongs to. <cite>y</cite> must
-be a binary flag. <cite>x</cite> is a set of features (either a DataFrame or sparse matrix) where the rows correspond to
-observations and the columns represent the presence of features (you can technically run this using non-binary
-features but the results will not be as readily interpretable.) The function returns a DataFrame of metrics
-computed for each feature, including the following columns:</p>
+<dt id="pewanalytics.stats.mutual_info.compute_mutual_info">
+<code class="sig-name descname">compute_mutual_info</code><span class="sig-paren">(</span><em class="sig-param">y</em>, <em class="sig-param">x</em>, <em class="sig-param">weights=None</em>, <em class="sig-param">col_names=None</em>, <em class="sig-param">l=0</em>, <em class="sig-param">normalize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/mutual_info.html#compute_mutual_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.mutual_info.compute_mutual_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes pointwise mutual information for a set of observations partitioned into two groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> – An array or, preferably, a pandas.Series</p></li>
+<li><p><strong>x</strong> – A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix</p></li>
+<li><p><strong>col_names</strong> (<em>list</em>) – The feature names associated with the columns in matrix ‘x’</p></li>
+<li><p><strong>l</strong> (<em>int</em><em> or </em><em>float</em>) – An optional Laplace smoothing parameter</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em>) – Toggle normalization on or off (to control for feature prevalance), on by default</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dataframe of features with a variety of computed metrics including mutual information.</p>
+</dd>
+</dl>
+<p>The function expects <cite>y</cite> to correspond to a list or series of values indicating which partition an observation     belongs to. <cite>y</cite> must be a binary flag. <cite>x</cite> is a set of features (either a DataFrame or sparse matrix) where the
+rows correspond to observations and the columns represent the presence of features (you can technically run
+this using non-binary features but the results will not be as readily interpretable.) The function returns
+a DataFrame of metrics computed for each feature, including the following columns:</p>
 <ul class="simple">
 <li><p><cite>MI1</cite>: The feature’s mutual information for the positive class</p></li>
 <li><p><cite>MI0</cite>: The feature’s mutual information for the negative class</p></li>
@@ -753,20 +770,6 @@ computed for each feature, including the following columns:</p>
 <p class="admonition-title">Note</p>
 <p>Mutual information can be a difficult metric to explain to others. We’ve found that the         <cite>pct_pos_neg_with_term_ratio</cite> can serve as a more interpretable alternative method for identifying         meaningful differences between groups.</p>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>y</strong> – An array or, preferably, a pandas.Series</p></li>
-<li><p><strong>x</strong> – A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix</p></li>
-<li><p><strong>col_names</strong> (<em>list</em>) – The feature names associated with the columns in matrix ‘x’</p></li>
-<li><p><strong>l</strong> (<em>int</em><em> or </em><em>float</em>) – An optional Laplace smoothing parameter</p></li>
-<li><p><strong>normalize</strong> (<em>bool</em>) – Toggle normalization on or off (to control for feature prevalance), on by default</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dataframe of features with a variety of computed metrics including mutual information.</p>
-</dd>
-</dl>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.stats.mutual_info</span> <span class="k">import</span> <span class="n">compute_mutual_info</span>
 <span class="kn">import</span> <span class="nn">nltk</span>
@@ -799,8 +802,8 @@ computed for each feature, including the following columns:</p>
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">mutual_info_bar_plot</code><span class="sig-paren">(</span><em class="sig-param">mutual_info</em>, <em class="sig-param">filter_col='MI1'</em>, <em class="sig-param">top_n=50</em>, <em class="sig-param">x_col='pct_term_pos_neg_ratio'</em>, <em class="sig-param">color='grey'</em>, <em class="sig-param">title=None</em>, <em class="sig-param">width=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/mutual_info.html#mutual_info_bar_plot"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.stats.mutual_info.mutual_info_bar_plot">
+<code class="sig-name descname">mutual_info_bar_plot</code><span class="sig-paren">(</span><em class="sig-param">mutual_info</em>, <em class="sig-param">filter_col='MI1'</em>, <em class="sig-param">top_n=50</em>, <em class="sig-param">x_col='pct_term_pos_neg_ratio'</em>, <em class="sig-param">color='grey'</em>, <em class="sig-param">title=None</em>, <em class="sig-param">width=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/mutual_info.html#mutual_info_bar_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.mutual_info.mutual_info_bar_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a mutual information table generated by <cite>compute_mutual_info</cite>, generates a bar plot of top features.      Allows for an easy visualization of feature differences. Can subsequently call <cite>plt.show()</cite> or
 <cite>plt.savefig</cite> to display or save the plot.</p>
 <dl class="field-list simple">
@@ -822,8 +825,8 @@ computed for each feature, including the following columns:</p>
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">mutual_info_scatter_plot</code><span class="sig-paren">(</span><em class="sig-param">mutual_info</em>, <em class="sig-param">filter_col='MI1'</em>, <em class="sig-param">top_n=50</em>, <em class="sig-param">x_col='pct_term_pos_neg_ratio'</em>, <em class="sig-param">xlabel=None</em>, <em class="sig-param">scale_x_even=True</em>, <em class="sig-param">y_col='MI1'</em>, <em class="sig-param">ylabel=None</em>, <em class="sig-param">scale_y_even=True</em>, <em class="sig-param">color='grey'</em>, <em class="sig-param">color_col='MI1'</em>, <em class="sig-param">size_col='pct_pos_with_term'</em>, <em class="sig-param">title=None</em>, <em class="sig-param">figsize=(10</em>, <em class="sig-param">10)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/mutual_info.html#mutual_info_scatter_plot"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.stats.mutual_info.mutual_info_scatter_plot">
+<code class="sig-name descname">mutual_info_scatter_plot</code><span class="sig-paren">(</span><em class="sig-param">mutual_info</em>, <em class="sig-param">filter_col='MI1'</em>, <em class="sig-param">top_n=50</em>, <em class="sig-param">x_col='pct_term_pos_neg_ratio'</em>, <em class="sig-param">xlabel=None</em>, <em class="sig-param">scale_x_even=True</em>, <em class="sig-param">y_col='MI1'</em>, <em class="sig-param">ylabel=None</em>, <em class="sig-param">scale_y_even=True</em>, <em class="sig-param">color='grey'</em>, <em class="sig-param">color_col='MI1'</em>, <em class="sig-param">size_col='pct_pos_with_term'</em>, <em class="sig-param">title=None</em>, <em class="sig-param">figsize=(10</em>, <em class="sig-param">10)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/mutual_info.html#mutual_info_scatter_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.mutual_info.mutual_info_scatter_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a mutual information table generated by <cite>compute_mutual_info</cite>, generates a scatter plot of top features.
 The names of the features will be displayed with varying colors and sizes depending on the variables specified
 in <cite>color_col</cite> and <cite>size_col</cite>. Allows for an easy visualization of feature differences. Can subsequently
@@ -856,15 +859,15 @@ call <cite>plt.show()</cite> or <cite>plt.savefig</cite> to display or save the 
 </div>
 <div class="section" id="sampling">
 <h2>Sampling<a class="headerlink" href="#sampling" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.sampling</span></code> submodule contains utilities for extracting and weighting samples based on a known sampling frame.</p>
-<p><strong>Classes</strong></p>
+<p>The <a class="reference internal" href="#module-pewanalytics.stats.sampling" title="pewanalytics.stats.sampling"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.sampling</span></code></a> submodule contains utilities for extracting and weighting samples based on a known sampling frame.</p>
+<span class="target" id="module-pewanalytics.stats.sampling"></span><p><strong>Classes</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">SampleExtractor</span></code>(df, id_col[, verbose, seed])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.sampling.SampleExtractor" title="pewanalytics.stats.sampling.SampleExtractor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SampleExtractor</span></code></a>(df, id_col[, verbose, seed])</p></td>
 <td><p>A helper class for extracting samples using various sampling methods.</p></td>
 </tr>
 </tbody>
@@ -876,17 +879,17 @@ call <cite>plt.show()</cite> or <cite>plt.savefig</cite> to display or save the 
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_balanced_sample_weights</span></code>(sample, …)</p></td>
-<td><p>Takes a DataFrame and one or more column names (<cite>weight_vars</cite>) and computes weights such that every unique combination of values in the weighting columns are balanced (when weighted, the sum of the observations with each combination will be equal to one another.) Useful for balancing important groups in training datasets, etc.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.sampling.compute_balanced_sample_weights" title="pewanalytics.stats.sampling.compute_balanced_sample_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_balanced_sample_weights</span></code></a>(sample, …)</p></td>
+<td><p>Takes a DataFrame and one or more column names (<cite>weight_vars</cite>) and computes weights such that every unique combination of values in the weighting columns are balanced (when weighted, the sum of the observations with each combination will be equal to one another).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_sample_weights_from_frame</span></code>(frame, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.stats.sampling.compute_sample_weights_from_frame" title="pewanalytics.stats.sampling.compute_sample_weights_from_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_sample_weights_from_frame</span></code></a>(frame, …)</p></td>
 <td><p>Takes two dataframes and computes sampling weights for the second one, based on the first.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
-<dt>
-<code class="sig-name descname">compute_sample_weights_from_frame</code><span class="sig-paren">(</span><em class="sig-param">frame</em>, <em class="sig-param">sample</em>, <em class="sig-param">weight_vars</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#compute_sample_weights_from_frame"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.stats.sampling.compute_sample_weights_from_frame">
+<code class="sig-name descname">compute_sample_weights_from_frame</code><span class="sig-paren">(</span><em class="sig-param">frame</em>, <em class="sig-param">sample</em>, <em class="sig-param">weight_vars</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#compute_sample_weights_from_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.sampling.compute_sample_weights_from_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes two dataframes and computes sampling weights for the second one, based on the first. The first dataframe
 should be equivalent to the population that the second dataframe, a sample, was drawn from. Weights will be
 calculated based on the differences in the distribution of one or more variables specified in <cite>weight_vars</cite>
@@ -941,11 +944,11 @@ calculated based on the differences in the distribution of one or more variables
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">compute_balanced_sample_weights</code><span class="sig-paren">(</span><em class="sig-param">sample</em>, <em class="sig-param">weight_vars</em>, <em class="sig-param">weight_column=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#compute_balanced_sample_weights"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.stats.sampling.compute_balanced_sample_weights">
+<code class="sig-name descname">compute_balanced_sample_weights</code><span class="sig-paren">(</span><em class="sig-param">sample</em>, <em class="sig-param">weight_vars</em>, <em class="sig-param">weight_column=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#compute_balanced_sample_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.sampling.compute_balanced_sample_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a DataFrame and one or more column names (<cite>weight_vars</cite>) and computes weights such that every unique
 combination of values in the weighting columns are balanced (when weighted, the sum of the observations with each
-combination will be equal to one another.) Useful for balancing important groups in training datasets, etc.</p>
+combination will be equal to one another). Useful for balancing important groups in training datasets, etc.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -958,6 +961,10 @@ combination will be equal to one another.) Useful for balancing important groups
 <dd class="field-even"><p>A Series containing the weights for each row in the <cite>sample</cite></p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All weight variables must be binary flags (1 or 0); if you want to weight using a non-binary variable,         you should convert it into a set of dummy variables and then pass those in as multiple columns.</p>
+</div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.stats.sampling</span> <span class="k">import</span> <span class="n">compute_balanced_sample_weights</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -988,8 +995,8 @@ combination will be equal to one another.) Useful for balancing important groups
 </dd></dl>
 
 <dl class="class">
-<dt>
-<em class="property">class </em><code class="sig-name descname">SampleExtractor</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">id_col</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#SampleExtractor"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.stats.sampling.SampleExtractor">
+<em class="property">class </em><code class="sig-name descname">SampleExtractor</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">id_col</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#SampleExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.sampling.SampleExtractor" title="Permalink to this definition">¶</a></dt>
 <dd><p>A helper class for extracting samples using various sampling methods.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1008,39 +1015,37 @@ combination will be equal to one another.) Useful for balancing important groups
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract</span></code>(sample_size[, sampling_strategy, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.sampling.SampleExtractor.extract" title="pewanalytics.stats.sampling.SampleExtractor.extract"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract</span></code></a>(sample_size[, sampling_strategy, …])</p></td>
 <td><p>Extract a sample from a DataFrame using one of the following methods:</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt>
-<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">sample_size</em>, <em class="sig-param">sampling_strategy='random'</em>, <em class="sig-param">stratify_by=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#SampleExtractor.extract"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.stats.sampling.SampleExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">sample_size</em>, <em class="sig-param">sampling_strategy='random'</em>, <em class="sig-param">stratify_by=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#SampleExtractor.extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.sampling.SampleExtractor.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract a sample from a DataFrame using one of the following methods:</p>
 <ul class="simple">
 <li><p>all: Returns all of the IDs</p></li>
 <li><p>random: Returns a random sample</p></li>
 <li><p>stratify: Proportional stratification, method from Kish, Leslie. “Survey sampling.” (1965). Chapter 4.</p></li>
 <li><p>stratify_even: Sample evenly from each strata (will obviously not be representative)</p></li>
-<li><dl class="simple">
-<dt>stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one</dt><dd><p>observation from each strata (if sample size is small and/or there are many small strata, the resulting sample
-may be far from representative)</p>
-</dd>
-</dl>
-</li>
+<li><p>stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one             observation from each strata (if sample size is small and/or there are many small strata, the resulting sample             may be far from representative)</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sample_size</strong> (<em>int</em>) – The desired size of the sample</p></li>
-<li><p><strong>sampling_strategy</strong> – The method to be used to extract samples. Options are: all, random, stratify,</p></li>
+<li><p><strong>sampling_strategy</strong> – The method to be used to extract samples. Options are: all, random, stratify, stratify_even, stratify_guaranteed</p></li>
+<li><p><strong>stratify_by</strong> – Optional name of a column or list of columns in the DataFrame to stratify on</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of IDs reflecting the observations selected from the DataFrame during sampling</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
 </dl>
-<p>stratify_even, stratify_guaranteed
-:param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on
-:return: A list of IDs reflecting the observations selected from the DataFrame during sampling
-:rtype: list</p>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.stats.sampling</span> <span class="k">import</span> <span class="n">SampleExtractor</span>
 <span class="kn">import</span> <span class="nn">nltk</span>
@@ -1105,7 +1110,7 @@ may be far from representative)</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="text.html" class="btn btn-neutral float-right" title="pewanalytics: Text Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="text.html" class="btn btn-neutral float-right" title="pewanalytics.text: Text Tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

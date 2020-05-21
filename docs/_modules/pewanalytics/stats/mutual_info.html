@@ -158,12 +158,23 @@
 <div class="viewcode-block" id="compute_mutual_info"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.mutual_info.compute_mutual_info">[docs]</a><span class="k">def</span> <span class="nf">compute_mutual_info</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">col_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes pointwise mutual information for a set of observations partitioned into two groups. The function expects</span>
-<span class="sd">    `y` to correspond to a list or series of values indicating which partition an observation belongs to. `y` must</span>
-<span class="sd">    be a binary flag. `x` is a set of features (either a DataFrame or sparse matrix) where the rows correspond to</span>
-<span class="sd">    observations and the columns represent the presence of features (you can technically run this using non-binary</span>
-<span class="sd">    features but the results will not be as readily interpretable.) The function returns a DataFrame of metrics</span>
-<span class="sd">    computed for each feature, including the following columns:</span>
+<span class="sd">    Computes pointwise mutual information for a set of observations partitioned into two groups.</span>
+
+<span class="sd">    :param y: An array or, preferably, a pandas.Series</span>
+<span class="sd">    :param x: A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix</span>
+<span class="sd">    :param col_names: The feature names associated with the columns in matrix &#39;x&#39;</span>
+<span class="sd">    :type col_names: list</span>
+<span class="sd">    :param l: An optional Laplace smoothing parameter</span>
+<span class="sd">    :type l: int or float</span>
+<span class="sd">    :param normalize: Toggle normalization on or off (to control for feature prevalance), on by default</span>
+<span class="sd">    :type normalize: bool</span>
+<span class="sd">    :return: A dataframe of features with a variety of computed metrics including mutual information.</span>
+
+<span class="sd">    The function expects `y` to correspond to a list or series of values indicating which partition an observation \</span>
+<span class="sd">    belongs to. `y` must be a binary flag. `x` is a set of features (either a DataFrame or sparse matrix) where the</span>
+<span class="sd">    rows correspond to observations and the columns represent the presence of features (you can technically run</span>
+<span class="sd">    this using non-binary features but the results will not be as readily interpretable.) The function returns</span>
+<span class="sd">    a DataFrame of metrics computed for each feature, including the following columns:</span>
 
 <span class="sd">    - `MI1`: The feature&#39;s mutual information for the positive class</span>
 <span class="sd">    - `MI0`: The feature&#39;s mutual information for the negative class</span>
@@ -190,16 +201,6 @@
 <span class="sd">    .. note:: Mutual information can be a difficult metric to explain to others. We&#39;ve found that the \</span>
 <span class="sd">        `pct_pos_neg_with_term_ratio` can serve as a more interpretable alternative method for identifying \</span>
 <span class="sd">        meaningful differences between groups.</span>
-
-<span class="sd">    :param y: An array or, preferably, a pandas.Series</span>
-<span class="sd">    :param x: A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix</span>
-<span class="sd">    :param col_names: The feature names associated with the columns in matrix &#39;x&#39;</span>
-<span class="sd">    :type col_names: list</span>
-<span class="sd">    :param l: An optional Laplace smoothing parameter</span>
-<span class="sd">    :type l: int or float</span>
-<span class="sd">    :param normalize: Toggle normalization on or off (to control for feature prevalance), on by default</span>
-<span class="sd">    :type normalize: bool</span>
-<span class="sd">    :return: A dataframe of features with a variety of computed metrics including mutual information.</span>
 
 <span class="sd">    Usage::</span>
 

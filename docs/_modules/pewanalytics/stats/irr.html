@@ -169,7 +169,9 @@
 <span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Translated from the `irr` R package, N.cohen.kappa: https://cran.r-project.org/web/packages/irr/irr.pdf</span>
+<span class="sd">    Python translation of the `N.cohen.kappa` function from the `irr` R package.</span>
+
+<span class="sd">    Source: https://cran.r-project.org/web/packages/irr/irr.pdf</span>
 
 <span class="sd">    :param rate1: The probability that the first rater will record a positive diagnosis</span>
 <span class="sd">    :type rate1: float</span>
@@ -235,9 +237,10 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="sd">    When having multiple coders code a set of documents for a binary outcome, this function can help determine \</span>
-<span class="sd">    whether they have coded enough documents to confirm that their Cohen&#39;s kappa is at or above a minimum threhsold. \</span>
-<span class="sd">    The function takes the observed kappa and proportion of positive cases from the sample, along with a lower-bound \</span>
+<span class="sd">    Helps determine the required document sample size to confirm that Cohen&#39;s Kappa between coders is at or \</span>
+<span class="sd">    above a minimum threhsold. Useful in situations where multiple coders code a set of documents for a binary outcome.</span>
+
+<span class="sd">    This function takes the observed kappa and proportion of positive cases from the sample, along with a lower-bound \</span>
 <span class="sd">    for the minimum acceptable kappa, and returns the sample size required to confirm that the coders&#39; agreement is \</span>
 <span class="sd">    truly above that minimum level of kappa with 95% certainty. If the current sample size is below the required \</span>
 <span class="sd">    sample size returned by this function, it can provide a rough estimate of how many additional documents need \</span>
@@ -324,17 +327,13 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes a variety of inter-rater reliability scores, including Cohen&#39;s kappa, Krippendorf&#39;s alpha, precision,</span>
 <span class="sd">    and recall. The input data must consist of a :py:class:`pandas.DataFrame` with the following columns:</span>
+
 <span class="sd">        - A column with values that indicate the coder (like a name)</span>
 <span class="sd">        - A column with values that indicate the document (like an ID)</span>
 <span class="sd">        - A column with values that indicate the code value</span>
 <span class="sd">        - (Optional) A column with document weights</span>
 
 <span class="sd">    This function will return a dataframe with agreement scores between the two specified coders.</span>
-
-<span class="sd">    .. note:: If using a multi-class (non-binary) code, some scores may come back null or not compute as expected. \</span>
-<span class="sd">        We recommend running the function separately for each specific code value as a binary flag by providing \</span>
-<span class="sd">        each unique value to the `pos_label` argument. If `pos_label` is not provided for multi-class codes, \</span>
-<span class="sd">        this function will attempt to compute scores based on support-weighted averages.</span>
 
 <span class="sd">    :param coder_df: A dataframe of codes</span>
 <span class="sd">    :type coder_df: :py:class:`pandas.DataFrame`</span>
@@ -354,6 +353,11 @@
 <span class="sd">    :type pos_label: str or int</span>
 <span class="sd">    :return: A dictionary of scores</span>
 <span class="sd">    :rtype: dict</span>
+
+<span class="sd">    .. note:: If using a multi-class (non-binary) code, some scores may come back null or not compute as expected. \</span>
+<span class="sd">        We recommend running the function separately for each specific code value as a binary flag by providing \</span>
+<span class="sd">        each unique value to the `pos_label` argument. If `pos_label` is not provided for multi-class codes, \</span>
+<span class="sd">        this function will attempt to compute scores based on support-weighted averages.</span>
 
 <span class="sd">    Usage::</span>
 
@@ -630,7 +634,7 @@
 <div class="viewcode-block" id="compute_overall_scores"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.irr.compute_overall_scores">[docs]</a><span class="k">def</span> <span class="nf">compute_overall_scores</span><span class="p">(</span><span class="n">coder_df</span><span class="p">,</span> <span class="n">document_column</span><span class="p">,</span> <span class="n">outcome_column</span><span class="p">,</span> <span class="n">coder_column</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes overall inter-rater reliability scores (Krippendorf&#39;s Alpha and Fleiss&#39; Kappa). Allows for more than two</span>
+<span class="sd">    Computes overall inter-rater reliability scores (Krippendorf&#39;s Alpha and Fleiss&#39; Kappa). Allows for more than two \</span>
 <span class="sd">    coders and code values. The input data must consist of a :py:class:`pandas.DataFrame` with the following columns:</span>
 <span class="sd">        - A column with values that indicate the coder (like a name)</span>
 <span class="sd">        - A column with values that indicate the document (like an ID)</span>

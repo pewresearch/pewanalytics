@@ -243,10 +243,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes a DataFrame and one or more column names (`weight_vars`) and computes weights such that every unique</span>
 <span class="sd">    combination of values in the weighting columns are balanced (when weighted, the sum of the observations with each</span>
-<span class="sd">    combination will be equal to one another.) Useful for balancing important groups in training datasets, etc.</span>
-
-<span class="sd">    .. notes:: All weight variables must be binary flags (1 or 0); if you want to weight using a non-binary variable, \</span>
-<span class="sd">        you should convert it into a set of dummy variables and then pass those in as multiple columns.</span>
+<span class="sd">    combination will be equal to one another). Useful for balancing important groups in training datasets, etc.</span>
 
 <span class="sd">    :param sample: DataFrame (must contain all of the columns specified in `weight_vars`)</span>
 <span class="sd">    :param weight_vars: The names of the columns to use when computing weights.</span>
@@ -255,6 +252,9 @@
 <span class="sd">    :type weight_column: str</span>
 <span class="sd">    :return: A Series containing the weights for each row in the `sample`</span>
 
+<span class="sd">    .. note:: All weight variables must be binary flags (1 or 0); if you want to weight using a non-binary variable, \</span>
+<span class="sd">        you should convert it into a set of dummy variables and then pass those in as multiple columns.</span>
+<span class="sd">        </span>
 <span class="sd">    Usage::</span>
 
 <span class="sd">        from pewanalytics.stats.sampling import compute_balanced_sample_weights</span>
@@ -378,14 +378,13 @@
 <span class="sd">        - random: Returns a random sample</span>
 <span class="sd">        - stratify: Proportional stratification, method from Kish, Leslie. &quot;Survey sampling.&quot; (1965). Chapter 4.</span>
 <span class="sd">        - stratify_even: Sample evenly from each strata (will obviously not be representative)</span>
-<span class="sd">        - stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one</span>
-<span class="sd">            observation from each strata (if sample size is small and/or there are many small strata, the resulting sample</span>
+<span class="sd">        - stratify_guaranteed: Proportional stratification, but the sample is guaranteed to contain at least one \</span>
+<span class="sd">            observation from each strata (if sample size is small and/or there are many small strata, the resulting sample \</span>
 <span class="sd">            may be far from representative)</span>
 
 <span class="sd">        :param sample_size: The desired size of the sample</span>
 <span class="sd">        :type sample_size: int</span>
-<span class="sd">        :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify,</span>
-<span class="sd">        stratify_even, stratify_guaranteed</span>
+<span class="sd">        :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify, stratify_even, stratify_guaranteed</span>
 <span class="sd">        :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on</span>
 <span class="sd">        :return: A list of IDs reflecting the observations selected from the DataFrame during sampling</span>
 <span class="sd">        :rtype: list</span>

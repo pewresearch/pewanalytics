@@ -203,8 +203,10 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs PCA on a set of features. This function expects input data where the rows are units \</span>
-<span class="sd">    and columns are features. For more information about how PCA is implemented, visit the \</span>
-<span class="sd">    `Scikit-Learn Documentation &lt;https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html&gt;`_.</span>
+<span class="sd">    and columns are features.</span>
+
+<span class="sd">    For more information about how PCA is implemented, visit the \</span>
+<span class="sd">    `Scikit-Learn Documentation &lt;https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html&gt;`__.</span>
 
 <span class="sd">    :param features: A dataframe or sparse matrix where rows are units/observations and columns are features</span>
 <span class="sd">    :param feature_names: An optional list of feature names (for sparse matrices)</span>
@@ -254,8 +256,10 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs LSA on a set of features. This function expects input data where the rows are units \</span>
-<span class="sd">    and columns are features. For more information about how LSA is implemented, visit the \</span>
-<span class="sd">    `Scikit-Learn Documentation &lt;https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html&gt;`_.</span>
+<span class="sd">    and columns are features.</span>
+
+<span class="sd">    For more information about how LSA is implemented, visit the \</span>
+<span class="sd">    `Scikit-Learn Documentation &lt;https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html&gt;`__.</span>
 
 <span class="sd">    :param features: A dataframe or sparse matrix with rows are units/observations and columns are features</span>
 <span class="sd">    :param feature_names: An optional list of feature names (for sparse matrices)</span>
@@ -304,15 +308,14 @@
 <div class="viewcode-block" id="correspondence_analysis"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.dimensionality_reduction.correspondence_analysis">[docs]</a><span class="k">def</span> <span class="nf">correspondence_analysis</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Performs correspondence analysis on a set of features. Expects a dataframe where the rows and columns are of \</span>
-<span class="sd">    equal length and correspond to units/observations. Values should be some sort of similarity metric, such as \</span>
-<span class="sd">    correlations, cosine similarity, or frequency counts. This is most useful in the context of network analysis, \</span>
-<span class="sd">    where you might wish to, for example, identify the underlying dimension in a network of Twitter users by using \</span>
-<span class="sd">    a matrix representing whether or not they follow one another (when news and political accounts are included, the \</span>
+<span class="sd">    Performs correspondence analysis on a set of features.</span>
+
+<span class="sd">    Most useful in the context of network analysis, where you might wish to, for example, \</span>
+<span class="sd">    identify the underlying dimension in a network of Twitter users by using a matrix representing whether \</span>
+<span class="sd">    or not they follow one another (when news and political accounts are included, the \</span>
 <span class="sd">    underlying dimension often appears to approximate the left-right political spectrum.)</span>
 
-<span class="sd">    :param edges: A dataframe of NxN where both the rows and columns are &quot;nodes&quot; and the values are some sort of \</span>
-<span class="sd">    closeness or similarity measure (like a cosine similarity matrix)</span>
+<span class="sd">    :param edges: A dataframe of NxN where both the rows and columns are &quot;nodes&quot; and the values are some sort of closeness or similarity measure (like a cosine similarity matrix)</span>
 <span class="sd">    :param n: The number of dimensions to extract</span>
 <span class="sd">    :type n: int</span>
 <span class="sd">    :return: A dataframe where rows are the units and the columns correspond to the extracted dimensions.</span>

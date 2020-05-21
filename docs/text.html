@@ -159,6 +159,27 @@
 <div class="section" id="general-text-processing-tools">
 <h2>General Text Processing Tools<a class="headerlink" href="#general-text-processing-tools" title="Permalink to this headline">¶</a></h2>
 <p>The main <code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.text</span></code> module contains a variety of general tools for processing text.</p>
+<span class="target" id="module-pewanalytics.text.__init__"></span><p><strong>Classes</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.SentenceTokenizer" title="pewanalytics.text.__init__.SentenceTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SentenceTokenizer</span></code></a>([base_tokenizer, …])</p></td>
+<td><p>Initializes a tokenizer that can be be used to break text into tokens using the <cite>tokenize</cite> function</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextCleaner" title="pewanalytics.text.__init__.TextCleaner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TextCleaner</span></code></a>([throw_loud_fail, filter_pos, …])</p></td>
+<td><p>A class for cleaning text up, in preparation for NLP, etc.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame" title="pewanalytics.text.__init__.TextDataFrame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TextDataFrame</span></code></a>(df, text_column, …)</p></td>
+<td><p>This is a class full of functions for working with dataframes of documents.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextOverlapExtractor" title="pewanalytics.text.__init__.TextOverlapExtractor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TextOverlapExtractor</span></code></a>([tokenizer])</p></td>
+<td><p>A helper class designed to identify overlapping sections between two strings.</p></td>
+</tr>
+</tbody>
+</table>
 <p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -166,26 +187,26 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_parts_of_speech</span></code>(text[, filter_pos, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.filter_parts_of_speech" title="pewanalytics.text.__init__.filter_parts_of_speech"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_parts_of_speech</span></code></a>(text[, filter_pos, …])</p></td>
 <td><p>Retain words associated with parts of speech in the text if <cite>exclude=False</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_fuzzy_partial_ratio</span></code>(text1, text2[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.get_fuzzy_partial_ratio" title="pewanalytics.text.__init__.get_fuzzy_partial_ratio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_fuzzy_partial_ratio</span></code></a>(text1, text2[, …])</p></td>
 <td><p>Useful to calculate similarity of two strings that are of noticeably different lengths.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_fuzzy_ratio</span></code>(text1, text2[, throw_loud_fail])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.get_fuzzy_ratio" title="pewanalytics.text.__init__.get_fuzzy_ratio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_fuzzy_ratio</span></code></a>(text1, text2[, throw_loud_fail])</p></td>
 <td><p>Uses Levenshtein Distance to calculate similarity of two strings.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_fragment</span></code>(text, fragment)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.has_fragment" title="pewanalytics.text.__init__.has_fragment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_fragment</span></code></a>(text, fragment)</p></td>
 <td><p>Checks whether a substring (“fragment”) is contained within a larger string (“text”).</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_fragments</span></code>(text, fragments[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.remove_fragments" title="pewanalytics.text.__init__.remove_fragments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_fragments</span></code></a>(text, fragments[, …])</p></td>
 <td><p>Iteratively remove fragments from a string.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
-<dt>
-<code class="sig-name descname">has_fragment</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">fragment</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#has_fragment"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.__init__.has_fragment">
+<code class="sig-name descname">has_fragment</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">fragment</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#has_fragment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.has_fragment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether a substring (“fragment”) is contained within a larger string (“text”). Uses the <cite>pewtils.decode_text</cite>
 function to process both the text and the fragment when running this check.</p>
 <dl class="field-list simple">
@@ -217,8 +238,8 @@ function to process both the text and the fragment when running this check.</p>
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">remove_fragments</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">fragments</em>, <em class="sig-param">throw_loud_fail=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#remove_fragments"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.__init__.remove_fragments">
+<code class="sig-name descname">remove_fragments</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">fragments</em>, <em class="sig-param">throw_loud_fail=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#remove_fragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.remove_fragments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iteratively remove fragments from a string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -250,8 +271,8 @@ function to process both the text and the fragment when running this check.</p>
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">filter_parts_of_speech</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">filter_pos=None</em>, <em class="sig-param">exclude=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#filter_parts_of_speech"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.__init__.filter_parts_of_speech">
+<code class="sig-name descname">filter_parts_of_speech</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">filter_pos=None</em>, <em class="sig-param">exclude=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#filter_parts_of_speech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.filter_parts_of_speech" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retain words associated with parts of speech in the text if <cite>exclude=False</cite>.
 If <cite>exclude=True</cite>, exclude words associated with parts of speech.
 Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)</p>
@@ -263,11 +284,11 @@ Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> (<em>str</em>) – The string to process</p></li>
 <li><p><strong>filter_pos</strong> (<em>list</em>) – Array of part of speech tags (default is ‘NN’, ‘NNP’, and ‘JJ’)</p></li>
-<li><p><strong>exclude</strong> – If <cite>True</cite>, the function will remove words that match to the specified parts of speech; by default     this function <em>filters to</em> POS matches instead.</p></li>
+<li><p><strong>exclude</strong> – If <cite>True</cite>, the function will remove words that match to the specified parts of speech; by default this function <em>filters to</em> POS matches instead.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A string comprised solely of words that matched (or did not match) to the specified parts of speech,     depending on the value of <cite>exclude</cite></p>
+<dd class="field-even"><p>A string comprised solely of words that matched (or did not match) to the specified parts of speech, depending on the value of <cite>exclude</cite></p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
@@ -288,8 +309,8 @@ Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)</p>
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">get_fuzzy_ratio</code><span class="sig-paren">(</span><em class="sig-param">text1</em>, <em class="sig-param">text2</em>, <em class="sig-param">throw_loud_fail=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#get_fuzzy_ratio"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.__init__.get_fuzzy_ratio">
+<code class="sig-name descname">get_fuzzy_ratio</code><span class="sig-paren">(</span><em class="sig-param">text1</em>, <em class="sig-param">text2</em>, <em class="sig-param">throw_loud_fail=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#get_fuzzy_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.get_fuzzy_ratio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares
 to the overall length of the texts. Uses the <cite>fuzzywuzzy</cite> library in Python 2, and the <cite>rapidfuzz</cite> library in     Python 3.</p>
 <dl class="field-list simple">
@@ -320,8 +341,8 @@ to the overall length of the texts. Uses the <cite>fuzzywuzzy</cite> library in 
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="sig-name descname">get_fuzzy_partial_ratio</code><span class="sig-paren">(</span><em class="sig-param">text1</em>, <em class="sig-param">text2</em>, <em class="sig-param">throw_loud_fail=False</em>, <em class="sig-param">timeout=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#get_fuzzy_partial_ratio"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.__init__.get_fuzzy_partial_ratio">
+<code class="sig-name descname">get_fuzzy_partial_ratio</code><span class="sig-paren">(</span><em class="sig-param">text1</em>, <em class="sig-param">text2</em>, <em class="sig-param">throw_loud_fail=False</em>, <em class="sig-param">timeout=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#get_fuzzy_partial_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.get_fuzzy_partial_ratio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Useful to calculate similarity of two strings that are of noticeably different lengths.  Allows for the possibility
 that one text is a subset of the other; finds the largest overlap and computes the Levenshtein ratio on that.</p>
 <dl class="field-list simple">
@@ -354,25 +375,754 @@ that one text is a subset of the other; finds the largest overlap and computes t
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="date-extraction">
-<h2>Date Extraction<a class="headerlink" href="#date-extraction" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.text.dates</span></code> submodule contains a helper class for extracting dates from text.</p>
-<p><strong>Classes</strong></p>
+<dl class="class">
+<dt id="pewanalytics.text.__init__.SentenceTokenizer">
+<em class="property">class </em><code class="sig-name descname">SentenceTokenizer</code><span class="sig-paren">(</span><em class="sig-param">base_tokenizer=None</em>, <em class="sig-param">regex_split_trailing=None</em>, <em class="sig-param">regex_split_leading=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#SentenceTokenizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.SentenceTokenizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes a tokenizer that can be be used to break text into tokens using the <cite>tokenize</cite> function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_tokenizer</strong> – The tokenizer to use (default = NLTK’s English Punkt tokenizer)</p></li>
+<li><p><strong>regex_split_trailing</strong> – A compiled regex object used to define the end of sentences</p></li>
+<li><p><strong>regex_split_leading</strong> – A compiled regex object used to define the beginning of sentences</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Methods</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DateFinder</span></code>([preprocessing_patterns])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.SentenceTokenizer.tokenize" title="pewanalytics.text.__init__.SentenceTokenizer.tokenize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokenize</span></code></a>(text[, throw_loud_fail, min_length])</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param text</dt>
+<dd class="field-odd"><p>The text to tokenize</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="k">import</span> <span class="n">SentenceTokenizer</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;This is a sentence. This is another sentence - and maybe a third sentence. And yet a fourth sentence.&quot;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">SentenceTokenizer</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39;This is a sentence.&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;This is another sentence - and maybe a third sentence.&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;And yet a fourth sentence.&#39;</span><span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">SentenceTokenizer</span><span class="p">(</span><span class="n">regex_split_leading</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\-&quot;</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39;This is a sentence.&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;This is another sentence&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;and maybe a third sentence.&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;And yet a fourth sentence.&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="pewanalytics.text.__init__.SentenceTokenizer.tokenize">
+<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">throw_loud_fail=False</em>, <em class="sig-param">min_length=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#SentenceTokenizer.tokenize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.SentenceTokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to tokenize</p></li>
+<li><p><strong>throw_loud_fail</strong> (<em>bool</em>) – Whether or not to raise an error if text decoding fails (default=False)</p></li>
+<li><p><strong>min_length</strong> (<em>int</em>) – The minimum acceptable length of a sentence (if a token is shorter than this, it will be considered part of the preceding sentence) (default=None)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of sentences</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pewanalytics.text.__init__.TextOverlapExtractor">
+<em class="property">class </em><code class="sig-name descname">TextOverlapExtractor</code><span class="sig-paren">(</span><em class="sig-param">tokenizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextOverlapExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextOverlapExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper class designed to identify overlapping sections between two strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tokenizer</strong> – The tokenizer to use (default = SentenceTokenizer())</p>
+</dd>
+</dl>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextOverlapExtractor.get_largest_overlap" title="pewanalytics.text.__init__.TextOverlapExtractor.get_largest_overlap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_largest_overlap</span></code></a>(text1, text2)</p></td>
+<td><p>Returns the largest overlapping segment of text between the two texts (this doesn’t use the tokenizer).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextOverlapExtractor.get_text_overlaps" title="pewanalytics.text.__init__.TextOverlapExtractor.get_text_overlaps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_text_overlaps</span></code></a>(text1, text2[, …])</p></td>
+<td><p>Extracts all overlapping segments of at least <cite>min_length</cite> characters between the two texts.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextOverlapExtractor.get_text_overlaps">
+<code class="sig-name descname">get_text_overlaps</code><span class="sig-paren">(</span><em class="sig-param">text1</em>, <em class="sig-param">text2</em>, <em class="sig-param">min_length=20</em>, <em class="sig-param">tokenize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextOverlapExtractor.get_text_overlaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextOverlapExtractor.get_text_overlaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts all overlapping segments of at least <cite>min_length</cite> characters between the two texts. If <cite>tokenize=True</cite>
+then only tokens that appear fully in both texts will be extracted. For example:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text1</strong> (<em>str</em>) – A piece of text</p></li>
+<li><p><strong>text2</strong> (<em>str</em>) – Another piece of text to compare against the first</p></li>
+<li><p><strong>min_length</strong> (<em>int</em>) – The minimum size of the overlap to be considered (number of characters)</p></li>
+<li><p><strong>tokenize</strong> (<em>bool</em>) – If True, overlapping segments will only be included if they consist of atomic tokens; overlaps that consist of only part of a token will be excluded (default=True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of all of the identified overlapping segments</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="k">import</span> <span class="n">TextOverlapExtractor</span>
+
+<span class="n">text1</span> <span class="o">=</span> <span class="s2">&quot;This is a sentence. This is another sentence. And a third sentence. And yet a fourth sentence.&quot;</span>
+<span class="n">text2</span> <span class="o">=</span> <span class="s2">&quot;This is a different sentence. This is another sentence. And a third sentence. But the fourth sentence is different too.&quot;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">extractor</span> <span class="o">=</span> <span class="n">TextOverlapExtractor</span><span class="p">()</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">extractor</span><span class="o">.</span><span class="n">get_text_overlaps</span><span class="p">(</span><span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39; sentence. This is another sentence. And a third sentence. &#39;</span><span class="p">,</span> <span class="s1">&#39; fourth sentence&#39;</span><span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">extractor</span><span class="o">.</span><span class="n">get_text_overlaps</span><span class="p">(</span><span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39;This is another sentence.&#39;</span><span class="p">,</span> <span class="s1">&#39;And a third sentence.&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextOverlapExtractor.get_largest_overlap">
+<code class="sig-name descname">get_largest_overlap</code><span class="sig-paren">(</span><em class="sig-param">text1</em>, <em class="sig-param">text2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextOverlapExtractor.get_largest_overlap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextOverlapExtractor.get_largest_overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the largest overlapping segment of text between the two texts (this doesn’t use the tokenizer).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text1</strong> (<em>str</em>) – A piece of text</p></li>
+<li><p><strong>text2</strong> (<em>str</em>) – Another piece of text to compare against the first</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The largest substring that occurs in both texts</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="k">import</span> <span class="n">TextOverlapExtractor</span>
+
+<span class="n">text1</span> <span class="o">=</span> <span class="s2">&quot;Overlaping section, unique text another overlapping section&quot;</span>
+<span class="n">text2</span> <span class="o">=</span> <span class="s2">&quot;Overlapping section, another overlapping section&quot;</span>
+
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">extractor</span> <span class="o">=</span> <span class="n">TextOverlapExtractor</span><span class="p">()</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">extractor</span><span class="o">.</span><span class="n">get_largest_overlap</span><span class="p">(</span><span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">)</span>
+<span class="s1">&#39; another overlapping section&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pewanalytics.text.__init__.TextCleaner">
+<em class="property">class </em><code class="sig-name descname">TextCleaner</code><span class="sig-paren">(</span><em class="sig-param">throw_loud_fail=False</em>, <em class="sig-param">filter_pos=None</em>, <em class="sig-param">process_method='lemmatize'</em>, <em class="sig-param">processor=None</em>, <em class="sig-param">lowercase=True</em>, <em class="sig-param">remove_urls=True</em>, <em class="sig-param">replacers=None</em>, <em class="sig-param">stopwords=None</em>, <em class="sig-param">strip_html=False</em>, <em class="sig-param">tokenizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextCleaner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextCleaner" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for cleaning text up, in preparation for NLP, etc.  Attempts to decode the text.</p>
+<p>This function performs for the following cleaning tasks, in sequence:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Removes HTML tags (optional)</p></li>
+<li><p>Decodes the text</p></li>
+<li><p>Filters out specified parts of speech (optional)</p></li>
+<li><p>Converts text to lowercase (optional)</p></li>
+<li><p>Removes URLs (optional)</p></li>
+<li><p>Expands contractions</p></li>
+<li><p>Removes stopwords</p></li>
+<li><p>Lemmatizes or stems (optional)</p></li>
+<li><p>Removes words less than three characters</p></li>
+<li><p>Removes punctuation</p></li>
+<li><p>Consolidates whitespace</p></li>
+</ul>
+</div></blockquote>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextCleaner.clean" title="pewanalytics.text.__init__.TextCleaner.clean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clean</span></code></a>(text)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param string</dt>
+<dd class="field-odd"><p>The string to clean</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lemmatize</strong> (<em>bool</em>) – Whether or not to lemmatize the tokens (default = True)</p></li>
+<li><p><strong>tokenizer</strong> – Tokenizer to use (default = nltk.WhitespaceTokenizer())</p></li>
+<li><p><strong>replacers</strong> (<em>list</em>) – A list of tuples, each with a regex pattern followed by the string/pattern to replace them with. Anything passed here will be used in addition to a set of built-in replacement patterns for common contractions.</p></li>
+<li><p><strong>process_method</strong> (<em>str</em>) – Options are “lemmatize”, “stem”, or None (default = “lemmatize”)</p></li>
+<li><p><strong>processor</strong> – A lemmatizer or stemmer with a “lemmatize” or “stem” function (default for process_method=”lemmatize” is nltk.WordNetLemmatizer(); default for process_method=”stem” is nltk.SnowballStemmer())</p></li>
+<li><p><strong>stopwords</strong> (<em>set</em>) – The set of stopwords to remove (default = nltk.corpus.stopwords.words(‘english’))</p></li>
+<li><p><strong>lowercase</strong> (<em>bool</em>) – Whether or not to lowercase the string (default = True)</p></li>
+<li><p><strong>remove_urls</strong> (<em>bool</em>) – Whether or not to remove URLs and links from the text (default = True)</p></li>
+<li><p><strong>throw_loud_fail</strong> (<em>bool</em>) – bool; whether or not to raise an error if text decoding fails (default=False)</p></li>
+<li><p><strong>strip_html</strong> (<em>bool</em>) – Whether or not to remove contents wrapped in HTML tags (default = False)</p></li>
+<li><p><strong>filter_pos</strong> (<em>list</em>) – A list of WordNet parts-of-speech tags to keep;     if provided, all other words will be removed (default = None)</p></li>
+</ul>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="k">import</span> <span class="n">TextCleaner</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Here&#39;s an example sentence.&lt;/br&gt;There are plenty of other examples we could use though.&quot;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span> <span class="o">=</span> <span class="n">TextCleaner</span><span class="p">(</span><span class="n">process_method</span><span class="o">=</span><span class="s2">&quot;lemmatize&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="s1">&#39;example sentence plenty example could use though&#39;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span> <span class="o">=</span> <span class="n">TextCleaner</span><span class="p">(</span><span class="n">process_method</span><span class="o">=</span><span class="s2">&quot;stem&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="s1">&#39;exampl sentenc plenti exampl could use though&#39;</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextCleaner.clean">
+<code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextCleaner.clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextCleaner.clean" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> – The string to clean</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The cleaned string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pewanalytics.text.__init__.TextDataFrame">
+<em class="property">class </em><code class="sig-name descname">TextDataFrame</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">text_column</em>, <em class="sig-param">**vectorizer_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a class full of functions for working with dataframes of documents. It contains utilities for identifying     potential duplicates, identifying recurring segments of text, computing metrics like mutual information,     extracting clusters of documents, and more.</p>
+<p>Given a DataFrame and the name of the column that contains the text to be analyzed, the TextDataFrame will     automatically produce a TF-IDF sparse matrix representation of the text upon initialization. All other     parameters are passed along to the scikit-learn TfidfVectorizer.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For more info on the parameters it excepts, refer to the official scikit-learn <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html">Tfidf vectorizer documentation</a>.</p>
+</div>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.extract_corpus_fragments" title="pewanalytics.text.__init__.TextDataFrame.extract_corpus_fragments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_corpus_fragments</span></code></a>([…])</p></td>
+<td><p>Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.find_duplicates" title="pewanalytics.text.__init__.TextDataFrame.find_duplicates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_duplicates</span></code></a>([tfidf_threshold, …])</p></td>
+<td><p>Search for duplicates by using cosine similarity and Levenshtein ratios.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.get_top_documents" title="pewanalytics.text.__init__.TextDataFrame.get_top_documents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_top_documents</span></code></a>([component_prefix, top_n])</p></td>
+<td><p>Use after running <cite>get_pca_components</cite> or <cite>get_lsa_components</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters" title="pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hdbscan_clusters</span></code></a>([min_cluster_size, min_samples])</p></td>
+<td><p>A wrapper around <cite>pewanalytics.stats.clustering.compute_hdbscan_clusters</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.kmeans_clusters" title="pewanalytics.text.__init__.TextDataFrame.kmeans_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kmeans_clusters</span></code></a>([k])</p></td>
+<td><p>A wrapper around <cite>pewanalytics.stats.clustering.compute_kmeans_clusters</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.lsa_components" title="pewanalytics.text.__init__.TextDataFrame.lsa_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lsa_components</span></code></a>([k])</p></td>
+<td><p>A wrapper around <cite>pewanalytics.stats.dimensionality_reduction.get_lsa</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.make_document_cooccurrence_matrix" title="pewanalytics.text.__init__.TextDataFrame.make_document_cooccurrence_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_document_cooccurrence_matrix</span></code></a>([normalize])</p></td>
+<td><p>Use to produce document co-occurrence matrices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.make_word_cooccurrence_matrix" title="pewanalytics.text.__init__.TextDataFrame.make_word_cooccurrence_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_word_cooccurrence_matrix</span></code></a>([normalize, …])</p></td>
+<td><p>Use to produce word co-occurrence matrices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus" title="pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">match_text_to_corpus</span></code></a>(match_list[, …])</p></td>
+<td><p>Takes a list of text values and attempts to match them to the documents in the DataFrame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.mutual_info" title="pewanalytics.text.__init__.TextDataFrame.mutual_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutual_info</span></code></a>(outcome_col[, weight_col, …])</p></td>
+<td><p>A wrapper around <cite>pewanalytics.stats.mutual_info.compute_mutual_info</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.pca_components" title="pewanalytics.text.__init__.TextDataFrame.pca_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pca_components</span></code></a>([k])</p></td>
+<td><p>A wrapper around <cite>pewanalytics.stats.dimensionality_reduction.get_pca</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.search_corpus" title="pewanalytics.text.__init__.TextDataFrame.search_corpus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">search_corpus</span></code></a>(text)</p></td>
+<td><p>Compares the provided text against the documents in the corpus and returns the most similar documents.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.top_cluster_terms" title="pewanalytics.text.__init__.TextDataFrame.top_cluster_terms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">top_cluster_terms</span></code></a>(cluster_col[, min_size, top_n])</p></td>
+<td><p>Extracts the top terms for each cluster, based on a column of cluster IDs saved to <cite>self.corpus</cite>, using mutual information.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – A dataframe of documents.  Must contain a column with text.</p></li>
+<li><p><strong>text_column</strong> – The name of the column in the dataframe that contains the text</p></li>
+<li><p><strong>vectorizer_kwargs</strong> – All remaining keyword arguments are passed to TfidfVectorizer</p></li>
+</ul>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="k">import</span> <span class="n">TextDataFrame</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;inaugural&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span><span class="s2">&quot;speech&quot;</span><span class="p">:</span> <span class="n">fileid</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">inaugural</span><span class="o">.</span><span class="n">raw</span><span class="p">(</span><span class="n">fileid</span><span class="p">)}</span> <span class="k">for</span> <span class="n">fileid</span> <span class="ow">in</span> <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">inaugural</span><span class="o">.</span><span class="n">fileids</span><span class="p">()</span>
+<span class="p">])</span>
+
+<span class="c1"># Create additional outcome grouping variable to identify mutual information within group</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;speech&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;21st_century&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">2000</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Create artificial duplicates in the dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tdf</span> <span class="o">=</span> <span class="n">TextDataFrame</span><span class="p">(</span><span class="n">text_df</span><span class="p">,</span>
+                        <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+                        <span class="n">stop_words</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">,</span>
+                        <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                        <span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tdf_dense</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">tfidf</span><span class="o">.</span><span class="n">todense</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="n">tdf</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">())</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tdf_dense</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">(</span><span class="n">tdf_dense</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>
+            <span class="mi">14</span><span class="n">th</span>        <span class="mi">14</span><span class="n">th</span> <span class="n">day</span>         <span class="n">abandon</span>  <span class="n">abandon</span> <span class="n">government</span><span class="o">...</span> <span class="n">zeal</span> <span class="n">inspires</span>   <span class="n">zeal</span> <span class="n">purity</span>     <span class="n">zeal</span> <span class="n">rely</span>       <span class="n">zeal</span> <span class="n">wisdom</span>
+<span class="mi">0</span>       <span class="mf">0.034014</span>        <span class="mf">0.034014</span>        <span class="mf">0.000000</span>               <span class="mf">0.000000</span> <span class="o">...</span>      <span class="mf">0.000000</span>          <span class="mf">0.000000</span>      <span class="mf">0.000000</span>          <span class="mf">0.000000</span>
+<span class="mi">1</span>       <span class="mf">0.000000</span>        <span class="mf">0.000000</span>        <span class="mf">0.000000</span>               <span class="mf">0.000000</span> <span class="o">...</span>      <span class="mf">0.000000</span>          <span class="mf">0.000000</span>      <span class="mf">0.000000</span>          <span class="mf">0.000000</span>
+<span class="mi">2</span>       <span class="mf">0.000000</span>        <span class="mf">0.000000</span>        <span class="mf">0.000000</span>               <span class="mf">0.000000</span> <span class="o">...</span>      <span class="mf">0.000000</span>          <span class="mf">0.000000</span>      <span class="mf">0.000000</span>          <span class="mf">0.000000</span>
+<span class="mi">3</span>       <span class="mf">0.000000</span>        <span class="mf">0.000000</span>        <span class="mf">0.020984</span>               <span class="mf">0.030686</span> <span class="o">...</span>      <span class="mf">0.000000</span>          <span class="mf">0.000000</span>      <span class="mf">0.030686</span>          <span class="mf">0.000000</span>
+<span class="mi">4</span>       <span class="mf">0.000000</span>        <span class="mf">0.000000</span>        <span class="mf">0.000000</span>               <span class="mf">0.000000</span> <span class="o">...</span>      <span class="mf">0.026539</span>          <span class="mf">0.026539</span>      <span class="mf">0.000000</span>          <span class="mf">0.026539</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.search_corpus">
+<code class="sig-name descname">search_corpus</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.search_corpus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.search_corpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares the provided text against the documents in the corpus and returns the most similar documents.         A new column called ‘cosine_similarity’ is generated, which is used to sort and return the dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> – The text to compare documents against</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The corpus dataframe sorted by cosine similarity</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">search_corpus</span><span class="p">(</span><span class="s1">&#39;upright zeal&#39;</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
+<span class="go">                                                text        search_cosine_similarity</span>
+<span class="go">4   Proceeding, fellow citizens, to that qualifica...       0.030856</span>
+<span class="go">8   Fellow citizens, I shall not attempt to descri...       0.025041</span>
+<span class="go">9   In compliance with an usage coeval with the ex...       0.024922</span>
+<span class="go">27  Fellow citizens, In obedience to the will of t...       0.021272</span>
+<span class="go">10  Fellow citizens, about to undertake the arduou...       0.014791</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus">
+<code class="sig-name descname">match_text_to_corpus</code><span class="sig-paren">(</span><em class="sig-param">match_list</em>, <em class="sig-param">allow_multiple=False</em>, <em class="sig-param">min_similarity=0.9</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.match_text_to_corpus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a list of text values and attempts to match them to the documents in the DataFrame. Each document will
+be matched to the value in the list to which it is most similar, based on cosine similarity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>match_list</strong> – A list of strings (other documents) to be matched to documents in the dataframe</p></li>
+<li><p><strong>allow_multiple</strong> – If set to True, each document in your corpus will be matched with its closes valid match in the list. If set to False (default), documents in the list will only be matched to their best match in the corpus.</p></li>
+<li><p><strong>min_similarity</strong> – Minimum cosine similarity required for any match to be made.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">match_df</span> <span class="o">=</span> <span class="n">tdf</span><span class="o">.</span><span class="n">match_text_to_corpus</span><span class="p">(</span><span class="n">test_excerpt</span><span class="p">,</span> <span class="n">min_similarity</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;cosine_similarity&#39;</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="go">                                                 text                                              match_text       match_index     cosine_similarity</span>
+<span class="go">48  Senator Hatfield, Mr. Chief Justice, Mr. Presi...       In this present crisis, government is not the ...       1               0.0699283</span>
+<span class="go">43  Vice President Johnson, Mr. Speaker, Mr. Chief...       And so, my fellow Americans: ask not what your...       0               0.166681</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.extract_corpus_fragments">
+<code class="sig-name descname">extract_corpus_fragments</code><span class="sig-paren">(</span><em class="sig-param">scan_top_n_matches_per_doc=20</em>, <em class="sig-param">min_fragment_length=15</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.extract_corpus_fragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.extract_corpus_fragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus.
+During each comparison, overlapping fragments are identified.  This can be useful for identifying common
+boilerplate sentences, repeated paragraphs, etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scan_top_n_matches_per_doc</strong> – The number of other documents to compare each document against.</p></li>
+<li><p><strong>min_fragment_length</strong> – The minimum character length a fragment must have to be extracted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of fragments that were found.</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">extract_corpus_fragmentsts</span><span class="p">()</span>
+<span class="go">[]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.find_duplicates">
+<code class="sig-name descname">find_duplicates</code><span class="sig-paren">(</span><em class="sig-param">tfidf_threshold=0.9</em>, <em class="sig-param">fuzzy_ratio_threshold=90</em>, <em class="sig-param">allow_partial=False</em>, <em class="sig-param">max_partial_difference=40</em>, <em class="sig-param">filter_function=None</em>, <em class="sig-param">partial_ratio_timeout=5</em>, <em class="sig-param">decode_text=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.find_duplicates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.find_duplicates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for duplicates by using cosine similarity and Levenshtein ratios.  This will struggle with large
+corpora, so we recommend trying to filter down to potential duplicates first.  The corpus will first be
+scanned for document pairs with a cosine similarity greater or equal to the <cite>tfidf_threshold</cite>.  Then,
+each of these pairs will be compared using the more stringent <cite>fuzzy_ratio_threshold</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tfidf_threshold</strong> – Minimum cosine similarity for two documents to be considered potential dupes.</p></li>
+<li><p><strong>fuzzy_ratio_threshold</strong> – The required Levenshtein ratio to consider two documents duplicates.</p></li>
+<li><p><strong>filter_function</strong> – An optional function that allows for more complex filtering. The function must accept the following parameters: text1, text2, cosine_similarity, fuzzy_ratio.  Must return True or False, indicating whether the two documents should be considered duplicates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of lists, containing groups of duplicate documents (represented as rows from the corpus dataframe)</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">find_duplicates</span><span class="p">()</span>
+<span class="go">[           speech                                               text  year</span>
+<span class="go">56  2013-Obama.txt  Thank you. Thank you so much.    Vice Presiden...  2013</span>
+<span class="go">56  2013-Obama.txt  Thank you. Thank you so much.    Vice Presiden...  2013</span>
+
+<span class="go">    21st_century</span>
+<span class="go">56             1</span>
+<span class="go">56             1  ,</span>
+<span class="go">            speech                                               text  year</span>
+<span class="go">57  2017-Trump.txt  Chief Justice Roberts, President Carter, Presi...  2017</span>
+<span class="go">57  2017-Trump.txt  Chief Justice Roberts, President Carter, Presi...  2017</span>
+
+<span class="go">    21st_century</span>
+<span class="go">57             1</span>
+<span class="go">57             1  ]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.mutual_info">
+<code class="sig-name descname">mutual_info</code><span class="sig-paren">(</span><em class="sig-param">outcome_col</em>, <em class="sig-param">weight_col=None</em>, <em class="sig-param">sample_size=None</em>, <em class="sig-param">l=0</em>, <em class="sig-param">normalize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.mutual_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.mutual_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper around <cite>pewanalytics.stats.mutual_info.compute_mutual_info</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outcome_col</strong> – The name of the column with the binary outcome variable</p></li>
+<li><p><strong>weight_col</strong> – (Optional) Name of the column to use in weighting</p></li>
+<li><p><strong>l</strong> – An optional Laplace smoothing parameter</p></li>
+<li><p><strong>normalize</strong> – Toggle normalization on or off (to control for feature prevalence), on by default</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A DataFrame of ngrams and various metrics about them, including mutual information</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">tdf</span><span class="o">.</span><span class="n">mutual_info</span><span class="p">(</span><span class="s1">&#39;21st_century&#39;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;MI1&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="mi">25</span><span class="p">]</span>
+<span class="go">Index([&#39;journey complete&#39;, &#39;jobs&#39;, &#39;make america&#39;, &#39;ve&#39;, &#39;obama&#39;, &#39;workers&#39;,</span>
+<span class="go">       &#39;xand&#39;, &#39;states america&#39;, &#39;america best&#39;, &#39;debates&#39;, &#39;clinton&#39;,</span>
+<span class="go">       &#39;president clinton&#39;, &#39;trillions&#39;, &#39;stops right&#39;, &#39;transferring&#39;,</span>
+<span class="go">       &#39;president obama&#39;, &#39;stops&#39;, &#39;protected protected&#39;, &#39;transferring power&#39;,</span>
+<span class="go">       &#39;nation capital&#39;, &#39;american workers&#39;, &#39;politicians&#39;, &#39;people believe&#39;,</span>
+<span class="go">       &#39;borders&#39;, &#39;victories&#39;],</span>
+<span class="go">       dtype=&#39;object&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.kmeans_clusters">
+<code class="sig-name descname">kmeans_clusters</code><span class="sig-paren">(</span><em class="sig-param">k=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.kmeans_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.kmeans_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper around <cite>pewanalytics.stats.clustering.compute_kmeans_clusters</cite>. Will compute clusters of documents.
+The resulting cluster IDs for each document are saved in the TextDataFrame’s <cite>corpus</cite> in a new column called
+“kmeans”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>k</strong> – The number of clusters to extract</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">kmeans_clusters</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">KMeans: n_clusters 5, score is 0.019735248210503934</span>
+<span class="go">KMeans clusters saved to self.corpus[&#39;kmeans&#39;]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;kmeans&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="go">2    26</span>
+<span class="go">3    15</span>
+<span class="go">4    11</span>
+<span class="go">0     5</span>
+<span class="go">1     3</span>
+<span class="go">Name: kmeans, dtype: int64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters">
+<code class="sig-name descname">hdbscan_clusters</code><span class="sig-paren">(</span><em class="sig-param">min_cluster_size=100</em>, <em class="sig-param">min_samples=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.hdbscan_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper around <cite>pewanalytics.stats.clustering.compute_hdbscan_clusters</cite>. Will compute clusters of documents.
+The resulting cluster IDs for each document are saved in the TextDataFrame’s <cite>corpus</cite> in a new column called
+“hdbscan”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>min_cluster_size</strong> – The minimum number of documents that a cluster must contain.</p></li>
+<li><p><strong>min_samples</strong> – An HDBSCAN parameter; refer to the documentation for more information</p></li>
+</ul>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">hdbscan_clusters</span><span class="p">(</span><span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">HDBSCAN: n_clusters 2</span>
+<span class="go">HDBSCAN clusters saved to self.corpus[&#39;hdbscan&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.top_cluster_terms">
+<code class="sig-name descname">top_cluster_terms</code><span class="sig-paren">(</span><em class="sig-param">cluster_col</em>, <em class="sig-param">min_size=50</em>, <em class="sig-param">top_n=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.top_cluster_terms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.top_cluster_terms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the top terms for each cluster, based on a column of cluster IDs saved to <cite>self.corpus</cite>, using
+mutual information. Returns the <cite>top_n</cite> terms for each cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cluster_col</strong> – The name of the column that contains the document cluster IDs</p></li>
+<li><p><strong>min_size</strong> – Ignore clusters that have fewer than this number of documents</p></li>
+<li><p><strong>top_n</strong> – The number of top terms to identify for each cluster</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary; keys are the cluster IDs and values are the top terms for the cluster</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df_top_cluster</span> <span class="o">=</span> <span class="n">tdf</span><span class="o">.</span><span class="n">top_cluster_terms</span><span class="p">(</span><span class="s1">&#39;kmeans&#39;</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">Cluster #2, 26 documents: [&#39;constitution&#39; &#39;union&#39; &#39;states&#39; &#39;friendly&#39; &#39;liberal&#39; &#39;revenue&#39;</span>
+<span class="go"> &#39;general government&#39; &#39;confederacy&#39; &#39;whilst&#39; &#39;authorities&#39;]</span>
+<span class="go">Cluster #4, 10 documents: [&#39;shall strive&#39; &#39;let sides&#39; &#39;woe&#39; &#39;offenses&#39; &#39;breeze&#39; &#39;war let&#39;</span>
+<span class="go"> &#39;nuclear weapons&#39; &#39;learned live&#39; &#39;mistakes&#39; &#39;mr speaker&#39;]</span>
+<span class="go">Cluster #0, 12 documents: [&#39;activities&#39; &#39;realization&#39; &#39;interstate&#39; &#39;wished&#39; &#39;industrial&#39; &#39;major&#39;</span>
+<span class="go"> &#39;counsel action&#39; &#39;conditions&#39; &#39;natural resources&#39; &#39;eighteenth amendment&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.pca_components">
+<code class="sig-name descname">pca_components</code><span class="sig-paren">(</span><em class="sig-param">k=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.pca_components"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.pca_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper around <cite>pewanalytics.stats.dimensionality_reduction.get_pca</cite>.
+Saves the PCA components to self.corpus as new columns (‘pca_1’, ‘pca_2’, etc.),
+saves the top component for each document as self.corpus[‘pca’], and returns
+the features-component matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>k</strong> – Number of dimensions to extract</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dataframe of (features x components)</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df_pca</span> <span class="o">=</span> <span class="n">tdf</span><span class="o">.</span><span class="n">pca_components</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">Decomposition explained variance ratio: 0.07488529151231405</span>
+<span class="go">Component 0: [&#39;america&#39; &#39;today&#39; &#39;americans&#39; &#39;world&#39; &#39;new&#39; &#39;freedom&#39; &#39;thank&#39; &#39;nation&#39;</span>
+<span class="go"> &#39;god&#39; &#39;journey&#39;]</span>
+<span class="go">Component 1: [&#39;america&#39; &#39;make america&#39; &#39;dreams&#39; &#39;protected&#39; &#39;obama&#39; &#39;borders&#39;</span>
+<span class="go"> &#39;factories&#39; &#39;american&#39; &#39;transferring&#39; &#39;stops&#39;]</span>
+<span class="go">Top PCA dimensions saved as clusters to self.corpus[&#39;pca&#39;]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">                 speech                                                  text       year    21st_century        pca_0      pca_1      pca</span>
+<span class="go">0   1789-Washington.txt     Fellow-Citizens of the Senate and of the House...       1789    0                   -0.129094   0.016984        pca_1</span>
+<span class="go">21  1873-Grant.txt      Fellow-Citizens: Under Providence I have been ...   1873    0                   -0.097430   0.009559        pca_1</span>
+<span class="go">49  1985-Reagan.txt         Senator Mathias, Chief Justice Burger, Vice Pr...       1985    0                   0.163833    -0.020259       pca_0</span>
+<span class="go">2   1797-Adams.txt          When it was first perceived, in early times, t...       1797    0                   -0.140250   0.024844        pca_1</span>
+<span class="go">20  1869-Grant.txt          Citizens of the United States:    Your suffrag...       1869    0                   -0.114444   0.014419        pca_1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.lsa_components">
+<code class="sig-name descname">lsa_components</code><span class="sig-paren">(</span><em class="sig-param">k=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.lsa_components"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.lsa_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper around <cite>pewanalytics.stats.dimensionality_reduction.get_lsa</cite>.
+Saves the LSA components to self.corpus as new columns (‘lsa_1’, ‘lsa_2’, etc.),
+saves the top component for each document as self.corpus[‘lsa’], and returns
+the features-component matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>k</strong> – Number of dimensions to extract</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dataframe of (features x components)</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df_lsa</span> <span class="o">=</span> <span class="n">tdf</span><span class="o">.</span><span class="n">lsa_components</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">Decomposition explained variance ratio: 0.04722850124656694</span>
+<span class="go">Top features:</span>
+<span class="go">Component 0: [&#39;government&#39; &#39;people&#39; &#39;america&#39; &#39;states&#39; &#39;world&#39; &#39;nation&#39; &#39;shall&#39;</span>
+<span class="go"> &#39;country&#39; &#39;great&#39; &#39;peace&#39;]</span>
+<span class="go">Component 1: [&#39;america&#39; &#39;today&#39; &#39;americans&#39; &#39;world&#39; &#39;new&#39; &#39;freedom&#39; &#39;thank&#39; &#39;nation&#39;</span>
+<span class="go"> &#39;god&#39; &#39;journey&#39;]</span>
+<span class="go">Top LSA dimensions saved as clusters to self.corpus[&#39;lsa_&#39;] columns</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">                speech                                                 text    year 21st_century    lsa_0      lsa_1          lsa</span>
+<span class="go">37  1937-Roosevelt.txt    When four years ago we met to inaugurate a Pre...    1937            0 0.293068   0.040802        lsa_0</span>
+<span class="go">8   1821-Monroe.txt       Fellow citizens, I shall not attempt to descri...    1821            0 0.348465   -0.212382       lsa_0</span>
+<span class="go">7   1817-Monroe.txt       I should be destitute of feeling if I was not ...    1817            0 0.369249   -0.237231       lsa_0</span>
+<span class="go">26  1893-Cleveland.txt    My Fellow citizens, in obedience of the mandat...    1893            0 0.275778   -0.128497       lsa_0</span>
+<span class="go">59  2017-Trump.txt        Chief Justice Roberts, President Carter, Presi...    2017            1 0.342111   0.511687        lsa_1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.get_top_documents">
+<code class="sig-name descname">get_top_documents</code><span class="sig-paren">(</span><em class="sig-param">component_prefix='cluster'</em>, <em class="sig-param">top_n=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.get_top_documents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.get_top_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use after running <cite>get_pca_components</cite> or <cite>get_lsa_components</cite>. Returns the <cite>top_n</cite> documents with the highest
+scores for each components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>component_prefix</strong> – ‘lsa’ or ‘pca’ (you must first run get_pca_components or get_lsa_components)</p></li>
+<li><p><strong>top_n</strong> – Number of documents to return for each component</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary where keys are the component, and values are the text values for the component’s <cite>top_n</cite> documents</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df_lsa_topdoc</span> <span class="o">=</span> <span class="n">tdf</span><span class="o">.</span><span class="n">get_top_documents</span><span class="p">(</span><span class="s2">&quot;lsa&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">lsa_topdoc</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="go">{&#39;lsa_0&#39;: 5, &#39;lsa_1&#39;: 4}</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lsa_topdoc</span><span class="p">[</span><span class="s1">&#39;lsa_1&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">&#39;Chief Justice Roberts, President Carter, President Clinton, President Bush, President Obama, fellow Americans,             and people of the world: Thank you.  We, the citizens of America...&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.make_word_cooccurrence_matrix">
+<code class="sig-name descname">make_word_cooccurrence_matrix</code><span class="sig-paren">(</span><em class="sig-param">normalize=False</em>, <em class="sig-param">min_frequency=10</em>, <em class="sig-param">max_frequency=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.make_word_cooccurrence_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.make_word_cooccurrence_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use to produce word co-occurrence matrices. Based on a helpful StackOverflow post:
+<a class="reference external" href="https://stackoverflow.com/questions/35562789/how-do-i-calculate-a-word-word-co-occurrence-matrix-with-sklearn">https://stackoverflow.com/questions/35562789/how-do-i-calculate-a-word-word-co-occurrence-matrix-with-sklearn</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normalize</strong> – If True, will be normalized</p></li>
+<li><p><strong>min_frequency</strong> – The minimum document frequency required for a term to be included</p></li>
+<li><p><strong>max_frequency</strong> – The maximum proportion of documents containing a term allowed to include the term</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A matrix of (terms x terms) whose values indicate the number of documents in which two terms co-occurred</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">wcm</span> <span class="o">=</span> <span class="n">tdf</span><span class="o">.</span><span class="n">make_word_cooccurrence_matrix</span><span class="p">(</span><span class="n">min_frequency</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># Find the top cooccurring pair of words</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wcm</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">wcm</span><span class="o">.</span><span class="n">values</span><span class="p">)]</span>
+<span class="go">(&#39;protection&#39;, &#39;policy&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.make_document_cooccurrence_matrix">
+<code class="sig-name descname">make_document_cooccurrence_matrix</code><span class="sig-paren">(</span><em class="sig-param">normalize=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.make_document_cooccurrence_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.make_document_cooccurrence_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use to produce document co-occurrence matrices. Based on a helpful StackOverflow post:
+<a class="reference external" href="https://stackoverflow.com/questions/35562789/how-do-i-calculate-a-word-word-co-occurrence-matrix-with-sklearn">https://stackoverflow.com/questions/35562789/how-do-i-calculate-a-word-word-co-occurrence-matrix-with-sklearn</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>normalize</strong> – If True, will be normalized</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A matrix of (documents x documents) whose values indicate the number of terms they had in common</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dcm</span> <span class="o">=</span> <span class="n">tdf</span><span class="o">.</span><span class="n">make_document_cooccurrence_matrix</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="go"># Remove artifical duplicates and insert document names</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dcm</span> <span class="o">=</span> <span class="n">dcm</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dcm</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;speech&#39;</span><span class="p">][:</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span>
+<span class="go">               index=df[&#39;speech&#39;][:-2],</span>
+<span class="go">               inplace=True)</span>
+
+<span class="go"># Find documents with the highest coocurrence score</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dcm</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dcm</span><span class="o">.</span><span class="n">values</span><span class="p">)]</span>
+<span class="go">(&#39;1793-Washington.txt&#39;, &#39;1841-Harrison.txt&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="date-extraction">
+<h2>Date Extraction<a class="headerlink" href="#date-extraction" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-pewanalytics.text.dates" title="pewanalytics.text.dates"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.text.dates</span></code></a> submodule contains a helper class for extracting dates from text.</p>
+<span class="target" id="module-pewanalytics.text.dates"></span><p><strong>Classes</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.dates.DateFinder" title="pewanalytics.text.dates.DateFinder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DateFinder</span></code></a>([preprocessing_patterns])</p></td>
 <td><p>A helper class to search for dates in text using a series of regular expressions and a parser from <cite>dateutil</cite>.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="class">
-<dt>
-<em class="property">class </em><code class="sig-name descname">DateFinder</code><span class="sig-paren">(</span><em class="sig-param">preprocessing_patterns=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/dates.html#DateFinder"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.dates.DateFinder">
+<em class="property">class </em><code class="sig-name descname">DateFinder</code><span class="sig-paren">(</span><em class="sig-param">preprocessing_patterns=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/dates.html#DateFinder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.dates.DateFinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>A helper class to search for dates in text using a series of regular expressions and a parser from <cite>dateutil</cite>.     Verifies that <cite>dateutil</cite> did not auto-fill missing values in the date. Time information will be automatically     cleared out, but you can also pass a list of additional regular expression patterns (as strings) to define other     patterns that should be cleared out before scanning for dates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -386,7 +1136,7 @@ that one text is a subset of the other; finds the largest overlap and computes t
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_dates</span></code>(text, cutoff_date_start, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.dates.DateFinder.find_dates" title="pewanalytics.text.dates.DateFinder.find_dates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_dates</span></code></a>(text, cutoff_date_start, …)</p></td>
 <td><p>Return all of the dates (in text form and as datetime) in the text variable that fall within the specified         window of dates (inclusive).</p></td>
 </tr>
 </tbody>
@@ -409,8 +1159,8 @@ that one text is a subset of the other; finds the largest overlap and computes t
 </pre></div>
 </div>
 <dl class="method">
-<dt>
-<code class="sig-name descname">find_dates</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">cutoff_date_start</em>, <em class="sig-param">cutoff_date_end</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/dates.html#DateFinder.find_dates"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.dates.DateFinder.find_dates">
+<code class="sig-name descname">find_dates</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">cutoff_date_start</em>, <em class="sig-param">cutoff_date_end</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/dates.html#DateFinder.find_dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.dates.DateFinder.find_dates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all of the dates (in text form and as datetime) in the text variable that fall within the specified         window of dates (inclusive).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -434,22 +1184,22 @@ that one text is a subset of the other; finds the largest overlap and computes t
 </div>
 <div class="section" id="named-entity-recognition">
 <h2>Named Entity Recognition<a class="headerlink" href="#named-entity-recognition" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.text.ner</span></code> submodule contains a helper class for extracting named entities from text.</p>
-<p><strong>Classes</strong></p>
+<p>The <a class="reference internal" href="#module-pewanalytics.text.ner" title="pewanalytics.text.ner"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.text.ner</span></code></a> submodule contains a helper class for extracting named entities from text.</p>
+<span class="target" id="module-pewanalytics.text.ner"></span><p><strong>Classes</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedEntityExtractor</span></code>([method])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.ner.NamedEntityExtractor" title="pewanalytics.text.ner.NamedEntityExtractor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedEntityExtractor</span></code></a>([method])</p></td>
 <td><p>A wrapper around NLTK and SpaCy for named entity extraction.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="class">
-<dt>
-<em class="property">class </em><code class="sig-name descname">NamedEntityExtractor</code><span class="sig-paren">(</span><em class="sig-param">method='spacy'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/ner.html#NamedEntityExtractor"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.ner.NamedEntityExtractor">
+<em class="property">class </em><code class="sig-name descname">NamedEntityExtractor</code><span class="sig-paren">(</span><em class="sig-param">method='spacy'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/ner.html#NamedEntityExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.ner.NamedEntityExtractor" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper around NLTK and SpaCy for named entity extraction. May be expanded to include more libraries in the     future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -463,7 +1213,7 @@ that one text is a subset of the other; finds the largest overlap and computes t
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract</span></code>(text)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.ner.NamedEntityExtractor.extract" title="pewanalytics.text.ner.NamedEntityExtractor.extract"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract</span></code></a>(text)</p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">param text</dt>
 <dd class="field-odd"><p>a string from which to extract named entities</p>
@@ -520,8 +1270,8 @@ that one text is a subset of the other; finds the largest overlap and computes t
 </pre></div>
 </div>
 <dl class="method">
-<dt>
-<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/ner.html#NamedEntityExtractor.extract"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.ner.NamedEntityExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/ner.html#NamedEntityExtractor.extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.ner.NamedEntityExtractor.extract" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>text</strong> – a string from which to extract named entities</p>
@@ -537,29 +1287,29 @@ that one text is a subset of the other; finds the largest overlap and computes t
 </div>
 <div class="section" id="topic-modeling">
 <h2>Topic Modeling<a class="headerlink" href="#topic-modeling" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.text.topics</span></code> submodule contains a standardized class for training and applying topic models using several different libraries.</p>
-<p><strong>Classes</strong></p>
+<p>The <a class="reference internal" href="#module-pewanalytics.text.topics" title="pewanalytics.text.topics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.text.topics</span></code></a> submodule contains a standardized class for training and applying topic models using several different libraries.</p>
+<span class="target" id="module-pewanalytics.text.topics"></span><p><strong>Classes</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">TopicModel</span></code>(df, text_col, method[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.topics.TopicModel" title="pewanalytics.text.topics.TopicModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TopicModel</span></code></a>(df, text_col, method[, …])</p></td>
 <td><p>A wrapper around various topic modeling algorithms and libraries, intended to provide a standardized way to train     and apply models.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="class">
-<dt>
-<em class="property">class </em><code class="sig-name descname">TopicModel</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">text_col</em>, <em class="sig-param">method</em>, <em class="sig-param">num_topics=None</em>, <em class="sig-param">max_ngram_size=2</em>, <em class="sig-param">holdout_pct=0.25</em>, <em class="sig-param">use_tfidf=False</em>, <em class="sig-param">**vec_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.topics.TopicModel">
+<em class="property">class </em><code class="sig-name descname">TopicModel</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">text_col</em>, <em class="sig-param">method</em>, <em class="sig-param">num_topics=None</em>, <em class="sig-param">max_ngram_size=2</em>, <em class="sig-param">holdout_pct=0.25</em>, <em class="sig-param">use_tfidf=False</em>, <em class="sig-param">**vec_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.topics.TopicModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper around various topic modeling algorithms and libraries, intended to provide a standardized way to train     and apply models. When you initialize a <cite>TopicModel</cite>, it will fit a vectorizer, and split the data into a train     and test set if <cite>holdout_pct</cite> is provided. For more information about the available implementations, refer to the     documentation for the <cite>fit()</cite> method below.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> – Pandas DataFrame</p></li>
 <li><p><strong>text_col</strong> (<em>str</em>) – Name of the column containing text</p></li>
-<li><p><strong>method</strong> (<em>str</em>) – The topic model implementation to use. Options are: sklearn_lda, sklearn_nmf, gensim_lda,     gensim_hdp, corex</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – The topic model implementation to use. Options are: sklearn_lda, sklearn_nmf, gensim_lda, gensim_hdp, corex</p></li>
 <li><p><strong>num_topics</strong> (<em>int</em>) – The number of topics to extract. Required for every method except <cite>gensim_hdp</cite>.</p></li>
 <li><p><strong>max_ngram_size</strong> (<em>int</em>) – Maximum ngram size (2=bigrams, 3=trigrams, etc)</p></li>
 <li><p><strong>holdout_pct</strong> (<em>float</em>) – Proportion of the documents to hold out for goodness-of-fit scoring</p></li>
@@ -575,25 +1325,25 @@ that one text is a subset of the other; finds the largest overlap and computes t
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code>([df])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.topics.TopicModel.fit" title="pewanalytics.text.topics.TopicModel.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>([df])</p></td>
 <td><p>Fits a model using the method specified when initializing the <cite>TopicModel</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_document_topics</span></code>(df, **kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.topics.TopicModel.get_document_topics" title="pewanalytics.text.topics.TopicModel.get_document_topics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_document_topics</span></code></a>(df, **kwargs)</p></td>
 <td><p>Takes a DataFrame and returns a document-topic DataFrame (rows=documents, columns=topics)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_features</span></code>(df[, keep_sparse])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.topics.TopicModel.get_features" title="pewanalytics.text.topics.TopicModel.get_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_features</span></code></a>(df[, keep_sparse])</p></td>
 <td><p>Uses the trained vectorizer to process a dataframe and return a feature matrix.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_fit_params</span></code>(**kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.topics.TopicModel.get_fit_params" title="pewanalytics.text.topics.TopicModel.get_fit_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_fit_params</span></code></a>(**kwargs)</p></td>
 <td><p>Internal helper function to set defaults depending on the specified model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_score</span></code>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.topics.TopicModel.get_score" title="pewanalytics.text.topics.TopicModel.get_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_score</span></code></a>()</p></td>
 <td><p>Returns goodness-of-fit scores for certain models, based on the holdout documents.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_topics</span></code>([include_weights, top_n])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.topics.TopicModel.get_topics" title="pewanalytics.text.topics.TopicModel.get_topics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_topics</span></code></a>([include_weights, top_n])</p></td>
 <td><p>Returns a list, equal in length to the number of topics, where each item is a list of words or word-weight tuples.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_topics</span></code>([include_weights, top_n])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.topics.TopicModel.print_topics" title="pewanalytics.text.topics.TopicModel.print_topics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_topics</span></code></a>([include_weights, top_n])</p></td>
 <td><p>Prints the top words for each topic from a trained model.</p></td>
 </tr>
 </tbody>
@@ -638,8 +1388,8 @@ that one text is a subset of the other; finds the largest overlap and computes t
 </pre></div>
 </div>
 <dl class="method">
-<dt>
-<code class="sig-name descname">get_features</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">keep_sparse=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.get_features"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.topics.TopicModel.get_features">
+<code class="sig-name descname">get_features</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">keep_sparse=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.get_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.topics.TopicModel.get_features" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses the trained vectorizer to process a dataframe and return a feature matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -655,8 +1405,8 @@ that one text is a subset of the other; finds the largest overlap and computes t
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="sig-name descname">get_fit_params</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.get_fit_params"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.topics.TopicModel.get_fit_params">
+<code class="sig-name descname">get_fit_params</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.get_fit_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.topics.TopicModel.get_fit_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal helper function to set defaults depending on the specified model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -669,8 +1419,8 @@ that one text is a subset of the other; finds the largest overlap and computes t
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.fit"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.topics.TopicModel.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.topics.TopicModel.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fits a model using the method specified when initializing the <cite>TopicModel</cite>. Details on model-specific         parameters are below:</p>
 <p><strong>sklearn_lda</strong></p>
 <p>Fits a model using <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.decomposition.LatentDirichletAllocation</span></code>. For more information on         available parameters, please refer to the official documentation: <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.LatentDirichletAllocation.html">https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.LatentDirichletAllocation.html</a></p>
@@ -678,8 +1428,8 @@ that one text is a subset of the other; finds the largest overlap and computes t
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> – The dataframe to train the model on (must contain <cite>self.text_col</cite>)</p></li>
-<li><p><strong>alpha</strong> – Represents document-topic density. When values are higher, documents will be comprised of more         topics; when values are lower, documents will be primarily comprised of only a few topics. This parameter         is used instead of the doc_topic_prior sklearn parameter, and will be passed along to sklearn using the         formula: <cite>doc_topic_prior = alpha / num_topics</cite></p></li>
-<li><p><strong>beta</strong> – Represents topic-word density. When values are higher, topics will be comprised of more words;         when values are lower, only a few words will be loaded onto each topic. This parameter is used instead of the         topic_word_prior sklearn parameter, and will be passed along to sklearn using the formula:         <cite>topic_word_prior = beta / num_topics</cite>.</p></li>
+<li><p><strong>alpha</strong> – Represents document-topic density. When values are higher, documents will be comprised of more topics; when values are lower, documents will be primarily comprised of only a few topics. This parameter is used instead of the doc_topic_prior sklearn parameter, and will be passed along to sklearn using the formula: <cite>doc_topic_prior = alpha / num_topics</cite></p></li>
+<li><p><strong>beta</strong> – Represents topic-word density. When values are higher, topics will be comprised of more words; when values are lower, only a few words will be loaded onto each topic. This parameter is used instead of the topic_word_prior sklearn parameter, and will be passed along to sklearn using the formula:<cite>topic_word_prior = beta / num_topics</cite>.</p></li>
 <li><p><strong>learning_decay</strong> – See sklearn documentation.</p></li>
 <li><p><strong>learning_offset</strong> – See sklearn documentation.</p></li>
 <li><p><strong>learning_method</strong> – See sklearn documentation.</p></li>
@@ -704,19 +1454,19 @@ that one text is a subset of the other; finds the largest overlap and computes t
 </dd>
 </dl>
 <p><strong>gensim_lda</strong></p>
-<dl class="simple">
-<dt>Fits an LDA model using <code class="xref py py-class docutils literal notranslate"><span class="pre">gensim.models.LdaModel</span></code> or         <code class="xref py py-class docutils literal notranslate"><span class="pre">gensim.models.ldamulticore.LdaMulticore</span></code>. When <cite>use_multicore</cite> is set to <cite>True</cite>, the multicore         implementation will be used, otherwise the standard LDA implementation will be used. For more information on         available parameters, please refer to the official documentation:</dt><dd><ul class="simple">
+<p>Fits an LDA model using <code class="xref py py-class docutils literal notranslate"><span class="pre">gensim.models.LdaModel</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">gensim.models.ldamulticore.LdaMulticore</span></code>.         When <cite>use_multicore</cite> is set to <cite>True</cite>, the multicore implementation will be used, otherwise the standard LDA implementation will be used.         For more information on available parameters, please refer to the official documentation below:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>use_multicore=True: <a class="reference external" href="https://radimrehurek.com/gensim/models/ldamulticore.html">https://radimrehurek.com/gensim/models/ldamulticore.html</a></p></li>
 <li><p>use_multicore=False: <a class="reference external" href="https://radimrehurek.com/gensim/models/ldamodel.html">https://radimrehurek.com/gensim/models/ldamodel.html</a></p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> – The dataframe to train the model on (must contain <cite>self.text_col</cite>)</p></li>
-<li><p><strong>alpha</strong> – Represents document-topic density. When values are higher, documents will be comprised of more         topics; when values are lower, documents will be primarily comprised of only a few topics. Gensim options are         a bit different than sklearn though; refer to the documentation for the accepted values here.</p></li>
-<li><p><strong>beta</strong> – Represents topic-word density. When values are higher, topics will be comprised of more words;         when values are lower, only a few words will be loaded onto each topic. Gensim options are a bit different         than sklearn though; refer to the documentation for the accepted values here. Gensim calls this parameter         <cite>eta</cite>. We renamed it to be consistent with the sklearn implementations.</p></li>
+<li><p><strong>alpha</strong> – Represents document-topic density. When values are higher, documents will be comprised of more topics; when values are lower, documents will be primarily comprised of only a few topics. Gensim options are a bit different than sklearn though; refer to the documentation for the accepted values here.</p></li>
+<li><p><strong>beta</strong> – Represents topic-word density. When values are higher, topics will be comprised of more words; when values are lower, only a few words will be loaded onto each topic. Gensim options are a bit different than sklearn though; refer to the documentation for the accepted values here. Gensim calls this parameter <cite>eta</cite>. We renamed it to be consistent with the sklearn implementations.</p></li>
 <li><p><strong>chunksize</strong> – See gensim documentation.</p></li>
 <li><p><strong>passes</strong> – See gensim documentation.</p></li>
 <li><p><strong>decay</strong> – See gensim documentation.</p></li>
@@ -756,6 +1506,12 @@ documents. Subsequent use of the model will only make use of topics that meet th
 <p><strong>corex</strong></p>
 <p>Fits a CorEx topic model. Anchors can be provided in the form of a list of lists, with each item
 corresponding to a set of words to be used to seed a topic. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">anchors</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;kitten&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;puppy&#39;</span><span class="p">]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
 <p>The list of anchors cannot be longer than the specified number of topics, and all of the words must
 exist in the vocabulary. The <cite>anchor_strength</cite> parameter determines the degree to which the model is able to
 override the suggested words based on the data; providing higher values are a way of “insisting” more strongly
@@ -772,8 +1528,8 @@ that the model keep the provided words together in a single topic. For more info
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="sig-name descname">get_score</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.get_score"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.topics.TopicModel.get_score">
+<code class="sig-name descname">get_score</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.get_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.topics.TopicModel.get_score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns goodness-of-fit scores for certain models, based on the holdout documents.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -792,14 +1548,14 @@ that the model keep the provided words together in a single topic. For more info
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="sig-name descname">get_document_topics</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.get_document_topics"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.topics.TopicModel.get_document_topics">
+<code class="sig-name descname">get_document_topics</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.get_document_topics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.topics.TopicModel.get_document_topics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a DataFrame and returns a document-topic DataFrame (rows=documents, columns=topics)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> – The DataFrame to process (must have <cite>self.text_col</cite> in it)</p></li>
-<li><p><strong>min_probability</strong> (<em>float</em>) – (gensim_lda use_multicore=False only) Topics with a probability lower than this         threshold will be filtered out (Default=0.0)</p></li>
+<li><p><strong>min_probability</strong> (<em>float</em>) – (gensim_lda use_multicore=False only) Topics with a probability lower than this threshold will be filtered out (Default=0.0)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -809,8 +1565,8 @@ that the model keep the provided words together in a single topic. For more info
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="sig-name descname">get_topics</code><span class="sig-paren">(</span><em class="sig-param">include_weights=False</em>, <em class="sig-param">top_n=10</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.get_topics"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.topics.TopicModel.get_topics">
+<code class="sig-name descname">get_topics</code><span class="sig-paren">(</span><em class="sig-param">include_weights=False</em>, <em class="sig-param">top_n=10</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.get_topics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.topics.TopicModel.get_topics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list, equal in length to the number of topics, where each item is a list of words or word-weight
 tuples.</p>
 <dl class="field-list simple">
@@ -827,8 +1583,8 @@ tuples.</p>
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="sig-name descname">print_topics</code><span class="sig-paren">(</span><em class="sig-param">include_weights=False</em>, <em class="sig-param">top_n=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.print_topics"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pewanalytics.text.topics.TopicModel.print_topics">
+<code class="sig-name descname">print_topics</code><span class="sig-paren">(</span><em class="sig-param">include_weights=False</em>, <em class="sig-param">top_n=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.print_topics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.topics.TopicModel.print_topics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints the top words for each topic from a trained model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
