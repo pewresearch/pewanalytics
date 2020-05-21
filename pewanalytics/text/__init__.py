@@ -437,17 +437,19 @@ class TextCleaner(object):
     """
     A class for cleaning text up, in preparation for NLP, etc.  Attempts to decode the text.
 
-    This function performs for the following cleaning tasks :
+    This function performs for the following cleaning tasks, in sequence:
 
-        - Converts text to lowercase
+        - Removes HTML tags (optional)
+        - Decodes the text
+        - Filters out specified parts of speech (optional)
+        - Converts text to lowercase (optional)
+        - Removes URLs (optional)
         - Expands contractions
+        - Removes stopwords
+        - Lemmatizes or stems (optional)
+        - Removes words less than three characters
         - Removes punctuation
-        - Lemmatizes or stems
-        - Removes stopwords and words less than three characters
         - Consolidates whitespace
-        - Replaces specified stings
-        - Remove HTML/URL string
-        - Filters out part of speech
 
     :param lemmatize: Whether or not to lemmatize the tokens (default = True)
     :type lemmatize: bool
