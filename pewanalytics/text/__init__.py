@@ -600,6 +600,7 @@ class TextDataFrame(object):
     parameters are passed along to the scikit-learn TfidfVectorizer.
 
     .. tip:: For more info on the parameters it excepts, refer to the official scikit-learn `Tfidf vectorizer documentation <https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html>`_.
+
     :param df: A dataframe of documents.  Must contain a column with text.
     :param text_column: The name of the column in the dataframe that contains the text
     :param vectorizer_kwargs: All remaining keyword arguments are passed to TfidfVectorizer

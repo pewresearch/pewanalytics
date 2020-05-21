@@ -180,6 +180,7 @@ def compute_scores(
     """
     Computes a variety of inter-rater reliability scores, including Cohen's kappa, Krippendorf's alpha, precision,
     and recall. The input data must consist of a :py:class:`pandas.DataFrame` with the following columns:
+
         - A column with values that indicate the coder (like a name)
         - A column with values that indicate the document (like an ID)
         - A column with values that indicate the code value
