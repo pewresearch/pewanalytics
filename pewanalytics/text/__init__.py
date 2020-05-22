@@ -8,6 +8,7 @@ import scipy.sparse as sp
 
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
 
 import nltk
 
@@ -543,7 +544,9 @@ class TextCleaner(object):
             self.processor = None
             self.process_func = None
         if not stopwords:
-            stopwords = set(nltk.corpus.stopwords.words("english"))
+            stopwords = set.union(
+                set(nltk.corpus.stopwords.words("english")), set(ENGLISH_STOP_WORDS)
+            )
         self.stopword_regex = re.compile(
             r"\b({})\b".format(r"|".join([re.escape(s) for s in stopwords if s])),
             re.IGNORECASE,
