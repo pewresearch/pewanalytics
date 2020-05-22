@@ -130,23 +130,19 @@ class TextTests(unittest.TestCase):
         from pewanalytics.text import TextCleaner
 
         for params, text, expected in [
-            (
-                {},
-                self.doc[:100],
-                "plot two teen couple church party drink drive get accident",
-            ),
+            ({}, self.doc[:100], "plot teen couple church party drink drive accident"),
             (
                 {},
                 "won't can't i'm ain't i'll can't wouldn't shouldn't couldn't doesn't don't i've we're i'd it's",
-                "will_not cannot cannot would_not should_not could_not does_not do_not would",
+                "will_not would_not should_not could_not does_not do_not",
             ),
-            ({"filter_pos": ["CD"]}, self.doc[:100], "two"),
+            ({"filter_pos": ["CD"], "stopwords": ["test"]}, self.doc[:100], "two"),
             (
                 {"filter_pos": ["NN"]},
                 self.doc[:100],
                 "plot teen church party drink drive accident",
             ),
-            ({"lowercase": False}, "Test One Two Three", "Test One Two Three"),
+            ({"lowercase": False}, "Test One Two Three", "Test"),
             ({"remove_urls": True}, "http://www.example.com?test=asdf", ""),
             (
                 {"remove_urls": False},
@@ -157,12 +153,12 @@ class TextTests(unittest.TestCase):
             (
                 {"process_method": None},
                 self.doc[:100],
-                "plot two teen couples church party drink drive get accident",
+                "plot teen couples church party drink drive accident",
             ),
             (
                 {"process_method": "stem"},
                 self.doc[:100],
-                "plot two teen coupl church parti drink drive get accid",
+                "plot teen coupl church parti drink drive accid",
             ),
         ]:
             cleaner = TextCleaner(**params)
