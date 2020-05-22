@@ -770,7 +770,11 @@ class TextDataFrame(object):
         return corpus
 
     def extract_corpus_fragments(
-        self, scan_top_n_matches_per_doc=20, min_fragment_length=15
+        self,
+        scan_top_n_matches_per_doc=20,
+        min_fragment_length=15,
+        tokenize=True,
+        tokenizer=None,
     ):
 
         """
@@ -789,7 +793,7 @@ class TextDataFrame(object):
 
         """
 
-        text_overlap_extractor = TextOverlapExtractor()
+        text_overlap_extractor = TextOverlapExtractor(tokenizer=tokenizer)
 
         similarity_matrix = cosine_similarity(self.tfidf)
         min_similarity = np.average([np.average(row) for row in similarity_matrix])
@@ -815,6 +819,7 @@ class TextDataFrame(object):
                 self.corpus.iloc[i][self.text_column],
                 self.corpus.iloc[cos_similarity][self.text_column],
                 min_length=min_fragment_length,
+                tokenize=tokenize,
             ):
                 if frag not in fragments:
                     fragments.append(frag)
