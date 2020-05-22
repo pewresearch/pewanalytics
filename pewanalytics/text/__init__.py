@@ -586,7 +586,9 @@ class TextCleaner(object):
         Cleans the text.
 
         :param text: The string to clean
+        :type text: str
         :return: The cleaned string
+        :rtype: str
         """
 
         # try to remove any html tags in the string
@@ -638,6 +640,7 @@ class TextDataFrame(object):
 
     :param df: A dataframe of documents.  Must contain a column with text.
     :param text_column: The name of the column in the dataframe that contains the text
+    :type text_column: str
     :param vectorizer_kwargs: All remaining keyword arguments are passed to TfidfVectorizer
 
     Usage::
@@ -685,6 +688,7 @@ class TextDataFrame(object):
         A new column called 'cosine_similarity' is generated, which is used to sort and return the dataframe.
 
         :param text: The text to compare documents against
+        :type text: str
         :return: The corpus dataframe sorted by cosine similarity
 
         Usage::
@@ -712,10 +716,13 @@ class TextDataFrame(object):
         be matched to the value in the list to which it is most similar, based on cosine similarity.
 
         :param match_list: A list of strings (other documents) to be matched to documents in the dataframe
+        :type match_list: str
         :param allow_multiple: If set to True, each document in your corpus will be matched with its closes valid \
         match in the list. If set to False (default), documents in the list will only be matched to their best match \
         in the corpus.
+        :type allow_multiple: bool
         :param min_similarity: Minimum cosine similarity required for any match to be made.
+        :type min_similarity: float
         :return: Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity
 
         Usage::
@@ -885,14 +892,20 @@ class TextDataFrame(object):
         each of these pairs will be compared using the more stringent `fuzzy_ratio_threshold`.
 
         :param tfidf_threshold: Minimum cosine similarity for two documents to be considered potential dupes.
+        :type tfidf_threshold: float
         :param fuzzy_ratio_threshold: The required Levenshtein ratio to consider two documents duplicates.
+        :type fuzzy_ratio_threshold: int
         :param allow_partial: Whether or not to allow a partial ratio (if False, absolute ratios will be used)
+        :type allow_partial: bool
         :param max_partial_diff: The maximum partial ratio difference allowed for a potential duplicate pair
+        :type max_partial_diff: int
         :param filter_function: An optional function that allows for more complex filtering. The function must accept \
         the following parameters: text1, text2, cosine_similarity, fuzzy_ratio.  Must return True or False, \
         indicating whether the two documents should be considered duplicates.
         :param partial_ratio_timeout: How long, in seconds, that the partial ratio is allowed to compute
+        :type partial_ratio_timeout: int
         :param decode_text: Whether to decode the text prior to making comparisons
+        :type decode_text: bool
         :return: A list of lists, containing groups of duplicate documents (represented as rows from the corpus \
         dataframe)
 
@@ -984,11 +997,16 @@ class TextDataFrame(object):
         A wrapper around `pewanalytics.stats.mutual_info.compute_mutual_info`
 
         :param outcome_col: The name of the column with the binary outcome variable
+        :type outcome_col: str
         :param weight_col: (Optional) Name of the column to use in weighting
+        :type weight_col: str
         :param sample_size: (Optional) If provided, a random sample of this size will be used instead of the full \
-            dataframe
+        dataframe
+        :type sample_size: int
         :param l: An optional Laplace smoothing parameter
+        :type l: float
         :param normalize: Toggle normalization on or off (to control for feature prevalence), on by default
+        :type normalize: bool
         :return: A DataFrame of ngrams and various metrics about them, including mutual information
 
         Usage::
@@ -1038,6 +1056,7 @@ class TextDataFrame(object):
         "kmeans".
 
         :param k: The number of clusters to extract
+        :type k: int
 
         Usage::
 
@@ -1067,7 +1086,9 @@ class TextDataFrame(object):
         "hdbscan".
 
         :param min_cluster_size: The minimum number of documents that a cluster must contain.
+        :type min_cluster_size: int
         :param min_samples: An HDBSCAN parameter; refer to the documentation for more information
+        :type min_samples: int
 
         Usage::
 
@@ -1088,9 +1109,13 @@ class TextDataFrame(object):
         mutual information. Returns the `top_n` terms for each cluster.
 
         :param cluster_col: The name of the column that contains the document cluster IDs
+        :type cluster_col: str
         :param min_size: Ignore clusters that have fewer than this number of documents
+        :type min_size: int
         :param top_n: The number of top terms to identify for each cluster
+        :type top_n: int
         :return: A dictionary; keys are the cluster IDs and values are the top terms for the cluster
+        :rtype: dict
 
         Usage::
 
@@ -1141,6 +1166,7 @@ class TextDataFrame(object):
         the features-component matrix.
 
         :param k: Number of dimensions to extract
+        :type k: int
         :return: A dataframe of (features x components)
 
         Usage::
@@ -1182,6 +1208,7 @@ class TextDataFrame(object):
         the features-component matrix
 
         :param k: Number of dimensions to extract
+        :type k: int
         :return: A dataframe of (features x components)
 
         Usage::
@@ -1223,9 +1250,12 @@ class TextDataFrame(object):
         scores for each components.
 
         :param component_prefix: 'lsa' or 'pca' (you must first run get_pca_components or get_lsa_components)
+        :type component_prefix: str
         :param top_n: Number of documents to return for each component
+        :type top_n: int
         :return: A dictionary where keys are the component, and values are the text values for the component's \
         `top_n` documents
+        :rtype: dict
 
         Usage::
 
@@ -1260,8 +1290,11 @@ class TextDataFrame(object):
         https://stackoverflow.com/questions/35562789/how-do-i-calculate-a-word-word-co-occurrence-matrix-with-sklearn
 
         :param normalize: If True, will be normalized
+        :type normalize: bool
         :param min_frequency: The minimum document frequency required for a term to be included
+        :type min_frequency: int
         :param max_frequency: The maximum proportion of documents containing a term allowed to include the term
+        :type max_frequency: int
         :return: A matrix of (terms x terms) whose values indicate the number of documents in which two terms co-occurred
 
         Usage::
@@ -1304,6 +1337,7 @@ class TextDataFrame(object):
         https://stackoverflow.com/questions/35562789/how-do-i-calculate-a-word-word-co-occurrence-matrix-with-sklearn
 
         :param normalize: If True, will be normalized
+        :type normalize: bool
         :return: A matrix of (documents x documents) whose values indicate the number of terms they had in common
 
         Usage::

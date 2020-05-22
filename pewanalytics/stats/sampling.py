@@ -18,6 +18,7 @@ def compute_sample_weights_from_frame(frame, sample, weight_vars):
     :param frame: DataFrame (must contain all of the columns specified in `weight_vars`)
     :param sample: DataFrame (must contain all of the columns specified in `weight_vars`)
     :param weight_vars: The names of the columns to use when computing weights.
+    :type weight_vars: list
     :return: A Series containing the weights for each row in the `sample`
 
     Usage::
@@ -204,7 +205,9 @@ class SampleExtractor(object):
     :param id_col: Column in the DataFrame to be used as the unique ID of observations
     :type id_col: str
     :param verbose: Whether or not to print information during the sampling process (default=False)
+    :type verbose: bool
     :param seed: Random seed (optional)
+    :type seed: int
 
     """
 
@@ -235,7 +238,9 @@ class SampleExtractor(object):
         :type sample_size: int
         :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify, \
         stratify_even, stratify_guaranteed
+        :type sampling_strategy: str
         :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on
+        :type stratify_by: str, list
         :return: A list of IDs reflecting the observations selected from the DataFrame during sampling
         :rtype: list
 

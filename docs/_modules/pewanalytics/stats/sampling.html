@@ -166,6 +166,7 @@
 <span class="sd">    :param frame: DataFrame (must contain all of the columns specified in `weight_vars`)</span>
 <span class="sd">    :param sample: DataFrame (must contain all of the columns specified in `weight_vars`)</span>
 <span class="sd">    :param weight_vars: The names of the columns to use when computing weights.</span>
+<span class="sd">    :type weight_vars: list</span>
 <span class="sd">    :return: A Series containing the weights for each row in the `sample`</span>
 
 <span class="sd">    Usage::</span>
@@ -352,7 +353,9 @@
 <span class="sd">    :param id_col: Column in the DataFrame to be used as the unique ID of observations</span>
 <span class="sd">    :type id_col: str</span>
 <span class="sd">    :param verbose: Whether or not to print information during the sampling process (default=False)</span>
+<span class="sd">    :type verbose: bool</span>
 <span class="sd">    :param seed: Random seed (optional)</span>
+<span class="sd">    :type seed: int</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -383,7 +386,9 @@
 <span class="sd">        :type sample_size: int</span>
 <span class="sd">        :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify, \</span>
 <span class="sd">        stratify_even, stratify_guaranteed</span>
+<span class="sd">        :type sampling_strategy: str</span>
 <span class="sd">        :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on</span>
+<span class="sd">        :type stratify_by: str, list</span>
 <span class="sd">        :return: A list of IDs reflecting the observations selected from the DataFrame during sampling</span>
 <span class="sd">        :rtype: list</span>
 

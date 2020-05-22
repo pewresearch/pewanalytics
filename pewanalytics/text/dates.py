@@ -68,7 +68,9 @@ class DateFinder(object):
         Return the text without any references to "parts" or specific times.
 
         :param text: A string to be cleaned that contains a date
+        :type text: str
         :return: A cleaned string without additional time info and other boilerplate
+        :rtype: str
         """
 
         for pattern in self.preprocessing_patterns:

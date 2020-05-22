@@ -444,6 +444,7 @@ class TopicModel(object):
                 - total_correlation: (corex only) The model's total correlation score
 
         :return: A dictionary with goodness-of-fit scores
+        :rtype: dict
 
         """
 
@@ -527,7 +528,9 @@ class TopicModel(object):
         tuples.
 
         :param include_weights: Whether or not to include weights along with the ngrams
+        :type include_weights: bool
         :param top_n: The number of words to include for each topic
+        :type top_n: init
         :return: A list of lists, where each item is a list of ngrams or ngram-weight tuples
         """
 
@@ -586,7 +589,9 @@ class TopicModel(object):
         Prints the top words for each topic from a trained model.
 
         :param include_weights: Whether or not to include weights along with the ngrams
+        :type include_weights: bool
         :param top_n: The number of words to include for each topic
+        :type top_n: int
         """
 
         for i, topic in self.get_topics(

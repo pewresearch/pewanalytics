@@ -88,7 +88,9 @@ class NamedEntityExtractor(object):
 
         """
         :param text: a string from which to extract named entities
+        :type text: str
         :return: dictionary of entities organized by their category
+        :rtype: dict
         """
 
         try:

@@ -626,10 +626,13 @@ then only tokens that appear fully in both texts will be extracted. For example:
 <dd><p>Cleans the text.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> – The string to clean</p>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The string to clean</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The cleaned string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -697,7 +700,7 @@ then only tokens that appear fully in both texts will be extracted. For example:
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> – A dataframe of documents.  Must contain a column with text.</p></li>
-<li><p><strong>text_column</strong> – The name of the column in the dataframe that contains the text</p></li>
+<li><p><strong>text_column</strong> (<em>str</em>) – The name of the column in the dataframe that contains the text</p></li>
 <li><p><strong>vectorizer_kwargs</strong> – All remaining keyword arguments are passed to TfidfVectorizer</p></li>
 </ul>
 </dd>
@@ -738,7 +741,7 @@ then only tokens that appear fully in both texts will be extracted. For example:
 <dd><p>Compares the provided text against the documents in the corpus and returns the most similar documents.         A new column called ‘cosine_similarity’ is generated, which is used to sort and return the dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> – The text to compare documents against</p>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to compare documents against</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The corpus dataframe sorted by cosine similarity</p>
@@ -764,9 +767,9 @@ be matched to the value in the list to which it is most similar, based on cosine
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>match_list</strong> – A list of strings (other documents) to be matched to documents in the dataframe</p></li>
-<li><p><strong>allow_multiple</strong> – If set to True, each document in your corpus will be matched with its closes valid         match in the list. If set to False (default), documents in the list will only be matched to their best match         in the corpus.</p></li>
-<li><p><strong>min_similarity</strong> – Minimum cosine similarity required for any match to be made.</p></li>
+<li><p><strong>match_list</strong> (<em>str</em>) – A list of strings (other documents) to be matched to documents in the dataframe</p></li>
+<li><p><strong>allow_multiple</strong> (<em>bool</em>) – If set to True, each document in your corpus will be matched with its closes valid         match in the list. If set to False (default), documents in the list will only be matched to their best match         in the corpus.</p></li>
+<li><p><strong>min_similarity</strong> (<em>float</em>) – Minimum cosine similarity required for any match to be made.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -838,13 +841,13 @@ each of these pairs will be compared using the more stringent <cite>fuzzy_ratio_
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tfidf_threshold</strong> – Minimum cosine similarity for two documents to be considered potential dupes.</p></li>
-<li><p><strong>fuzzy_ratio_threshold</strong> – The required Levenshtein ratio to consider two documents duplicates.</p></li>
-<li><p><strong>allow_partial</strong> – Whether or not to allow a partial ratio (if False, absolute ratios will be used)</p></li>
-<li><p><strong>max_partial_diff</strong> – The maximum partial ratio difference allowed for a potential duplicate pair</p></li>
+<li><p><strong>tfidf_threshold</strong> (<em>float</em>) – Minimum cosine similarity for two documents to be considered potential dupes.</p></li>
+<li><p><strong>fuzzy_ratio_threshold</strong> (<em>int</em>) – The required Levenshtein ratio to consider two documents duplicates.</p></li>
+<li><p><strong>allow_partial</strong> (<em>bool</em>) – Whether or not to allow a partial ratio (if False, absolute ratios will be used)</p></li>
+<li><p><strong>max_partial_diff</strong> (<em>int</em>) – The maximum partial ratio difference allowed for a potential duplicate pair</p></li>
 <li><p><strong>filter_function</strong> – An optional function that allows for more complex filtering. The function must accept         the following parameters: text1, text2, cosine_similarity, fuzzy_ratio.  Must return True or False,         indicating whether the two documents should be considered duplicates.</p></li>
-<li><p><strong>partial_ratio_timeout</strong> – How long, in seconds, that the partial ratio is allowed to compute</p></li>
-<li><p><strong>decode_text</strong> – Whether to decode the text prior to making comparisons</p></li>
+<li><p><strong>partial_ratio_timeout</strong> (<em>int</em>) – How long, in seconds, that the partial ratio is allowed to compute</p></li>
+<li><p><strong>decode_text</strong> (<em>bool</em>) – Whether to decode the text prior to making comparisons</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -878,11 +881,11 @@ each of these pairs will be compared using the more stringent <cite>fuzzy_ratio_
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>outcome_col</strong> – The name of the column with the binary outcome variable</p></li>
-<li><p><strong>weight_col</strong> – (Optional) Name of the column to use in weighting</p></li>
-<li><p><strong>sample_size</strong> – (Optional) If provided, a random sample of this size will be used instead of the full             dataframe</p></li>
-<li><p><strong>l</strong> – An optional Laplace smoothing parameter</p></li>
-<li><p><strong>normalize</strong> – Toggle normalization on or off (to control for feature prevalence), on by default</p></li>
+<li><p><strong>outcome_col</strong> (<em>str</em>) – The name of the column with the binary outcome variable</p></li>
+<li><p><strong>weight_col</strong> (<em>str</em>) – (Optional) Name of the column to use in weighting</p></li>
+<li><p><strong>sample_size</strong> (<em>int</em>) – (Optional) If provided, a random sample of this size will be used instead of the full         dataframe</p></li>
+<li><p><strong>l</strong> (<em>float</em>) – An optional Laplace smoothing parameter</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em>) – Toggle normalization on or off (to control for feature prevalence), on by default</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -911,7 +914,7 @@ The resulting cluster IDs for each document are saved in the TextDataFrame’s <
 “kmeans”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>k</strong> – The number of clusters to extract</p>
+<dd class="field-odd"><p><strong>k</strong> (<em>int</em>) – The number of clusters to extract</p>
 </dd>
 </dl>
 <p>Usage:</p>
@@ -939,8 +942,8 @@ The resulting cluster IDs for each document are saved in the TextDataFrame’s <
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>min_cluster_size</strong> – The minimum number of documents that a cluster must contain.</p></li>
-<li><p><strong>min_samples</strong> – An HDBSCAN parameter; refer to the documentation for more information</p></li>
+<li><p><strong>min_cluster_size</strong> (<em>int</em>) – The minimum number of documents that a cluster must contain.</p></li>
+<li><p><strong>min_samples</strong> (<em>int</em>) – An HDBSCAN parameter; refer to the documentation for more information</p></li>
 </ul>
 </dd>
 </dl>
@@ -960,13 +963,16 @@ mutual information. Returns the <cite>top_n</cite> terms for each cluster.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cluster_col</strong> – The name of the column that contains the document cluster IDs</p></li>
-<li><p><strong>min_size</strong> – Ignore clusters that have fewer than this number of documents</p></li>
-<li><p><strong>top_n</strong> – The number of top terms to identify for each cluster</p></li>
+<li><p><strong>cluster_col</strong> (<em>str</em>) – The name of the column that contains the document cluster IDs</p></li>
+<li><p><strong>min_size</strong> (<em>int</em>) – Ignore clusters that have fewer than this number of documents</p></li>
+<li><p><strong>top_n</strong> (<em>int</em>) – The number of top terms to identify for each cluster</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dictionary; keys are the cluster IDs and values are the top terms for the cluster</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 <p>Usage:</p>
@@ -990,7 +996,7 @@ saves the top component for each document as self.corpus[‘pca’], and returns
 the features-component matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>k</strong> – Number of dimensions to extract</p>
+<dd class="field-odd"><p><strong>k</strong> (<em>int</em>) – Number of dimensions to extract</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dataframe of (features x components)</p>
@@ -1025,7 +1031,7 @@ saves the top component for each document as self.corpus[‘lsa’], and returns
 the features-component matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>k</strong> – Number of dimensions to extract</p>
+<dd class="field-odd"><p><strong>k</strong> (<em>int</em>) – Number of dimensions to extract</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dataframe of (features x components)</p>
@@ -1060,12 +1066,15 @@ scores for each components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>component_prefix</strong> – ‘lsa’ or ‘pca’ (you must first run get_pca_components or get_lsa_components)</p></li>
-<li><p><strong>top_n</strong> – Number of documents to return for each component</p></li>
+<li><p><strong>component_prefix</strong> (<em>str</em>) – ‘lsa’ or ‘pca’ (you must first run get_pca_components or get_lsa_components)</p></li>
+<li><p><strong>top_n</strong> (<em>int</em>) – Number of documents to return for each component</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dictionary where keys are the component, and values are the text values for the component’s         <cite>top_n</cite> documents</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 <p>Usage:</p>
@@ -1087,9 +1096,9 @@ scores for each components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>normalize</strong> – If True, will be normalized</p></li>
-<li><p><strong>min_frequency</strong> – The minimum document frequency required for a term to be included</p></li>
-<li><p><strong>max_frequency</strong> – The maximum proportion of documents containing a term allowed to include the term</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em>) – If True, will be normalized</p></li>
+<li><p><strong>min_frequency</strong> (<em>int</em>) – The minimum document frequency required for a term to be included</p></li>
+<li><p><strong>max_frequency</strong> (<em>int</em>) – The maximum proportion of documents containing a term allowed to include the term</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1112,7 +1121,7 @@ scores for each components.</p>
 <a class="reference external" href="https://stackoverflow.com/questions/35562789/how-do-i-calculate-a-word-word-co-occurrence-matrix-with-sklearn">https://stackoverflow.com/questions/35562789/how-do-i-calculate-a-word-word-co-occurrence-matrix-with-sklearn</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>normalize</strong> – If True, will be normalized</p>
+<dd class="field-odd"><p><strong>normalize</strong> (<em>bool</em>) – If True, will be normalized</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A matrix of (documents x documents) whose values indicate the number of terms they had in common</p>
@@ -1306,10 +1315,13 @@ scores for each components.</p>
 <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/ner.html#NamedEntityExtractor.extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.ner.NamedEntityExtractor.extract" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> – a string from which to extract named entities</p>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – a string from which to extract named entities</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>dictionary of entities organized by their category</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1576,6 +1588,9 @@ that the model keep the provided words together in a single topic. For more info
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A dictionary with goodness-of-fit scores</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1604,8 +1619,8 @@ tuples.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>include_weights</strong> – Whether or not to include weights along with the ngrams</p></li>
-<li><p><strong>top_n</strong> – The number of words to include for each topic</p></li>
+<li><p><strong>include_weights</strong> (<em>bool</em>) – Whether or not to include weights along with the ngrams</p></li>
+<li><p><strong>top_n</strong> (<em>init</em>) – The number of words to include for each topic</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1621,8 +1636,8 @@ tuples.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>include_weights</strong> – Whether or not to include weights along with the ngrams</p></li>
-<li><p><strong>top_n</strong> – The number of words to include for each topic</p></li>
+<li><p><strong>include_weights</strong> (<em>bool</em>) – Whether or not to include weights along with the ngrams</p></li>
+<li><p><strong>top_n</strong> (<em>int</em>) – The number of words to include for each topic</p></li>
 </ul>
 </dd>
 </dl>
