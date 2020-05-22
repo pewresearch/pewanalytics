@@ -49,7 +49,7 @@ class TopicModel(object):
         reviews = [{"fileid": fileid, "text": nltk.corpus.movie_reviews.raw(fileid)} for fileid in nltk.corpus.movie_reviews.fileids()]
         df = pd.DataFrame(reviews)
 
-        >>> model = TopicModel(df, "text", "sklearn_nmf", num_topics=num_topics, min_df=25, max_df=.5, use_tfidf=False)
+        >>> model = TopicModel(df, "text", "sklearn_nmf", num_topics=5, min_df=25, max_df=.5, use_tfidf=False)
         Initialized sklearn_nmf topic model with 3285 features
         1600 training documents, 400 testing documents
 

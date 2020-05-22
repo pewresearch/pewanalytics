@@ -363,7 +363,8 @@ class TextOverlapExtractor(object):
         :param min_length: The minimum size of the overlap to be considered (number of characters)
         :type min_length: int
         :param tokenize: If True, overlapping segments will only be included if they consist of atomic tokens; \
-        overlaps that consist of only part of a token will be excluded (default=True)
+        overlaps that consist of only part of a token will be excluded. By default, the text is tokenize into \
+        sentences based on punctuation. (default=True)
         :type tokenize: bool
         :return: A list of all of the identified overlapping segments
         :rtype: list
@@ -459,59 +460,77 @@ class TextCleaner(object):
         - Removes punctuation
         - Consolidates whitespace
 
-    :param lemmatize: Whether or not to lemmatize the tokens (default = True)
-    :type lemmatize: bool
-    :param tokenizer: Tokenizer to use (default = nltk.WhitespaceTokenizer())
-    :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them with. \
-    Anything passed here will be used in addition to a set of built-in replacement patterns for common contractions.
-    :type replacers: list
     :param process_method: Options are "lemmatize", "stem", or None (default = "lemmatize")
     :type process_method: str
     :param processor: A lemmatizer or stemmer with a "lemmatize" or "stem" function (default for \
     process_method="lemmatize" is nltk.WordNetLemmatizer(); default for process_method="stem" is nltk.SnowballStemmer())
-    :param stopwords: The set of stopwords to remove (default = nltk.corpus.stopwords.words('english'))
-    :type stopwords: set
+    :param filter_pos: A list of WordNet parts-of-speech tags to keep; \
+    if provided, all other words will be removed (default = None)
+    :type filter_pos: list
     :param lowercase: Whether or not to lowercase the string (default = True)
     :type lowercase: bool
     :param remove_urls: Whether or not to remove URLs and links from the text (default = True)
     :type remove_urls: bool
-    :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
-    :type throw_loud_fail: bool
+    :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them with. \
+    Anything passed here will be used in addition to a set of built-in replacement patterns for common contractions.
+    :param stopwords: The set of stopwords to remove (default = nltk.corpus.stopwords.words('english') combined with \
+    sklearn.feature_extraction.stop_words.ENGLISH_STOP_WORDS)
+    :type stopwords: set
     :param strip_html: Whether or not to remove contents wrapped in HTML tags (default = False)
     :type strip_html: bool
-    :param filter_pos: A list of WordNet parts-of-speech tags to keep; \
-    if provided, all other words will be removed (default = None)
-    :type filter_pos: list
-
+    :param tokenizer: Tokenizer to use (default = nltk.WhitespaceTokenizer())
+    :type replacers: list
+    :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)
+    :type throw_loud_fail: bool
 
     Usage::
 
         from pewanalytics.text import TextCleaner
 
-        text = "Here's an example sentence.</br>There are plenty of other examples we could use though."
-
-        >>> cleaner = TextCleaner(process_method="lemmatize")
-        >>> cleaner.clean(text)
-        'example sentence plenty example could use though'
-
+        text = "<body> \
+            Here's some example text.</br>It isn't a great example, but it'll do. \
+            Of course, there are plenty of other examples we could use though. \
+            http://example.com \
+            </body>"
+        
         >>> cleaner = TextCleaner(process_method="stem")
         >>> cleaner.clean(text)
-        'exampl sentenc plenti exampl could use though'
+        'exampl is_not great exampl cours plenti exampl could use though'
+
+        >>> cleaner = TextCleaner(process_method="stem", stopwords=["my_custom_stopword"], strip_html=True)
+        >>> cleaner.clean(text)
+        'here some exampl is_not great exampl but will cours there are plenti other exampl could use though'
+
+        >>> cleaner = TextCleaner(process_method="lemmatize", strip_html=True)
+        >>> cleaner.clean(text)
+        'example is_not great example course plenty example could use though'
+
+        >>> cleaner = TextCleaner(process_method="lemmatize", remove_urls=False, strip_html=True)
+        >>> cleaner.clean(text)
+        'example text is_not great example course plenty example could use though http example com'
+
+        >>> cleaner = TextCleaner(process_method="stem", strip_html=False)
+        >>> cleaner.clean(text)
+        'example text is_not great example course plenty example could use though http example com'
+
+        >>> cleaner = TextCleaner(process_method="stem", filter_pos=["JJ"], strip_html=True)
+        >>> cleaner.clean(text)
+        'great though'
 
     """
 
     def __init__(
         self,
-        throw_loud_fail=False,
-        filter_pos=None,
         process_method="lemmatize",
         processor=None,
+        filter_pos=None,
         lowercase=True,
         remove_urls=True,
         replacers=None,
         stopwords=None,
         strip_html=False,
         tokenizer=None,
+        throw_loud_fail=False,
     ):
 
         self.tokenizer = tokenizer if tokenizer else nltk.WhitespaceTokenizer()
@@ -625,25 +644,23 @@ class TextDataFrame(object):
 
         from pewanalytics.text import TextDataFrame
         import pandas as pd
+        import nltk
 
         nltk.download("inaugural")
         df = pd.DataFrame([
             {"speech": fileid, "text": nltk.corpus.inaugural.raw(fileid)} for fileid in nltk.corpus.inaugural.fileids()
         ])
+        # Let's remove new line characters so we can print the output in the docstrings
+        df['text'] = df['text'].str.replace("\\n", " ")
 
-        # Create additional outcome grouping variable to identify mutual information within group
+        # And now let's create some additional variables to group our data
         df['year'] = df['speech'].map(lambda x: int(x.split("-")[0]))
         df['21st_century'] = df['year'].map(lambda x: 1 if x >= 2000 else 0)
 
-        # Create artificial duplicates in the dataset
+        # And we'll also create some artificial duplicates in the dataset
         df = df.append(df.tail(2)).reset_index()
 
-        >>> tdf = TextDataFrame(text_df,
-                                "text",
-                                stop_words="english",
-                                ngram_range=(1, 2)
-                                )
-
+        >>> tdf = TextDataFrame(df, "text", stop_words="english", ngram_range=(1, 2))
         >>> tdf_dense = pd.DataFrame(tdf.tfidf.todense(), columns=tdf.vectorizer.get_feature_names()).head(5)
         >>> tdf_dense.loc[:, (tdf_dense != 0).any(axis=0)]
         	    14th	14th day	 abandon  abandon government... zeal inspires	zeal purity	zeal rely	zeal wisdom
@@ -696,7 +713,8 @@ class TextDataFrame(object):
 
         :param match_list: A list of strings (other documents) to be matched to documents in the dataframe
         :param allow_multiple: If set to True, each document in your corpus will be matched with its closes valid \
-        match in the list. If set to False (default), documents in the list will only be matched to their best match in the corpus.
+        match in the list. If set to False (default), documents in the list will only be matched to their best match \
+        in the corpus.
         :param min_similarity: Minimum cosine similarity required for any match to be made.
         :return: Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity
 
@@ -776,21 +794,44 @@ class TextDataFrame(object):
         tokenize=True,
         tokenizer=None,
     ):
-
         """
-        Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus.
-        During each comparison, overlapping fragments are identified.  This can be useful for identifying common
-        boilerplate sentences, repeated paragraphs, etc.
+        Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus
+        using TF-IDF cosine similarity. During each comparison, overlapping fragments are identified.  This can be
+        useful for identifying common boilerplate sentences, repeated paragraphs, etc. By default, the text is
+        tokenized into complete sentences (so only complete sentences that recur will be returned), but you can set
+        `tokenize=False` to get raw segments of text that occur multiple times.
 
         :param scan_top_n_matches_per_doc: The number of other documents to compare each document against.
+        :type scan_top_n_matches_per_doc: int
         :param min_fragment_length: The minimum character length a fragment must have to be extracted.
+        :type min_fragment_length: int
+        :param tokenize: If True, overlapping segments will only be included if they consist of atomic tokens; \
+        overlaps that consist of only part of a token will be excluded. Uses sentence tokenization by default. \
+        (default=True)
+        :type tokenize: bool
+        :param tokenizer: The tokenizer to use, if tokenizing isn't disabled (default = SentenceTokenizer())
+        :type tokenizer: object
         :return: A list of fragments that were found.
+
+        .. note:: This function will skip over duplicates if they exist in your data; it only compares documents
+            that have less than .997 cosine similarity.
 
         Usage::
 
-            >>> tdf.extract_corpus_fragmentsts()
-            []
-
+            >>> tdf.extract_corpus_fragments(scan_top_n_matches_per_doc=20, min_fragment_length=25, tokenize=False)
+            ['s. Equal and exact justice ',
+             'd by the General Government',
+             ' of the American people, ',
+             'ent of the United States ',
+             ' the office of President of the United States ',
+             ' preserve, protect, and defend the Constitution of the United States."  ',
+             ' to "preserve, protect, and defend',
+             ' of the United States are ',
+             'e of my countrymen I am about to ',
+             'Vice President, Mr. Chief Justice, ',
+             ' 200th anniversary as a nation',
+             ', and my fellow citizens: ',
+             'e United States of America']
         """
 
         text_overlap_extractor = TextOverlapExtractor(tokenizer=tokenizer)
@@ -953,7 +994,6 @@ class TextDataFrame(object):
         Usage::
 
             >>> results = tdf.mutual_info('21st_century')
-
             >>> results.sort_values("MI1", ascending=False).index[:25]
             Index(['journey complete', 'jobs', 'make america', 've', 'obama', 'workers',
                    'xand', 'states america', 'america best', 'debates', 'clinton',
