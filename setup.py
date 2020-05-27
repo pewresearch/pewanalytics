@@ -29,7 +29,7 @@ setup(
     packages=["pewanalytics"],
     include_package_data=True,
     keywords="statistics, nlp, text analysis, text processing, sampling, pew pew pew",
-    license="LGPLv2.1+",
+    license="GPLv2+",
     classifiers=[
         # https://pypi.python.org/pypi?%3Aaction=list_classifiers
         "Development Status :: 5 - Production/Stable",
@@ -38,7 +38,7 @@ setup(
         "Intended Audience :: Science/Research",
         "Intended Audience :: Information Technology",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
+        "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
         "Natural Language :: English",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 2.7",
