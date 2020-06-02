@@ -993,9 +993,22 @@ class TextDataFrame(object):
 
         """
         Given a particular keyword, looks for related terms in the corpus using mutual information.
+
         :param keyword: The keyword to use
+        :type keyword: str
         :param n: Number of related terms to return
+        :type n: int
         :return: Terms associated with the keyword
+        :rtype: list
+
+        Usage::
+
+            >>> tdf.find_related_keywords("war")[:2]
+            ['war', 'peace']
+
+            >>> tdf.find_related_keywords("economy")[:2]
+            ['economy', 'expenditures']
+
         """
 
         self.corpus["temp"] = (
@@ -1006,7 +1019,7 @@ class TextDataFrame(object):
         mi = self.mutual_info("temp")
         del self.corpus["temp"]
 
-        return mi[mi["MI1"] > 0].sort_values("MI1", ascending=False)[:n].index
+        return list(mi[mi["MI1"] > 0].sort_values("MI1", ascending=False)[:n].index)
 
     def mutual_info(
         self, outcome_col, weight_col=None, sample_size=None, l=0, normalize=True
