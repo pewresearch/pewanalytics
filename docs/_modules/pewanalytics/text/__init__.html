@@ -1,0 +1,1600 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pewanalytics.text.__init__ &mdash; pewanalytics 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pewanalytics
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../stats.html">Statistical Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../text.html">Text Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pewanalytics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../text.html">pewanalytics.text</a> &raquo;</li>
+        
+      <li>pewanalytics.text.__init__</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pewanalytics.text.__init__</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="k">import</span> <span class="n">TfidfVectorizer</span><span class="p">,</span> <span class="n">CountVectorizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="k">import</span> <span class="n">cosine_similarity</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.stop_words</span> <span class="k">import</span> <span class="n">ENGLISH_STOP_WORDS</span>
+
+<span class="kn">import</span> <span class="nn">nltk</span>
+
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">stopit</span> <span class="k">import</span> <span class="n">ThreadingTimeout</span> <span class="k">as</span> <span class="n">Timeout</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">rapidfuzz</span> <span class="k">import</span> <span class="n">fuzz</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">fuzzywuzzy</span> <span class="k">import</span> <span class="n">fuzz</span>
+<span class="kn">from</span> <span class="nn">difflib</span> <span class="k">import</span> <span class="n">SequenceMatcher</span>
+<span class="kn">from</span> <span class="nn">stopit</span> <span class="k">import</span> <span class="n">TimeoutException</span>
+
+<span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">is_null</span><span class="p">,</span> <span class="n">is_not_null</span>
+<span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">strip_html</span>
+<span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">decode_text</span> <span class="k">as</span> <span class="n">_decode_text</span>
+<span class="kn">from</span> <span class="nn">pewtils.regex</span> <span class="k">import</span> <span class="n">URL_REGEX</span>
+
+<span class="kn">from</span> <span class="nn">pewanalytics.stats.clustering</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">compute_hdbscan_clusters</span><span class="p">,</span>
+    <span class="n">compute_kmeans_clusters</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pewanalytics.stats.mutual_info</span> <span class="k">import</span> <span class="n">compute_mutual_info</span>
+<span class="kn">from</span> <span class="nn">pewanalytics.stats.dimensionality_reduction</span> <span class="k">import</span> <span class="n">get_lsa</span><span class="p">,</span> <span class="n">get_pca</span>
+
+
+<div class="viewcode-block" id="has_fragment"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.has_fragment">[docs]</a><span class="k">def</span> <span class="nf">has_fragment</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">fragment</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks whether a substring (&quot;fragment&quot;) is contained within a larger string (&quot;text&quot;). Uses the `pewtils.decode_text`</span>
+<span class="sd">    function to process both the text and the fragment when running this check.</span>
+
+<span class="sd">    :param text: The text to search</span>
+<span class="sd">    :type text: str</span>
+<span class="sd">    :param fragment: The fragment to search for</span>
+<span class="sd">    :type fragment: str</span>
+<span class="sd">    :return: Whether or not the text contains the fragment</span>
+<span class="sd">    :rtype: bool</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.text import has_fragment</span>
+
+<span class="sd">        text = &quot;testing one two three&quot;</span>
+
+<span class="sd">        &gt;&gt;&gt; has_fragment(text, &quot;one two&quot;)</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &gt;&gt;&gt; has_fragment(text, &quot;four&quot;)</span>
+<span class="sd">        False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">any</span><span class="p">([(</span><span class="n">fragment</span> <span class="ow">in</span> <span class="n">text</span><span class="p">),</span> <span class="p">(</span><span class="n">_decode_text</span><span class="p">(</span><span class="n">fragment</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_decode_text</span><span class="p">(</span><span class="n">text</span><span class="p">))])</span></div>
+
+
+<div class="viewcode-block" id="remove_fragments"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.remove_fragments">[docs]</a><span class="k">def</span> <span class="nf">remove_fragments</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">fragments</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Iteratively remove fragments from a string.</span>
+
+<span class="sd">    :param text: The text toremove the fragments from</span>
+<span class="sd">    :type text: str</span>
+<span class="sd">    :param fragments: A list of string fragments to search for and remove</span>
+<span class="sd">    :type fragments: list</span>
+<span class="sd">    :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)</span>
+<span class="sd">    :type throw_loud_fail: bool</span>
+<span class="sd">    :return: The original string, minus any parts that matched the fragments provided</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.text import remove_fragments</span>
+
+<span class="sd">        text = &quot;testing one two three&quot;</span>
+
+<span class="sd">        &gt;&gt;&gt; remove_fragments(text, [&quot;one two&quot;])</span>
+<span class="sd">        &quot;testing  three&quot;</span>
+
+<span class="sd">        &gt;&gt;&gt; remove_fragments(text, [&quot;testing&quot;, &quot;three&quot;])</span>
+<span class="sd">        &quot; one two &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fragments</span><span class="p">:</span>
+        <span class="n">new_text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="c1"># if the new text is the same as previous, try decoding</span>
+        <span class="k">if</span> <span class="n">new_text</span> <span class="o">==</span> <span class="n">text</span><span class="p">:</span>
+            <span class="n">new_text</span> <span class="o">=</span> <span class="n">_decode_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="n">_decode_text</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="p">),</span> <span class="s2">&quot;&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># if the new text is still the same as previous, then new text is None</span>
+        <span class="k">if</span> <span class="n">new_text</span> <span class="o">==</span> <span class="n">text</span><span class="p">:</span>
+            <span class="n">new_text</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">new_text</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">new_text</span>
+    <span class="k">return</span> <span class="n">text</span></div>
+
+
+<div class="viewcode-block" id="filter_parts_of_speech"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.filter_parts_of_speech">[docs]</a><span class="k">def</span> <span class="nf">filter_parts_of_speech</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">filter_pos</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retain words associated with parts of speech in the text if `exclude=False`.</span>
+<span class="sd">    If `exclude=True`, exclude words associated with parts of speech.</span>
+<span class="sd">    Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)</span>
+
+<span class="sd">    | The full list of POS is here: https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html</span>
+
+<span class="sd">    :param text: The string to process</span>
+<span class="sd">    :type text: str</span>
+<span class="sd">    :param filter_pos: Array of part of speech tags (default is &#39;NN&#39;, &#39;NNP&#39;, and &#39;JJ&#39;)</span>
+<span class="sd">    :type filter_pos: list</span>
+<span class="sd">    :param exclude: If `True`, the function will remove words that match to the specified parts of speech; by default \</span>
+<span class="sd">    this function *filters to* POS matches instead.</span>
+<span class="sd">    :return: A string comprised solely of words that matched (or did not match) to the specified parts of speech, \</span>
+<span class="sd">    depending on the value of `exclude`</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.text import filter_parts_of_speech</span>
+
+<span class="sd">        text = &quot;This is a very exciting sentence that can serve as a functional example&quot;</span>
+
+<span class="sd">        &gt;&gt;&gt; filter_parts_of_speech(text, filter_pos=[&quot;NN&quot;])</span>
+<span class="sd">        &#39;sentence example&#39;</span>
+
+<span class="sd">        &gt;&gt;&gt; filter_parts_of_speech(text, filter_pos=[&quot;JJ&quot;], exclude=True)</span>
+<span class="sd">        &#39;This is a very sentence that can serve as a example&#39;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">filter_pos</span><span class="p">:</span>
+        <span class="n">filter_pos</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;NN&quot;</span><span class="p">,</span> <span class="s2">&quot;NNP&quot;</span><span class="p">,</span> <span class="s2">&quot;JJ&quot;</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">tagged_words</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">pos_tag</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">exclude</span><span class="p">:</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">tagged_words</span> <span class="k">if</span> <span class="n">word</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">filter_pos</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">tagged_words</span> <span class="k">if</span> <span class="n">word</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">filter_pos</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">valid</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_fuzzy_ratio"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.get_fuzzy_ratio">[docs]</a><span class="k">def</span> <span class="nf">get_fuzzy_ratio</span><span class="p">(</span><span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares</span>
+<span class="sd">    to the overall length of the texts. Uses the `fuzzywuzzy` library in Python 2, and the `rapidfuzz` library in \</span>
+<span class="sd">    Python 3.</span>
+
+<span class="sd">    :param text1: First string</span>
+<span class="sd">    :type text1: str</span>
+<span class="sd">    :param text2: Second string</span>
+<span class="sd">    :type text1: str</span>
+<span class="sd">    :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)</span>
+<span class="sd">    :type throw_loud_fail: bool</span>
+<span class="sd">    :return: The Levenshtein ratio between the two strings</span>
+<span class="sd">    :rtype: float</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.text import get_fuzzy_ratio</span>
+
+<span class="sd">        text1 = &quot;This is a sentence.&quot;</span>
+<span class="sd">        text2 = &quot;This is a slightly difference sentence.&quot;</span>
+
+<span class="sd">        &gt;&gt;&gt; get_fuzzy_ratio(text1, text2)</span>
+<span class="sd">        64.28571428571428</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">fuzz</span><span class="o">.</span><span class="n">ratio</span><span class="p">(</span><span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">UnicodeDecodeError</span><span class="p">,</span> <span class="ne">UnicodeEncodeError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">fuzz</span><span class="o">.</span><span class="n">ratio</span><span class="p">(</span>
+            <span class="n">_decode_text</span><span class="p">(</span><span class="n">text1</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="p">),</span> <span class="n">_decode_text</span><span class="p">(</span><span class="n">text2</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_fuzzy_partial_ratio"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.get_fuzzy_partial_ratio">[docs]</a><span class="k">def</span> <span class="nf">get_fuzzy_partial_ratio</span><span class="p">(</span><span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Useful to calculate similarity of two strings that are of noticeably different lengths.  Allows for the possibility</span>
+<span class="sd">    that one text is a subset of the other; finds the largest overlap and computes the Levenshtein ratio on that.</span>
+
+<span class="sd">    :param text1: First string</span>
+<span class="sd">    :type text1: str</span>
+<span class="sd">    :param text2: Second string</span>
+<span class="sd">    :type text2: str</span>
+<span class="sd">    :param timeout: The number of seconds to wait before giving up</span>
+<span class="sd">    :type timeout: int</span>
+<span class="sd">    :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)</span>
+<span class="sd">    :type throw_loud_fail: bool</span>
+<span class="sd">    :return: The partial Levenshtein ratio between the two texts</span>
+<span class="sd">    :rtype: float</span>
+
+<span class="sd">    :accepts kwarg timeout:</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.text import get_partial_fuzzy_ratio</span>
+
+<span class="sd">        text1 = &quot;This is a sentence.&quot;</span>
+<span class="sd">        text2 = &quot;This is a sentence, but with more text.&quot;</span>
+
+<span class="sd">        &gt;&gt;&gt; get_partial_fuzzy_ratio(text1, text2)</span>
+<span class="sd">        100.0</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">partial_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="n">Timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">swallow_exc</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">partial_ratio</span> <span class="o">=</span> <span class="n">fuzz</span><span class="o">.</span><span class="n">partial_ratio</span><span class="p">(</span><span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">UnicodeDecodeError</span><span class="p">,</span> <span class="ne">UnicodeEncodeError</span><span class="p">):</span>
+            <span class="n">partial_ratio</span> <span class="o">=</span> <span class="n">fuzz</span><span class="o">.</span><span class="n">partial_ratio</span><span class="p">(</span>
+                <span class="n">_decode_text</span><span class="p">(</span><span class="n">text1</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="p">),</span>
+                <span class="n">_decode_text</span><span class="p">(</span><span class="n">text2</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">partial_ratio</span></div>
+
+
+<div class="viewcode-block" id="SentenceTokenizer"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.SentenceTokenizer">[docs]</a><span class="k">class</span> <span class="nc">SentenceTokenizer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initializes a tokenizer that can be be used to break text into tokens using the `tokenize` function</span>
+
+<span class="sd">    :param base_tokenizer: The tokenizer to use (default = NLTK&#39;s English Punkt tokenizer)</span>
+<span class="sd">    :param regex_split_trailing: A compiled regex object used to define the end of sentences</span>
+<span class="sd">    :param regex_split_leading: A compiled regex object used to define the beginning of sentences</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.text import SentenceTokenizer</span>
+<span class="sd">        import re</span>
+
+<span class="sd">        text = &quot;This is a sentence. This is another sentence - and maybe a third sentence. And yet a fourth sentence.&quot;</span>
+
+<span class="sd">        &gt;&gt;&gt; tokenizer = SentenceTokenizer()</span>
+<span class="sd">        &gt;&gt;&gt; tokenizer.tokenize(text)</span>
+<span class="sd">        [&#39;This is a sentence.&#39;,</span>
+<span class="sd">         &#39;This is another sentence - and maybe a third sentence.&#39;,</span>
+<span class="sd">         &#39;And yet a fourth sentence.&#39;]</span>
+
+<span class="sd">        &gt;&gt;&gt; tokenizer = SentenceTokenizer(regex_split_leading=re.compile(r&quot;\-&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; tokenizer.tokenize(text)</span>
+<span class="sd">        [&#39;This is a sentence.&#39;,</span>
+<span class="sd">         &#39;This is another sentence&#39;,</span>
+<span class="sd">         &#39;and maybe a third sentence.&#39;,</span>
+<span class="sd">         &#39;And yet a fourth sentence.&#39;]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">base_tokenizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">regex_split_trailing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">regex_split_leading</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_tokenizer</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">base_tokenizer</span>
+            <span class="k">if</span> <span class="n">base_tokenizer</span>
+            <span class="k">else</span> <span class="n">nltk</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;tokenizers/punkt/english.pickle&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regex_split_trailing</span> <span class="o">=</span> <span class="n">regex_split_trailing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regex_split_leading</span> <span class="o">=</span> <span class="n">regex_split_leading</span>
+
+<div class="viewcode-block" id="SentenceTokenizer.tokenize"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.SentenceTokenizer.tokenize">[docs]</a>    <span class="k">def</span> <span class="nf">tokenize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tokenizes the text.</span>
+
+<span class="sd">        :param text: The text to tokenize</span>
+<span class="sd">        :type text: str</span>
+<span class="sd">        :param throw_loud_fail: Whether or not to raise an error if text decoding fails (default=False)</span>
+<span class="sd">        :type throw_loud_fail: bool</span>
+<span class="sd">        :param min_length: The minimum acceptable length of a sentence (if a token is shorter than this, it will be \</span>
+<span class="sd">        considered part of the preceding sentence) (default=None)</span>
+<span class="sd">        :type min_length: int</span>
+<span class="sd">        :return: A list of sentences</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="n">_decode_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="p">)</span>
+
+        <span class="n">partial_tokens</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">token_group</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex_split_leading</span><span class="p">:</span>
+                <span class="n">partial_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">leaders</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex_split_leading</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                <span class="n">token_group</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">subt_lead</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex_split_leading</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">subt_lead</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                        <span class="n">token_group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subt_lead</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">leaders</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">subt_lead</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leaders</span><span class="p">:</span>
+                        <span class="n">partial_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">token_group</span><span class="p">))</span>
+                        <span class="n">token_group</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">partial_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">token_group</span> <span class="k">if</span> <span class="n">t</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">partial_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">token_group</span> <span class="k">if</span> <span class="n">t</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex_split_trailing</span><span class="p">:</span>
+            <span class="n">final_tokens</span> <span class="o">=</span> <span class="n">partial_tokens</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">final_tokens</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">token_group</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">partial_tokens</span><span class="p">:</span>
+                <span class="n">trailers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex_split_trailing</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                <span class="n">token_group</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">subt_trail</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex_split_trailing</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">subt_trail</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                        <span class="n">token_group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subt_trail</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">trailers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">subt_trail</span> <span class="ow">in</span> <span class="n">trailers</span><span class="p">:</span>
+                        <span class="n">final_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">token_group</span><span class="p">))</span>
+                        <span class="n">token_group</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">final_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">token_group</span> <span class="k">if</span> <span class="n">t</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">final_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">token_group</span> <span class="k">if</span> <span class="n">t</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]))</span>
+
+        <span class="n">final_tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">final_tokens</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">min_length</span><span class="p">:</span>
+            <span class="n">final_tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">final_tokens</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">min_length</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">final_tokens</span></div></div>
+
+
+<div class="viewcode-block" id="TextOverlapExtractor"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextOverlapExtractor">[docs]</a><span class="k">class</span> <span class="nc">TextOverlapExtractor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A helper class designed to identify overlapping sections between two strings.</span>
+
+<span class="sd">    :param tokenizer: The tokenizer to use (default = SentenceTokenizer())</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tokenizer</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">SentenceTokenizer</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
+
+<div class="viewcode-block" id="TextOverlapExtractor.get_text_overlaps"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextOverlapExtractor.get_text_overlaps">[docs]</a>    <span class="k">def</span> <span class="nf">get_text_overlaps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts all overlapping segments of at least `min_length` characters between the two texts. If `tokenize=True`</span>
+<span class="sd">        then only tokens that appear fully in both texts will be extracted. For example:</span>
+
+<span class="sd">        :param text1: A piece of text</span>
+<span class="sd">        :type text1: str</span>
+<span class="sd">        :param text2: Another piece of text to compare against the first</span>
+<span class="sd">        :type text2: str</span>
+<span class="sd">        :param min_length: The minimum size of the overlap to be considered (number of characters)</span>
+<span class="sd">        :type min_length: int</span>
+<span class="sd">        :param tokenize: If True, overlapping segments will only be included if they consist of atomic tokens; \</span>
+<span class="sd">        overlaps that consist of only part of a token will be excluded. By default, the text is tokenize into \</span>
+<span class="sd">        sentences based on punctuation. (default=True)</span>
+<span class="sd">        :type tokenize: bool</span>
+<span class="sd">        :return: A list of all of the identified overlapping segments</span>
+<span class="sd">        :rtype: list</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            from pewanalytics.text import TextOverlapExtractor</span>
+
+<span class="sd">            text1 = &quot;This is a sentence. This is another sentence. And a third sentence. And yet a fourth sentence.&quot;</span>
+<span class="sd">            text2 = &quot;This is a different sentence. This is another sentence. And a third sentence. But the fourth \</span>
+<span class="sd">            sentence is different too.&quot;</span>
+
+<span class="sd">            &gt;&gt;&gt; extractor = TextOverlapExtractor()</span>
+
+<span class="sd">            &gt;&gt;&gt; extractor.get_text_overlaps(text1, text2, min_length=10, tokenize=False)</span>
+<span class="sd">            [&#39; sentence. This is another sentence. And a third sentence. &#39;, &#39; fourth sentence&#39;]</span>
+
+<span class="sd">            &gt;&gt;&gt; extractor.get_text_overlaps(text1, text2, min_length=10, tokenize=True)</span>
+<span class="sd">            [&#39;This is another sentence.&#39;, &#39;And a third sentence.&#39;]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">valid_tokens</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">tokenize</span><span class="p">:</span>
+            <span class="n">valid_tokens</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="s2">&quot;. &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">]))</span>
+            <span class="p">]</span>
+        <span class="n">fragments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">SequenceMatcher</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">,</span> <span class="n">autojunk</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">get_matching_blocks</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;=</span> <span class="n">min_length</span><span class="p">:</span>
+                <span class="n">overlap</span> <span class="o">=</span> <span class="n">text1</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">a</span> <span class="p">:</span> <span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">a</span> <span class="o">+</span> <span class="n">block</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="n">tokenize</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span>
+                        <span class="n">overlap</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="n">min_length</span>
+                    <span class="p">):</span>
+                        <span class="n">token</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">valid_tokens</span> <span class="ow">or</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">valid_tokens</span><span class="p">:</span>
+                            <span class="n">fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">min_length</span><span class="p">:</span>
+                    <span class="n">fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fragments</span></div>
+
+<div class="viewcode-block" id="TextOverlapExtractor.get_largest_overlap"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextOverlapExtractor.get_largest_overlap">[docs]</a>    <span class="k">def</span> <span class="nf">get_largest_overlap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the largest overlapping segment of text between the two texts (this doesn&#39;t use the tokenizer).</span>
+
+<span class="sd">        :param text1: A piece of text</span>
+<span class="sd">        :type text1: str</span>
+<span class="sd">        :param text2: Another piece of text to compare against the first</span>
+<span class="sd">        :type text2: str</span>
+<span class="sd">        :return: The largest substring that occurs in both texts</span>
+<span class="sd">        :rtype: str</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            from pewanalytics.text import TextOverlapExtractor</span>
+
+<span class="sd">            text1 = &quot;Overlaping section, unique text another overlapping section&quot;</span>
+<span class="sd">            text2 = &quot;Overlapping section, another overlapping section&quot;</span>
+
+
+<span class="sd">            &gt;&gt;&gt; extractor = TextOverlapExtractor()</span>
+
+<span class="sd">            &gt;&gt;&gt; extractor.get_largest_overlap(text1, text2)</span>
+<span class="sd">            &#39; another overlapping section&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">SequenceMatcher</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">)</span>
+        <span class="n">pos_a</span><span class="p">,</span> <span class="n">pos_b</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">find_longest_match</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">text1</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">text2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">text1</span><span class="p">[</span><span class="n">pos_a</span> <span class="p">:</span> <span class="n">pos_a</span> <span class="o">+</span> <span class="n">size</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="TextCleaner"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextCleaner">[docs]</a><span class="k">class</span> <span class="nc">TextCleaner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for cleaning text up, in preparation for NLP, etc.  Attempts to decode the text.</span>
+
+<span class="sd">    This function performs for the following cleaning tasks, in sequence:</span>
+
+<span class="sd">        - Removes HTML tags (optional)</span>
+<span class="sd">        - Decodes the text</span>
+<span class="sd">        - Filters out specified parts of speech (optional)</span>
+<span class="sd">        - Converts text to lowercase (optional)</span>
+<span class="sd">        - Removes URLs (optional)</span>
+<span class="sd">        - Expands contractions</span>
+<span class="sd">        - Removes stopwords</span>
+<span class="sd">        - Lemmatizes or stems (optional)</span>
+<span class="sd">        - Removes words less than three characters</span>
+<span class="sd">        - Removes punctuation</span>
+<span class="sd">        - Consolidates whitespace</span>
+
+<span class="sd">    :param process_method: Options are &quot;lemmatize&quot;, &quot;stem&quot;, or None (default = &quot;lemmatize&quot;)</span>
+<span class="sd">    :type process_method: str</span>
+<span class="sd">    :param processor: A lemmatizer or stemmer with a &quot;lemmatize&quot; or &quot;stem&quot; function (default for \</span>
+<span class="sd">    process_method=&quot;lemmatize&quot; is nltk.WordNetLemmatizer(); default for process_method=&quot;stem&quot; is nltk.SnowballStemmer())</span>
+<span class="sd">    :param filter_pos: A list of WordNet parts-of-speech tags to keep; \</span>
+<span class="sd">    if provided, all other words will be removed (default = None)</span>
+<span class="sd">    :type filter_pos: list</span>
+<span class="sd">    :param lowercase: Whether or not to lowercase the string (default = True)</span>
+<span class="sd">    :type lowercase: bool</span>
+<span class="sd">    :param remove_urls: Whether or not to remove URLs and links from the text (default = True)</span>
+<span class="sd">    :type remove_urls: bool</span>
+<span class="sd">    :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them with. \</span>
+<span class="sd">    Anything passed here will be used in addition to a set of built-in replacement patterns for common contractions.</span>
+<span class="sd">    :param stopwords: The set of stopwords to remove (default = nltk.corpus.stopwords.words(&#39;english&#39;) combined with \</span>
+<span class="sd">    sklearn.feature_extraction.stop_words.ENGLISH_STOP_WORDS)</span>
+<span class="sd">    :type stopwords: set</span>
+<span class="sd">    :param strip_html: Whether or not to remove contents wrapped in HTML tags (default = False)</span>
+<span class="sd">    :type strip_html: bool</span>
+<span class="sd">    :param tokenizer: Tokenizer to use (default = nltk.WhitespaceTokenizer())</span>
+<span class="sd">    :type replacers: list</span>
+<span class="sd">    :param throw_loud_fail: bool; whether or not to raise an error if text decoding fails (default=False)</span>
+<span class="sd">    :type throw_loud_fail: bool</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.text import TextCleaner</span>
+
+<span class="sd">        text = &quot;&lt;body&gt; \</span>
+<span class="sd">            Here&#39;s some example text.&lt;/br&gt;It isn&#39;t a great example, but it&#39;ll do. \</span>
+<span class="sd">            Of course, there are plenty of other examples we could use though. \</span>
+<span class="sd">            http://example.com \</span>
+<span class="sd">            &lt;/body&gt;&quot;</span>
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; cleaner = TextCleaner(process_method=&quot;stem&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; cleaner.clean(text)</span>
+<span class="sd">        &#39;exampl is_not great exampl cours plenti exampl could use though&#39;</span>
+
+<span class="sd">        &gt;&gt;&gt; cleaner = TextCleaner(process_method=&quot;stem&quot;, stopwords=[&quot;my_custom_stopword&quot;], strip_html=True)</span>
+<span class="sd">        &gt;&gt;&gt; cleaner.clean(text)</span>
+<span class="sd">        &#39;here some exampl is_not great exampl but will cours there are plenti other exampl could use though&#39;</span>
+
+<span class="sd">        &gt;&gt;&gt; cleaner = TextCleaner(process_method=&quot;lemmatize&quot;, strip_html=True)</span>
+<span class="sd">        &gt;&gt;&gt; cleaner.clean(text)</span>
+<span class="sd">        &#39;example is_not great example course plenty example could use though&#39;</span>
+
+<span class="sd">        &gt;&gt;&gt; cleaner = TextCleaner(process_method=&quot;lemmatize&quot;, remove_urls=False, strip_html=True)</span>
+<span class="sd">        &gt;&gt;&gt; cleaner.clean(text)</span>
+<span class="sd">        &#39;example text is_not great example course plenty example could use though http example com&#39;</span>
+
+<span class="sd">        &gt;&gt;&gt; cleaner = TextCleaner(process_method=&quot;stem&quot;, strip_html=False)</span>
+<span class="sd">        &gt;&gt;&gt; cleaner.clean(text)</span>
+<span class="sd">        &#39;example text is_not great example course plenty example could use though http example com&#39;</span>
+
+<span class="sd">        &gt;&gt;&gt; cleaner = TextCleaner(process_method=&quot;stem&quot;, filter_pos=[&quot;JJ&quot;], strip_html=True)</span>
+<span class="sd">        &gt;&gt;&gt; cleaner.clean(text)</span>
+<span class="sd">        &#39;great though&#39;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">process_method</span><span class="o">=</span><span class="s2">&quot;lemmatize&quot;</span><span class="p">,</span>
+        <span class="n">processor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">filter_pos</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">lowercase</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">remove_urls</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">replacers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">stopwords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">strip_html</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">tokenizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">throw_loud_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span> <span class="k">if</span> <span class="n">tokenizer</span> <span class="k">else</span> <span class="n">nltk</span><span class="o">.</span><span class="n">WhitespaceTokenizer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replacers</span> <span class="o">=</span> <span class="n">replacers</span> <span class="k">if</span> <span class="n">replacers</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replacers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;won\&#39;t&quot;</span><span class="p">,</span> <span class="s2">&quot;will_not&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;can\&#39;t&quot;</span><span class="p">,</span> <span class="s2">&quot;cannot&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;i\&#39;m&quot;</span><span class="p">,</span> <span class="s2">&quot;i am&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;ain\&#39;t&quot;</span><span class="p">,</span> <span class="s2">&quot;is not&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\w+)\&#39;ll&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\g&lt;1&gt; will&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\w+)n\&#39;t&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\g&lt;1&gt;_not&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\w+)\&#39;ve&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\g&lt;1&gt; have&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\w+)\&#39;re&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\g&lt;1&gt; are&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\w+)\&#39;d&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\g&lt;1&gt; would&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;it\&#39;s&quot;</span><span class="p">,</span> <span class="s2">&quot;it is&quot;</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="p">)</span>  <span class="c1"># Borrowed from NLTK cookbook</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replacers</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b</span><span class="si">{}</span><span class="s2">\b&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">regex</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">regex</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">regex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacers</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">process_method</span> <span class="o">==</span> <span class="s2">&quot;lemmatize&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">processor</span> <span class="o">=</span> <span class="n">processor</span> <span class="k">if</span> <span class="n">processor</span> <span class="k">else</span> <span class="n">nltk</span><span class="o">.</span><span class="n">WordNetLemmatizer</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">lemmatize</span>
+        <span class="k">elif</span> <span class="n">process_method</span> <span class="o">==</span> <span class="s2">&quot;stem&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">processor</span> <span class="o">=</span> <span class="n">processor</span> <span class="k">if</span> <span class="n">processor</span> <span class="k">else</span> <span class="n">nltk</span><span class="o">.</span><span class="n">SnowballStemmer</span><span class="p">(</span><span class="s2">&quot;english&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">stem</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">processor</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_func</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">stopwords</span><span class="p">:</span>
+            <span class="n">stopwords</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
+                <span class="nb">set</span><span class="p">(</span><span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">&quot;english&quot;</span><span class="p">)),</span> <span class="nb">set</span><span class="p">(</span><span class="n">ENGLISH_STOP_WORDS</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopword_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s2">&quot;\b(</span><span class="si">{}</span><span class="s2">)\b&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stopwords</span> <span class="k">if</span> <span class="n">s</span><span class="p">])),</span>
+            <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">remove_urls</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">url_regex</span> <span class="o">=</span> <span class="n">URL_REGEX</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">url_regex</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter_pos</span> <span class="o">=</span> <span class="n">filter_pos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lowercase</span> <span class="o">=</span> <span class="n">lowercase</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_loud_fail</span> <span class="o">=</span> <span class="n">throw_loud_fail</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strip_html</span> <span class="o">=</span> <span class="n">strip_html</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\w*\d\w*&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TextCleaner.clean"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextCleaner.clean">[docs]</a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cleans the text.</span>
+
+<span class="sd">        :param text: The string to clean</span>
+<span class="sd">        :type text: str</span>
+<span class="sd">        :return: The cleaned string</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># try to remove any html tags in the string</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strip_html</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">strip_html</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># try to encode everything as utf-8</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">_decode_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_loud_fail</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_pos</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">filter_parts_of_speech</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_pos</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lowercase</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_regex</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">regex</span><span class="p">,</span> <span class="n">replace</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacers</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">replace</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>  <span class="c1"># expand contractions</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopword_regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\W+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>  <span class="c1"># remove punctuation</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># split on whitespace</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">process_func</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopword_regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\W+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span></div></div>
+
+
+<div class="viewcode-block" id="TextDataFrame"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame">[docs]</a><span class="k">class</span> <span class="nc">TextDataFrame</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a class full of functions for working with dataframes of documents. It contains utilities for identifying \</span>
+<span class="sd">    potential duplicates, identifying recurring segments of text, computing metrics like mutual information, \</span>
+<span class="sd">    extracting clusters of documents, and more.</span>
+
+<span class="sd">    Given a DataFrame and the name of the column that contains the text to be analyzed, the TextDataFrame will \</span>
+<span class="sd">    automatically produce a TF-IDF sparse matrix representation of the text upon initialization. All other \</span>
+<span class="sd">    parameters are passed along to the scikit-learn TfidfVectorizer.</span>
+
+<span class="sd">    .. tip:: For more info on the parameters it excepts, refer to the official scikit-learn `Tfidf vectorizer \</span>
+<span class="sd">    documentation \</span>
+<span class="sd">    &lt;https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html&gt;`_.</span>
+
+<span class="sd">    :param df: A dataframe of documents.  Must contain a column with text.</span>
+<span class="sd">    :param text_column: The name of the column in the dataframe that contains the text</span>
+<span class="sd">    :type text_column: str</span>
+<span class="sd">    :param vectorizer_kwargs: All remaining keyword arguments are passed to TfidfVectorizer</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.text import TextDataFrame</span>
+<span class="sd">        import pandas as pd</span>
+<span class="sd">        import nltk</span>
+
+<span class="sd">        nltk.download(&quot;inaugural&quot;)</span>
+<span class="sd">        df = pd.DataFrame([</span>
+<span class="sd">            {&quot;speech&quot;: fileid, &quot;text&quot;: nltk.corpus.inaugural.raw(fileid)} for fileid in nltk.corpus.inaugural.fileids()</span>
+<span class="sd">        ])</span>
+<span class="sd">        # Let&#39;s remove new line characters so we can print the output in the docstrings</span>
+<span class="sd">        df[&#39;text&#39;] = df[&#39;text&#39;].str.replace(&quot;\\n&quot;, &quot; &quot;)</span>
+
+<span class="sd">        # And now let&#39;s create some additional variables to group our data</span>
+<span class="sd">        df[&#39;year&#39;] = df[&#39;speech&#39;].map(lambda x: int(x.split(&quot;-&quot;)[0]))</span>
+<span class="sd">        df[&#39;21st_century&#39;] = df[&#39;year&#39;].map(lambda x: 1 if x &gt;= 2000 else 0)</span>
+
+<span class="sd">        # And we&#39;ll also create some artificial duplicates in the dataset</span>
+<span class="sd">        df = df.append(df.tail(2)).reset_index()</span>
+
+<span class="sd">        &gt;&gt;&gt; tdf = TextDataFrame(df, &quot;text&quot;, stop_words=&quot;english&quot;, ngram_range=(1, 2))</span>
+<span class="sd">        &gt;&gt;&gt; tdf_dense = pd.DataFrame(tdf.tfidf.todense(), columns=tdf.vectorizer.get_feature_names()).head(5)</span>
+<span class="sd">        &gt;&gt;&gt; tdf_dense.loc[:, (tdf_dense != 0).any(axis=0)]</span>
+<span class="sd">        	    14th	14th day	 abandon  abandon government... zeal inspires	zeal purity	zeal rely	zeal wisdom</span>
+<span class="sd">        0	0.034014	0.034014	0.000000	       0.000000	...      0.000000	   0.000000	 0.000000	   0.000000</span>
+<span class="sd">        1	0.000000	0.000000	0.000000	       0.000000	...      0.000000	   0.000000	 0.000000	   0.000000</span>
+<span class="sd">        2	0.000000	0.000000	0.000000	       0.000000	...      0.000000	   0.000000	 0.000000	   0.000000</span>
+<span class="sd">        3	0.000000	0.000000	0.020984	       0.030686	...      0.000000	   0.000000	 0.030686	   0.000000</span>
+<span class="sd">        4	0.000000	0.000000	0.000000	       0.000000	...      0.026539	   0.026539	 0.000000	   0.026539</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">text_column</span><span class="p">,</span> <span class="o">**</span><span class="n">vectorizer_kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span> <span class="o">=</span> <span class="n">df</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_column</span> <span class="o">=</span> <span class="n">text_column</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">decode_error</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">vectorizer_kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tfidf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">text_column</span><span class="p">])</span>
+
+<div class="viewcode-block" id="TextDataFrame.search_corpus"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.search_corpus">[docs]</a>    <span class="k">def</span> <span class="nf">search_corpus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compares the provided text against the documents in the corpus and returns the most similar documents. \</span>
+<span class="sd">        A new column called &#39;cosine_similarity&#39; is generated, which is used to sort and return the dataframe.</span>
+
+<span class="sd">        :param text: The text to compare documents against</span>
+<span class="sd">        :type text: str</span>
+<span class="sd">        :return: The corpus dataframe sorted by cosine similarity</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; tdf.search_corpus(&#39;upright zeal&#39;)[:5]</span>
+<span class="sd">                                                            text	search_cosine_similarity</span>
+<span class="sd">            4	Proceeding, fellow citizens, to that qualifica...	0.030856</span>
+<span class="sd">            8	Fellow citizens, I shall not attempt to descri...	0.025041</span>
+<span class="sd">            9	In compliance with an usage coeval with the ex...	0.024922</span>
+<span class="sd">            27	Fellow citizens, In obedience to the will of t...	0.021272</span>
+<span class="sd">            10	Fellow citizens, about to undertake the arduou...	0.014791</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">similarities</span> <span class="o">=</span> <span class="n">cosine_similarity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">text</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">tfidf</span><span class="p">)</span>
+        <span class="n">corpus</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">]])</span>
+        <span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;search_cosine_similarity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">similarities</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">corpus</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;search_cosine_similarity&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.match_text_to_corpus"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus">[docs]</a>    <span class="k">def</span> <span class="nf">match_text_to_corpus</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">match_list</span><span class="p">,</span> <span class="n">allow_multiple</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_similarity</span><span class="o">=</span><span class="mf">0.9</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes a list of text values and attempts to match them to the documents in the DataFrame. Each document will</span>
+<span class="sd">        be matched to the value in the list to which it is most similar, based on cosine similarity.</span>
+
+<span class="sd">        :param match_list: A list of strings (other documents) to be matched to documents in the dataframe</span>
+<span class="sd">        :type match_list: str</span>
+<span class="sd">        :param allow_multiple: If set to True, each document in your corpus will be matched with its closes valid \</span>
+<span class="sd">        match in the list. If set to False (default), documents in the list will only be matched to their best match \</span>
+<span class="sd">        in the corpus.</span>
+<span class="sd">        :type allow_multiple: bool</span>
+<span class="sd">        :param min_similarity: Minimum cosine similarity required for any match to be made.</span>
+<span class="sd">        :type min_similarity: float</span>
+<span class="sd">        :return: Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; match_df = tdf.match_text_to_corpus(test_excerpt, min_similarity=0.05)</span>
+<span class="sd">            &gt;&gt;&gt; match_df.sort_values(&#39;cosine_similarity&#39;)[:2]</span>
+<span class="sd">                                                             text	                                       match_text	match_index	cosine_similarity</span>
+<span class="sd">            48	Senator Hatfield, Mr. Chief Justice, Mr. Presi...	In this present crisis, government is not the ...	1	        0.0699283</span>
+<span class="sd">            43	Vice President Johnson, Mr. Speaker, Mr. Chief...	And so, my fellow Americans: ask not what your...	0	        0.166681</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">similarities</span> <span class="o">=</span> <span class="n">cosine_similarity</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tfidf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">match_list</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">corpus</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">]])</span>
+        <span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;match_text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;match_index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;cosine_similarity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">corpus</span><span class="o">.</span><span class="n">iterrows</span><span class="p">(),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Matching items to corpus&quot;</span><span class="p">):</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">is_null</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;match_index&quot;</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sim</span> <span class="ow">in</span> <span class="p">[</span>
+                    <span class="n">s</span>
+                    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+                        <span class="nb">zip</span><span class="p">(</span>
+                            <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">match_list</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span>
+                            <span class="n">similarities</span><span class="p">[</span><span class="n">corpus</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="n">index</span><span class="p">)],</span>
+                        <span class="p">),</span>
+                        <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                        <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_similarity</span>
+                <span class="p">]:</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="ow">not</span> <span class="n">allow_multiple</span>
+                        <span class="ow">and</span> <span class="n">i</span>
+                        <span class="ow">in</span> <span class="n">corpus</span><span class="p">[</span><span class="o">~</span><span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;match_index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()][</span>
+                            <span class="s2">&quot;match_index&quot;</span>
+                        <span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+                    <span class="p">):</span>
+                        <span class="n">current_best</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;match_index&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">][</span>
+                            <span class="s2">&quot;cosine_similarity&quot;</span>
+                        <span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">sim</span> <span class="o">&gt;=</span> <span class="n">current_best</span><span class="p">:</span>
+                            <span class="n">corpus</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;match_index&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;match_text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                            <span class="n">corpus</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                                <span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;match_index&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;cosine_similarity&quot;</span>
+                            <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                            <span class="n">corpus</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;match_index&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;match_index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">match</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                        <span class="n">corpus</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                            <span class="n">corpus</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">],</span>
+                            <span class="s2">&quot;match_index&quot;</span><span class="p">,</span>
+                        <span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+                        <span class="n">corpus</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                            <span class="n">corpus</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">],</span>
+                            <span class="s2">&quot;match_text&quot;</span><span class="p">,</span>
+                        <span class="p">]</span> <span class="o">=</span> <span class="n">match_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                        <span class="n">corpus</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                            <span class="n">corpus</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">],</span>
+                            <span class="s2">&quot;cosine_similarity&quot;</span><span class="p">,</span>
+                        <span class="p">]</span> <span class="o">=</span> <span class="n">sim</span>
+                        <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">corpus</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.extract_corpus_fragments"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.extract_corpus_fragments">[docs]</a>    <span class="k">def</span> <span class="nf">extract_corpus_fragments</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">scan_top_n_matches_per_doc</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">min_fragment_length</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+        <span class="n">tokenize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">tokenizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus</span>
+<span class="sd">        using TF-IDF cosine similarity. During each comparison, overlapping fragments are identified.  This can be</span>
+<span class="sd">        useful for identifying common boilerplate sentences, repeated paragraphs, etc. By default, the text is</span>
+<span class="sd">        tokenized into complete sentences (so only complete sentences that recur will be returned), but you can set</span>
+<span class="sd">        `tokenize=False` to get raw segments of text that occur multiple times.</span>
+
+<span class="sd">        :param scan_top_n_matches_per_doc: The number of other documents to compare each document against.</span>
+<span class="sd">        :type scan_top_n_matches_per_doc: int</span>
+<span class="sd">        :param min_fragment_length: The minimum character length a fragment must have to be extracted.</span>
+<span class="sd">        :type min_fragment_length: int</span>
+<span class="sd">        :param tokenize: If True, overlapping segments will only be included if they consist of atomic tokens; \</span>
+<span class="sd">        overlaps that consist of only part of a token will be excluded. Uses sentence tokenization by default. \</span>
+<span class="sd">        (default=True)</span>
+<span class="sd">        :type tokenize: bool</span>
+<span class="sd">        :param tokenizer: The tokenizer to use, if tokenizing isn&#39;t disabled (default = SentenceTokenizer())</span>
+<span class="sd">        :type tokenizer: object</span>
+<span class="sd">        :return: A list of fragments that were found.</span>
+
+<span class="sd">        .. note:: This function will skip over duplicates if they exist in your data; it only compares documents</span>
+<span class="sd">            that have less than .997 cosine similarity.</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; tdf.extract_corpus_fragments(scan_top_n_matches_per_doc=20, min_fragment_length=25, tokenize=False)</span>
+<span class="sd">            [&#39;s. Equal and exact justice &#39;,</span>
+<span class="sd">             &#39;d by the General Government&#39;,</span>
+<span class="sd">             &#39; of the American people, &#39;,</span>
+<span class="sd">             &#39;ent of the United States &#39;,</span>
+<span class="sd">             &#39; the office of President of the United States &#39;,</span>
+<span class="sd">             &#39; preserve, protect, and defend the Constitution of the United States.&quot;  &#39;,</span>
+<span class="sd">             &#39; to &quot;preserve, protect, and defend&#39;,</span>
+<span class="sd">             &#39; of the United States are &#39;,</span>
+<span class="sd">             &#39;e of my countrymen I am about to &#39;,</span>
+<span class="sd">             &#39;Vice President, Mr. Chief Justice, &#39;,</span>
+<span class="sd">             &#39; 200th anniversary as a nation&#39;,</span>
+<span class="sd">             &#39;, and my fellow citizens: &#39;,</span>
+<span class="sd">             &#39;e United States of America&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">text_overlap_extractor</span> <span class="o">=</span> <span class="n">TextOverlapExtractor</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">)</span>
+
+        <span class="n">similarity_matrix</span> <span class="o">=</span> <span class="n">cosine_similarity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tfidf</span><span class="p">)</span>
+        <span class="n">min_similarity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">similarity_matrix</span><span class="p">])</span>
+
+        <span class="n">combos</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">index</span><span class="p">)):</span>
+            <span class="n">combos</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">cos_similarity</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">cos_similarity</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+                        <span class="nb">zip</span><span class="p">(</span>
+                            <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">index</span><span class="p">))),</span>
+                            <span class="n">similarity_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:],</span>
+                        <span class="p">),</span>
+                        <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">min_similarity</span> <span class="o">&lt;=</span> <span class="n">cos_similarity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.997</span>
+                <span class="p">][:</span><span class="n">scan_top_n_matches_per_doc</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="n">fragments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cos_similarity</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">combos</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Extracting fragments&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">text_overlap_extractor</span><span class="o">.</span><span class="n">get_text_overlaps</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">cos_similarity</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">],</span>
+                <span class="n">min_length</span><span class="o">=</span><span class="n">min_fragment_length</span><span class="p">,</span>
+                <span class="n">tokenize</span><span class="o">=</span><span class="n">tokenize</span><span class="p">,</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="n">frag</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fragments</span><span class="p">:</span>
+                    <span class="n">fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fragments</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.find_duplicates"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.find_duplicates">[docs]</a>    <span class="k">def</span> <span class="nf">find_duplicates</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tfidf_threshold</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+        <span class="n">fuzzy_ratio_threshold</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+        <span class="n">allow_partial</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">max_partial_difference</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+        <span class="n">filter_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">partial_ratio_timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">decode_text</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search for duplicates by using cosine similarity and Levenshtein ratios.  This will struggle with large</span>
+<span class="sd">        corpora, so we recommend trying to filter down to potential duplicates first.  The corpus will first be</span>
+<span class="sd">        scanned for document pairs with a cosine similarity greater or equal to the `tfidf_threshold`.  Then,</span>
+<span class="sd">        each of these pairs will be compared using the more stringent `fuzzy_ratio_threshold`.</span>
+
+<span class="sd">        :param tfidf_threshold: Minimum cosine similarity for two documents to be considered potential dupes.</span>
+<span class="sd">        :type tfidf_threshold: float</span>
+<span class="sd">        :param fuzzy_ratio_threshold: The required Levenshtein ratio to consider two documents duplicates.</span>
+<span class="sd">        :type fuzzy_ratio_threshold: int</span>
+<span class="sd">        :param allow_partial: Whether or not to allow a partial ratio (if False, absolute ratios will be used)</span>
+<span class="sd">        :type allow_partial: bool</span>
+<span class="sd">        :param max_partial_diff: The maximum partial ratio difference allowed for a potential duplicate pair</span>
+<span class="sd">        :type max_partial_diff: int</span>
+<span class="sd">        :param filter_function: An optional function that allows for more complex filtering. The function must accept \</span>
+<span class="sd">        the following parameters: text1, text2, cosine_similarity, fuzzy_ratio.  Must return True or False, \</span>
+<span class="sd">        indicating whether the two documents should be considered duplicates.</span>
+<span class="sd">        :param partial_ratio_timeout: How long, in seconds, that the partial ratio is allowed to compute</span>
+<span class="sd">        :type partial_ratio_timeout: int</span>
+<span class="sd">        :param decode_text: Whether to decode the text prior to making comparisons</span>
+<span class="sd">        :type decode_text: bool</span>
+<span class="sd">        :return: A list of lists, containing groups of duplicate documents (represented as rows from the corpus \</span>
+<span class="sd">        dataframe)</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; tdf.find_duplicates()</span>
+<span class="sd">            [           speech                                               text  year</span>
+<span class="sd">            56  2013-Obama.txt  Thank you. Thank you so much.    Vice Presiden...  2013</span>
+<span class="sd">            56  2013-Obama.txt  Thank you. Thank you so much.    Vice Presiden...  2013</span>
+
+<span class="sd">                21st_century</span>
+<span class="sd">            56             1</span>
+<span class="sd">            56             1  ,</span>
+<span class="sd">                        speech                                               text  year</span>
+<span class="sd">            57  2017-Trump.txt  Chief Justice Roberts, President Carter, Presi...  2017</span>
+<span class="sd">            57  2017-Trump.txt  Chief Justice Roberts, President Carter, Presi...  2017</span>
+
+<span class="sd">                21st_century</span>
+<span class="sd">            57             1</span>
+<span class="sd">            57             1  ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">decode_text</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_decode_text</span><span class="p">)</span>
+
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># compute cosine similarity between the inputs in tf.idf matrix</span>
+        <span class="n">similarity_matrix</span> <span class="o">=</span> <span class="n">cosine_similarity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tfidf</span><span class="p">)</span>
+        <span class="n">threshold_filter_matrix</span> <span class="o">=</span> <span class="n">similarity_matrix</span> <span class="o">&gt;=</span> <span class="n">tfidf_threshold</span>
+
+        <span class="c1"># return the  location of the similarity matrix that satisfies the threshold</span>
+        <span class="n">similarity_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">threshold_filter_matrix</span><span class="p">,</span> <span class="n">similarity_matrix</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># create pairs in the similarity matrix</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">similarity_matrix</span><span class="p">)</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">similarity_matrix</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pairs</span> <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Scanning pairs&quot;</span><span class="p">):</span>
+            <span class="n">sim</span> <span class="o">=</span> <span class="n">similarity_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="n">get_fuzzy_ratio</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">text</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">ratio</span> <span class="o">&lt;</span> <span class="n">fuzzy_ratio_threshold</span> <span class="ow">and</span> <span class="n">allow_partial</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">partial_ratio</span> <span class="o">=</span> <span class="n">get_fuzzy_partial_ratio</span><span class="p">(</span>
+                        <span class="n">text</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">text</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">timeout</span><span class="o">=</span><span class="n">partial_ratio_timeout</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">MemoryError</span><span class="p">,</span> <span class="n">TimeoutException</span><span class="p">):</span>
+                    <span class="n">partial_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                    <span class="n">partial_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">partial_ratio</span>
+                    <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ratio</span> <span class="o">-</span> <span class="n">partial_ratio</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_partial_difference</span>
+                <span class="p">):</span>
+                    <span class="n">ratio</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">ratio</span><span class="p">,</span> <span class="n">partial_ratio</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">ratio</span> <span class="o">&gt;=</span> <span class="n">fuzzy_ratio_threshold</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="ow">not</span> <span class="n">filter_function</span>
+                <span class="ow">or</span> <span class="n">filter_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">sim</span><span class="p">,</span> <span class="n">ratio</span><span class="p">)</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="ow">and</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                    <span class="n">new_group</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
+                    <span class="n">groups</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_group</span>
+                    <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_group</span>
+                <span class="k">elif</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="ow">and</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                    <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">groups</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="ow">and</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                    <span class="n">groups</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">groups</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                    <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="n">duplicates</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">final_groups</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">g</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">final_groups</span><span class="p">:</span>
+                <span class="n">final_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+                <span class="n">duplicates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">g</span><span class="p">)])</span>
+
+        <span class="k">return</span> <span class="n">duplicates</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.find_related_keywords"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.find_related_keywords">[docs]</a>    <span class="k">def</span> <span class="nf">find_related_keywords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a particular keyword, looks for related terms in the corpus using mutual information.</span>
+
+<span class="sd">        :param keyword: The keyword to use</span>
+<span class="sd">        :type keyword: str</span>
+<span class="sd">        :param n: Number of related terms to return</span>
+<span class="sd">        :type n: int</span>
+<span class="sd">        :return: Terms associated with the keyword</span>
+<span class="sd">        :rtype: list</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; tdf.find_related_keywords(&quot;war&quot;)[:2]</span>
+<span class="sd">            [&#39;war&#39;, &#39;peace&#39;]</span>
+
+<span class="sd">            &gt;&gt;&gt; tdf.find_related_keywords(&quot;economy&quot;)[:2]</span>
+<span class="sd">            [&#39;economy&#39;, &#39;expenditures&#39;]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;temp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">]</span>
+            <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b</span><span class="si">{}</span><span class="s2">\b&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">keyword</span><span class="p">),</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">mi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutual_info</span><span class="p">(</span><span class="s2">&quot;temp&quot;</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;temp&quot;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">mi</span><span class="p">[</span><span class="n">mi</span><span class="p">[</span><span class="s2">&quot;MI1&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;MI1&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.mutual_info"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.mutual_info">[docs]</a>    <span class="k">def</span> <span class="nf">mutual_info</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">outcome_col</span><span class="p">,</span> <span class="n">weight_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A wrapper around `pewanalytics.stats.mutual_info.compute_mutual_info`</span>
+
+<span class="sd">        :param outcome_col: The name of the column with the binary outcome variable</span>
+<span class="sd">        :type outcome_col: str</span>
+<span class="sd">        :param weight_col: (Optional) Name of the column to use in weighting</span>
+<span class="sd">        :type weight_col: str</span>
+<span class="sd">        :param sample_size: (Optional) If provided, a random sample of this size will be used instead of the full \</span>
+<span class="sd">        dataframe</span>
+<span class="sd">        :type sample_size: int</span>
+<span class="sd">        :param l: An optional Laplace smoothing parameter</span>
+<span class="sd">        :type l: float</span>
+<span class="sd">        :param normalize: Toggle normalization on or off (to control for feature prevalence), on by default</span>
+<span class="sd">        :type normalize: bool</span>
+<span class="sd">        :return: A DataFrame of ngrams and various metrics about them, including mutual information</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; results = tdf.mutual_info(&#39;21st_century&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; results.sort_values(&quot;MI1&quot;, ascending=False).index[:25]</span>
+<span class="sd">            Index([&#39;journey complete&#39;, &#39;jobs&#39;, &#39;make america&#39;, &#39;ve&#39;, &#39;obama&#39;, &#39;workers&#39;,</span>
+<span class="sd">                   &#39;xand&#39;, &#39;states america&#39;, &#39;america best&#39;, &#39;debates&#39;, &#39;clinton&#39;,</span>
+<span class="sd">                   &#39;president clinton&#39;, &#39;trillions&#39;, &#39;stops right&#39;, &#39;transferring&#39;,</span>
+<span class="sd">                   &#39;president obama&#39;, &#39;stops&#39;, &#39;protected protected&#39;, &#39;transferring power&#39;,</span>
+<span class="sd">                   &#39;nation capital&#39;, &#39;american workers&#39;, &#39;politicians&#39;, &#39;people believe&#39;,</span>
+<span class="sd">                   &#39;borders&#39;, &#39;victories&#39;],</span>
+<span class="sd">                   dtype=&#39;object&#39;)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">keep_columns</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">,</span> <span class="n">outcome_col</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">weight_col</span><span class="p">:</span>
+            <span class="n">keep_columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weight_col</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="n">keep_columns</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">sample_size</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">sample_size</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">weight_col</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">,</span> <span class="n">outcome_col</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">outcome_col</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">])</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">weight_col</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">weight_col</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">compute_mutual_info</span><span class="p">(</span>
+            <span class="n">y</span><span class="p">,</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span>
+            <span class="n">col_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">(),</span>
+            <span class="n">l</span><span class="o">=</span><span class="n">l</span><span class="p">,</span>
+            <span class="n">normalize</span><span class="o">=</span><span class="n">normalize</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.kmeans_clusters"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.kmeans_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">kmeans_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A wrapper around `pewanalytics.stats.clustering.compute_kmeans_clusters`. Will compute clusters of documents.</span>
+<span class="sd">        The resulting cluster IDs for each document are saved in the TextDataFrame&#39;s `corpus` in a new column called</span>
+<span class="sd">        &quot;kmeans&quot;.</span>
+
+<span class="sd">        :param k: The number of clusters to extract</span>
+<span class="sd">        :type k: int</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; tdf.kmeans_clusters(5)</span>
+<span class="sd">            KMeans: n_clusters 5, score is 0.019735248210503934</span>
+<span class="sd">            KMeans clusters saved to self.corpus[&#39;kmeans&#39;]</span>
+
+<span class="sd">            &gt;&gt;&gt; df[&#39;kmeans&#39;].value_counts()</span>
+<span class="sd">            2    26</span>
+<span class="sd">            3    15</span>
+<span class="sd">            4    11</span>
+<span class="sd">            0     5</span>
+<span class="sd">            1     3</span>
+<span class="sd">            Name: kmeans, dtype: int64</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;kmeans&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_kmeans_clusters</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tfidf</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">return_score</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KMeans clusters saved to self.corpus[&#39;kmeans&#39;]&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.hdbscan_clusters"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">hdbscan_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A wrapper around `pewanalytics.stats.clustering.compute_hdbscan_clusters`. Will compute clusters of documents.</span>
+<span class="sd">        The resulting cluster IDs for each document are saved in the TextDataFrame&#39;s `corpus` in a new column called</span>
+<span class="sd">        &quot;hdbscan&quot;.</span>
+
+<span class="sd">        :param min_cluster_size: The minimum number of documents that a cluster must contain.</span>
+<span class="sd">        :type min_cluster_size: int</span>
+<span class="sd">        :param min_samples: An HDBSCAN parameter; refer to the documentation for more information</span>
+<span class="sd">        :type min_samples: int</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; tdf.hdbscan_clusters(min_cluster_size=10)</span>
+<span class="sd">            HDBSCAN: n_clusters 2</span>
+<span class="sd">            HDBSCAN clusters saved to self.corpus[&#39;hdbscan&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;hdbscan&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_hdbscan_clusters</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tfidf</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="o">=</span><span class="n">min_cluster_size</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="n">min_samples</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HDBSCAN clusters saved to self.corpus[&#39;hdbscan&#39;]&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.top_cluster_terms"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.top_cluster_terms">[docs]</a>    <span class="k">def</span> <span class="nf">top_cluster_terms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster_col</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts the top terms for each cluster, based on a column of cluster IDs saved to `self.corpus`, using</span>
+<span class="sd">        mutual information. Returns the `top_n` terms for each cluster.</span>
+
+<span class="sd">        :param cluster_col: The name of the column that contains the document cluster IDs</span>
+<span class="sd">        :type cluster_col: str</span>
+<span class="sd">        :param min_size: Ignore clusters that have fewer than this number of documents</span>
+<span class="sd">        :type min_size: int</span>
+<span class="sd">        :param top_n: The number of top terms to identify for each cluster</span>
+<span class="sd">        :type top_n: int</span>
+<span class="sd">        :return: A dictionary; keys are the cluster IDs and values are the top terms for the cluster</span>
+<span class="sd">        :rtype: dict</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; df_top_cluster = tdf.top_cluster_terms(&#39;kmeans&#39;, min_size=10)</span>
+<span class="sd">            Cluster #2, 26 documents: [&#39;constitution&#39; &#39;union&#39; &#39;states&#39; &#39;friendly&#39; &#39;liberal&#39; &#39;revenue&#39;</span>
+<span class="sd">             &#39;general government&#39; &#39;confederacy&#39; &#39;whilst&#39; &#39;authorities&#39;]</span>
+<span class="sd">            Cluster #4, 10 documents: [&#39;shall strive&#39; &#39;let sides&#39; &#39;woe&#39; &#39;offenses&#39; &#39;breeze&#39; &#39;war let&#39;</span>
+<span class="sd">             &#39;nuclear weapons&#39; &#39;learned live&#39; &#39;mistakes&#39; &#39;mr speaker&#39;]</span>
+<span class="sd">            Cluster #0, 12 documents: [&#39;activities&#39; &#39;realization&#39; &#39;interstate&#39; &#39;wished&#39; &#39;industrial&#39; &#39;major&#39;</span>
+<span class="sd">             &#39;counsel action&#39; &#39;conditions&#39; &#39;natural resources&#39; &#39;eighteenth amendment&#39;]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dummies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="n">cluster_col</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="n">cluster_col</span><span class="p">)</span>
+        <span class="n">cluster_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">,</span> <span class="n">dummies</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">terms</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">cluster_df</span><span class="p">[</span><span class="n">cluster_col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">is_not_null</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster_df</span><span class="p">[</span><span class="n">cluster_df</span><span class="p">[</span><span class="n">cluster_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">cluster</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">min_size</span>
+            <span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cluster_col</span><span class="p">,</span> <span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> <span class="n">cluster_df</span><span class="p">[</span>
+                    <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cluster_col</span><span class="p">,</span> <span class="n">cluster</span><span class="p">)</span>
+                <span class="p">]</span>
+                <span class="n">minfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutual_info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cluster_col</span><span class="p">,</span> <span class="n">cluster</span><span class="p">))</span>
+                <span class="n">minfo</span> <span class="o">=</span> <span class="n">minfo</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;MI1&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="n">top_n</span><span class="p">]</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cluster_col</span><span class="p">,</span> <span class="n">cluster</span><span class="p">)]</span>
+                <span class="n">minfo</span> <span class="o">=</span> <span class="n">minfo</span><span class="p">[</span><span class="n">minfo</span><span class="p">[</span><span class="s2">&quot;MI1&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;MI1&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span>
+                    <span class="p">:</span><span class="n">top_n</span>
+                <span class="p">]</span>
+                <span class="n">terms</span><span class="p">[</span><span class="n">cluster</span><span class="p">]</span> <span class="o">=</span> <span class="n">minfo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Cluster #</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2"> documents: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">cluster</span><span class="p">,</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="n">cluster_df</span><span class="p">[</span><span class="n">cluster_df</span><span class="p">[</span><span class="n">cluster_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">cluster</span><span class="p">]),</span>
+                        <span class="n">minfo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">terms</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.pca_components"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.pca_components">[docs]</a>    <span class="k">def</span> <span class="nf">pca_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A wrapper around `pewanalytics.stats.dimensionality_reduction.get_pca`.</span>
+<span class="sd">        Saves the PCA components to self.corpus as new columns (&#39;pca_1&#39;, &#39;pca_2&#39;, etc.),</span>
+<span class="sd">        saves the top component for each document as self.corpus[&#39;pca&#39;], and returns</span>
+<span class="sd">        the features-component matrix.</span>
+
+<span class="sd">        :param k: Number of dimensions to extract</span>
+<span class="sd">        :type k: int</span>
+<span class="sd">        :return: A dataframe of (features x components)</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; df_pca = tdf.pca_components(2)</span>
+<span class="sd">            Decomposition explained variance ratio: 0.07488529151231405</span>
+<span class="sd">            Component 0: [&#39;america&#39; &#39;today&#39; &#39;americans&#39; &#39;world&#39; &#39;new&#39; &#39;freedom&#39; &#39;thank&#39; &#39;nation&#39;</span>
+<span class="sd">             &#39;god&#39; &#39;journey&#39;]</span>
+<span class="sd">            Component 1: [&#39;america&#39; &#39;make america&#39; &#39;dreams&#39; &#39;protected&#39; &#39;obama&#39; &#39;borders&#39;</span>
+<span class="sd">             &#39;factories&#39; &#39;american&#39; &#39;transferring&#39; &#39;stops&#39;]</span>
+<span class="sd">            Top PCA dimensions saved as clusters to self.corpus[&#39;pca&#39;]</span>
+
+<span class="sd">            &gt;&gt;&gt; df.sample(5)</span>
+<span class="sd">            	             speech	                                             text	year	21st_century	    pca_0      pca_1	  pca</span>
+<span class="sd">            0	1789-Washington.txt	Fellow-Citizens of the Senate and of the House...	1789	0	            -0.129094	0.016984	pca_1</span>
+<span class="sd">            21	1873-Grant.txt      Fellow-Citizens: Under Providence I have been ...	1873	0	            -0.097430	0.009559	pca_1</span>
+<span class="sd">            49	1985-Reagan.txt  	Senator Mathias, Chief Justice Burger, Vice Pr...	1985	0	            0.163833	-0.020259	pca_0</span>
+<span class="sd">            2	1797-Adams.txt    	When it was first perceived, in early times, t...	1797	0	            -0.140250	0.024844	pca_1</span>
+<span class="sd">            20	1869-Grant.txt   	Citizens of the United States:    Your suffrag...	1869	0	            -0.114444	0.014419	pca_1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;pca_&quot;</span><span class="p">):</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+        <span class="n">components</span><span class="p">,</span> <span class="n">documents</span> <span class="o">=</span> <span class="n">get_pca</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tfidf</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">(),</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">documents</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">documents</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Top PCA dimensions saved as clusters to self.corpus[&#39;pca_&#39;] columns&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">components</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.lsa_components"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.lsa_components">[docs]</a>    <span class="k">def</span> <span class="nf">lsa_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A wrapper around `pewanalytics.stats.dimensionality_reduction.get_lsa`.</span>
+<span class="sd">        Saves the LSA components to self.corpus as new columns (&#39;lsa_1&#39;, &#39;lsa_2&#39;, etc.),</span>
+<span class="sd">        saves the top component for each document as self.corpus[&#39;lsa&#39;], and returns</span>
+<span class="sd">        the features-component matrix</span>
+
+<span class="sd">        :param k: Number of dimensions to extract</span>
+<span class="sd">        :type k: int</span>
+<span class="sd">        :return: A dataframe of (features x components)</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; df_lsa = tdf.lsa_components(2)</span>
+<span class="sd">            Decomposition explained variance ratio: 0.04722850124656694</span>
+<span class="sd">            Top features:</span>
+<span class="sd">            Component 0: [&#39;government&#39; &#39;people&#39; &#39;america&#39; &#39;states&#39; &#39;world&#39; &#39;nation&#39; &#39;shall&#39;</span>
+<span class="sd">             &#39;country&#39; &#39;great&#39; &#39;peace&#39;]</span>
+<span class="sd">            Component 1: [&#39;america&#39; &#39;today&#39; &#39;americans&#39; &#39;world&#39; &#39;new&#39; &#39;freedom&#39; &#39;thank&#39; &#39;nation&#39;</span>
+<span class="sd">             &#39;god&#39; &#39;journey&#39;]</span>
+<span class="sd">            Top LSA dimensions saved as clusters to self.corpus[&#39;lsa_&#39;] columns</span>
+
+<span class="sd">            &gt;&gt;&gt; df.sample(5)</span>
+<span class="sd">            	            speech                                                 text    year	21st_century	lsa_0	   lsa_1	  lsa</span>
+<span class="sd">            37	1937-Roosevelt.txt    When four years ago we met to inaugurate a Pre...    1937	           0 0.293068	0.040802	lsa_0</span>
+<span class="sd">            8	1821-Monroe.txt       Fellow citizens, I shall not attempt to descri...    1821	           0 0.348465	-0.212382	lsa_0</span>
+<span class="sd">            7	1817-Monroe.txt       I should be destitute of feeling if I was not ...    1817	           0 0.369249	-0.237231	lsa_0</span>
+<span class="sd">            26	1893-Cleveland.txt    My Fellow citizens, in obedience of the mandat...    1893	           0 0.275778	-0.128497	lsa_0</span>
+<span class="sd">            59	2017-Trump.txt        Chief Justice Roberts, President Carter, Presi...    2017	           1 0.342111	0.511687	lsa_1</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;lsa_&quot;</span><span class="p">):</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+        <span class="n">components</span><span class="p">,</span> <span class="n">documents</span> <span class="o">=</span> <span class="n">get_lsa</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tfidf</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">(),</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">documents</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">documents</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Top LSA dimensions saved as clusters to self.corpus[&#39;lsa_&#39;] columns&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">components</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.get_top_documents"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.get_top_documents">[docs]</a>    <span class="k">def</span> <span class="nf">get_top_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component_prefix</span><span class="o">=</span><span class="s2">&quot;cluster&quot;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Use after running `get_pca_components` or `get_lsa_components`. Returns the `top_n` documents with the highest</span>
+<span class="sd">        scores for each components.</span>
+
+<span class="sd">        :param component_prefix: &#39;lsa&#39; or &#39;pca&#39; (you must first run get_pca_components or get_lsa_components)</span>
+<span class="sd">        :type component_prefix: str</span>
+<span class="sd">        :param top_n: Number of documents to return for each component</span>
+<span class="sd">        :type top_n: int</span>
+<span class="sd">        :return: A dictionary where keys are the component, and values are the text values for the component&#39;s \</span>
+<span class="sd">        `top_n` documents</span>
+<span class="sd">        :rtype: dict</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; df_lsa_topdoc = tdf.get_top_documents(&quot;lsa&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; {key: len(value) for key, value in lsa_topdoc.items()}</span>
+<span class="sd">            {&#39;lsa_0&#39;: 5, &#39;lsa_1&#39;: 4}</span>
+
+<span class="sd">            &gt;&gt;&gt; lsa_topdoc[&#39;lsa_1&#39;][0]</span>
+<span class="sd">            &#39;Chief Justice Roberts, President Carter, President Clinton, President Bush, President Obama, fellow \</span>
+<span class="sd">            Americans, and people of the world: Thank you.  We, the citizens of America...&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">top_docs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">c</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">columns</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">component_prefix</span><span class="p">))</span>
+        <span class="p">]:</span>
+            <span class="n">docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="n">component_prefix</span><span class="p">]</span> <span class="o">==</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+                <span class="n">col</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)[:</span><span class="n">top_n</span><span class="p">]</span>
+            <span class="n">top_docs</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">docs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">return</span> <span class="n">top_docs</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.make_word_cooccurrence_matrix"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.make_word_cooccurrence_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">make_word_cooccurrence_matrix</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_frequency</span><span class="o">=</span><span class="mf">0.5</span>
+    <span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Use to produce word co-occurrence matrices. Based on a helpful StackOverflow post:</span>
+<span class="sd">        https://stackoverflow.com/questions/35562789/how-do-i-calculate-a-word-word-co-occurrence-matrix-with-sklearn</span>
+
+<span class="sd">        :param normalize: If True, will be normalized</span>
+<span class="sd">        :type normalize: bool</span>
+<span class="sd">        :param min_frequency: The minimum document frequency required for a term to be included</span>
+<span class="sd">        :type min_frequency: int</span>
+<span class="sd">        :param max_frequency: The maximum proportion of documents containing a term allowed to include the term</span>
+<span class="sd">        :type max_frequency: int</span>
+<span class="sd">        :return: A matrix of (terms x terms) whose values indicate the number of documents in which two terms co-occurred</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; wcm = tdf.make_word_cooccurrence_matrix(min_frequency=25, normalize=True)</span>
+<span class="sd">            # Find the top cooccurring pair of words</span>
+<span class="sd">            &gt;&gt;&gt; wcm.stack().index[np.argmax(wcm.values)]</span>
+<span class="sd">            (&#39;protection&#39;, &#39;policy&#39;)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">]</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span>
+            <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">stop_words</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">,</span>
+            <span class="n">min_df</span><span class="o">=</span><span class="n">min_frequency</span><span class="p">,</span>
+            <span class="n">max_df</span><span class="o">=</span><span class="n">max_frequency</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">mat</span><span class="p">[</span>
+            <span class="n">mat</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mi">1</span>
+        <span class="p">)</span>  <span class="c1"># this makes sure that we&#39;re counting number of documents words have in common \</span>
+        <span class="c1"># and not weighting by the frequency of one of the words in a single document, which can lead to spurious links</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">mat</span>  <span class="c1"># compute the document-document matrix</span>
+        <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+            <span class="n">diag</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">diags</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">mat</span><span class="o">.</span><span class="n">diagonal</span><span class="p">())</span>
+            <span class="n">mat</span> <span class="o">=</span> <span class="n">diag</span> <span class="o">*</span> <span class="n">mat</span>
+        <span class="n">mat</span><span class="o">.</span><span class="n">setdiag</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">mat</span><span class="o">.</span><span class="n">todense</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">matrix</span></div>
+
+<div class="viewcode-block" id="TextDataFrame.make_document_cooccurrence_matrix"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.make_document_cooccurrence_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">make_document_cooccurrence_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Use to produce document co-occurrence matrices. Based on a helpful StackOverflow post:</span>
+<span class="sd">        https://stackoverflow.com/questions/35562789/how-do-i-calculate-a-word-word-co-occurrence-matrix-with-sklearn</span>
+
+<span class="sd">        :param normalize: If True, will be normalized</span>
+<span class="sd">        :type normalize: bool</span>
+<span class="sd">        :return: A matrix of (documents x documents) whose values indicate the number of terms they had in common</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            &gt;&gt;&gt; dcm = tdf.make_document_cooccurrence_matrix(normalize=True)</span>
+
+<span class="sd">            # Remove artifical duplicates and insert document names</span>
+<span class="sd">            &gt;&gt;&gt; dcm = dcm.iloc[:-2, :-2]</span>
+<span class="sd">            &gt;&gt;&gt; dcm.rename(columns=df[&#39;speech&#39;][:-2],</span>
+<span class="sd">                           index=df[&#39;speech&#39;][:-2],</span>
+<span class="sd">                           inplace=True)</span>
+
+<span class="sd">            # Find documents with the highest coocurrence score</span>
+<span class="sd">            &gt;&gt;&gt; dcm.stack().index[np.argmax(dcm.values)]</span>
+<span class="sd">            (&#39;1793-Washington.txt&#39;, &#39;1841-Harrison.txt&#39;)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_column</span><span class="p">]</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stop_words</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">)</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">mat</span><span class="p">[</span>
+            <span class="n">mat</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mi">1</span>
+        <span class="p">)</span>  <span class="c1"># this makes sure that we&#39;re counting number of words documents have in common \</span>
+        <span class="c1"># and not weighting by the frequency of one of the words in a single document, which can lead to spurious links</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">mat</span> <span class="o">*</span> <span class="n">mat</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># compute the word-word matrix</span>
+        <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+            <span class="n">diag</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">diags</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">mat</span><span class="o">.</span><span class="n">diagonal</span><span class="p">())</span>
+            <span class="n">mat</span> <span class="o">=</span> <span class="n">diag</span> <span class="o">*</span> <span class="n">mat</span>
+        <span class="n">mat</span><span class="o">.</span><span class="n">setdiag</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">mat</span><span class="o">.</span><span class="n">todense</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">matrix</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Pew Research Center
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
