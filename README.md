@@ -4,9 +4,9 @@
 
 ## Installation 
 
-To install, you can use PyPI: ::
+To install, you can use pip: ::
 
-    pip install pewanalytics
+    pip install git+https://github.com/pewresearch/pewanalytics#egg=pewanalytics
 
 Or you can install from source: ::
 

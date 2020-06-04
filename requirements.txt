@@ -19,7 +19,6 @@ numpy<1.17.0; python_version < '3.0'
 numpy>=1.16.0; python_version >= '3.0'
 pandas<0.25.0; python_version < '3.0'
 pandas>=0.25.0; python_version >= '3.0'
-pewtils>=1.0.0
 polyglot>=16.7.4
 pycparser>=2.20
 python-dateutil>=2.6.0
@@ -45,3 +44,4 @@ unidecode>=0.4.20
 xlrd>=1.2.0
 xlsxwriter>=1.1.8
 git+ssh://github.com/seanpianka/zipcodes#egg=zipcodes
+git+ssh://github.com/pewresearch/pewtiils#egg=pewtils
