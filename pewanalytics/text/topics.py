@@ -303,7 +303,7 @@ class TopicModel(object):
 
         Fits an LDA model using :py:class:`gensim.models.LdaModel` or \
         :py:class:`gensim.models.ldamulticore.LdaMulticore`. \
-        When ``use_multicore`` is set to ``True``, the multicore implementation will be used, otherwise the standard \
+        When ``use_multicore`` is set to True, the multicore implementation will be used, otherwise the standard \
         LDA implementation will be used. \
         For more information on available parameters, please refer to the official documentation below:
 

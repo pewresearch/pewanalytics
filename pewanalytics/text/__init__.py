@@ -38,8 +38,8 @@ from pewanalytics.stats.dimensionality_reduction import get_lsa, get_pca
 def has_fragment(text, fragment):
 
     """
-    Checks whether a substring ("fragment") is contained within a larger string ("text"). Uses the ``pewtils.decode_text``
-    function to process both the text and the fragment when running this check.
+    Checks whether a substring ("fragment") is contained within a larger string ("text"). Uses the \
+    :py:func:`pewtils.decode_text` function to process both the text and the fragment when running this check.
 
     :param text: The text to search
     :type text: str
@@ -154,8 +154,8 @@ def get_fuzzy_ratio(text1, text2, throw_loud_fail=False):
 
     """
     Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares
-    to the overall length of the texts. Uses the ``fuzzywuzzy`` library in Python 2, and the ``rapidfuzz`` library in \
-    Python 3.
+    to the overall length of the texts. Uses the :py:mod:`fuzzywuzzy` library in Python 2, and the :py:mod:`rapidfuzz` \
+    library in Python 3.
 
     :param text1: First string
     :type text1: str
@@ -634,7 +634,7 @@ class TextDataFrame(object):
     TextDataFrame will automatically produce a TF-IDF sparse matrix representation of the text upon initialization. \
     All other parameters are passed along to the scikit-learn TfidfVectorizer.
 
-    .. tip:: For more info on the parameters it excepts, refer to the official scikit-learn `Tfidf vectorizer \
+    .. tip:: For more info on the parameters it excepts, refer to the official scikit-learn `TfidfVectorizer \
     documentation \
     <https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html>`_.
 
@@ -1029,7 +1029,7 @@ class TextDataFrame(object):
     ):
 
         """
-        A wrapper around ``pewanalytics.stats.mutual_info.compute_mutual_info``
+        A wrapper around :py:func:`pewanalytics.stats.mutual_info.compute_mutual_info`
 
         :param outcome_col: The name of the column with the binary outcome variable
         :type outcome_col: str
@@ -1086,7 +1086,7 @@ class TextDataFrame(object):
     def kmeans_clusters(self, k=10):
 
         """
-        A wrapper around ``pewanalytics.stats.clustering.compute_kmeans_clusters``. Will compute clusters of documents.
+        A wrapper around :py:func:`pewanalytics.stats.clustering.compute_kmeans_clusters`. Will compute clusters of documents.
         The resulting cluster IDs for each document are saved in the TextDataFrame's ``corpus`` in a new column called
         "kmeans".
 
@@ -1116,9 +1116,9 @@ class TextDataFrame(object):
     def hdbscan_clusters(self, min_cluster_size=100, min_samples=1):
 
         """
-        A wrapper around ``pewanalytics.stats.clustering.compute_hdbscan_clusters``. Will compute clusters of documents.
-        The resulting cluster IDs for each document are saved in the TextDataFrame's ``corpus`` in a new column called
-        "hdbscan".
+        A wrapper around :py:func:`pewanalytics.stats.clustering.compute_hdbscan_clusters`. Will compute clusters \
+        of documents. The resulting cluster IDs for each document are saved in the TextDataFrame's ``corpus`` in a \
+        new column called "hdbscan".
 
         :param min_cluster_size: The minimum number of documents that a cluster must contain.
         :type min_cluster_size: int
@@ -1195,7 +1195,7 @@ class TextDataFrame(object):
     def pca_components(self, k=20):
 
         """
-        A wrapper around ``pewanalytics.stats.dimensionality_reduction.get_pca``.
+        A wrapper around :py:func:`pewanalytics.stats.dimensionality_reduction.get_pca`.
         Saves the PCA components to self.corpus as new columns ('pca_1', 'pca_2', etc.),
         saves the top component for each document as self.corpus['pca'], and returns
         the features-component matrix.
@@ -1237,7 +1237,7 @@ class TextDataFrame(object):
     def lsa_components(self, k=20):
 
         """
-        A wrapper around ``pewanalytics.stats.dimensionality_reduction.get_lsa``.
+        A wrapper around :py:func:`pewanalytics.stats.dimensionality_reduction.get_lsa`.
         Saves the LSA components to self.corpus as new columns ('lsa_1', 'lsa_2', etc.),
         saves the top component for each document as self.corpus['lsa'], and returns
         the features-component matrix
@@ -1281,8 +1281,9 @@ class TextDataFrame(object):
     def get_top_documents(self, component_prefix="cluster", top_n=5):
 
         """
-        Use after running ``get_pca_components`` or ``get_lsa_components``. Returns the ``top_n`` documents with the highest
-        scores for each components.
+        Use after running :py:func:`pewanalytics.text.TextDataFrame.get_pca_components` or \
+        :py:func:`pewanalytics.text.TextDataFrame.get_lsa_components`. Returns the ``top_n`` documents with \
+        the highest scores for each components.
 
         :param component_prefix: 'lsa' or 'pca' (you must first run get_pca_components or get_lsa_components)
         :type component_prefix: str

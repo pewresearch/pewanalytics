@@ -162,7 +162,7 @@
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="sampling">
 <h2>Sampling<a class="headerlink" href="#sampling" title="Permalink to this headline">¶</a></h2>
-<p>The <cite>pewanalytics.stats.sampling</cite> module has several useful tools for extracting samples and computing sampling weights. Given a sampling frame stored in a Pandas DataFrame, you can draw a sample using a variety of different sampling methods, and then compute sampling weights for any combination of one or more binary variables.</p>
+<p>The <a class="reference internal" href="stats.html#module-pewanalytics.stats.sampling" title="pewanalytics.stats.sampling"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.sampling</span></code></a> module has several useful tools for extracting samples and computing sampling weights. Given a sampling frame stored in a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>, you can draw a sample using a variety of different sampling methods, and then compute sampling weights for any combination of one or more binary variables.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.stats.sampling</span> <span class="kn">import</span> <span class="n">SampleExtractor</span><span class="p">,</span> <span class="n">compute_sample_weights_from_frame</span>
 
 <span class="kn">import</span> <span class="nn">nltk</span>
@@ -233,7 +233,7 @@
 </div>
 <div class="section" id="inter-rater-reliability">
 <h2>Inter-rater reliability<a class="headerlink" href="#inter-rater-reliability" title="Permalink to this headline">¶</a></h2>
-<p>The <cite>pewanalytics.stats.irr</cite> module has several useful functions for computing a wide variety of inter-rater reliability and model performance metrics. The <cite>compute_scores</cite> function provides a one-stop shop for assessing agreement between two classifiers - whether you’re comparing coders or machine learning models.</p>
+<p>The <a class="reference internal" href="stats.html#module-pewanalytics.stats.irr" title="pewanalytics.stats.irr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.irr</span></code></a> module has several useful functions for computing a wide variety of inter-rater reliability and model performance metrics. The <a class="reference internal" href="stats.html#pewanalytics.stats.irr.compute_scores" title="pewanalytics.stats.irr.compute_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">pewanalytics.stats.irr.compute_scores()</span></code></a> function provides a one-stop shop for assessing agreement between two classifiers - whether you’re comparing coders or machine learning models.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.stats.irr</span> <span class="kn">import</span> <span class="n">compute_scores</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
@@ -298,7 +298,7 @@
 </div>
 <div class="section" id="cleaning-text">
 <h2>Cleaning text<a class="headerlink" href="#cleaning-text" title="Permalink to this headline">¶</a></h2>
-<p>When working with text data, pre-processing is an essential first task. The <cite>pewanalytics.text</cite> module contains a wide range of tools for working with text data, among them the <cite>TextCleaner</cite> class that provides a wide range of pre-processing options for cleaning your text.</p>
+<p>When working with text data, pre-processing is an essential first task. The <code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.text</span></code> module contains a wide range of tools for working with text data, among them the <code class="xref py py-class docutils literal notranslate"><span class="pre">pewanalytics.text.TextCleaner</span></code> class that provides a wide range of pre-processing options for cleaning your text.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="kn">import</span> <span class="n">TextCleaner</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -337,7 +337,7 @@
 </div>
 <div class="section" id="the-textdataframe-class">
 <h2>The TextDataFrame class<a class="headerlink" href="#the-textdataframe-class" title="Permalink to this headline">¶</a></h2>
-<p>In some of the following examples, we’ll be making use of the <cite>pewanalytics.text.TextDataFrame</cite> class, which provides a variety of useful functions for working with a Pandas DataFrame that contains a column of text that you want to analyze. To set up a <cite>TextDataFrame</cite>, you just need to pass a DataFrame and specify the name of the column that contains the text. The <cite>TextDataFrame</cite> will automatically convert your corpus into a TF-IDF representation; you can pass additional keyword arguments to control this vectorization process, which get forwarded to a Scikit-Learn TfidfVectorizer class. In the following examples, we’ll be using a <cite>TextDataFrame</cite> containing inaugural speeches:</p>
+<p>In some of the following examples, we’ll be making use of the <code class="xref py py-class docutils literal notranslate"><span class="pre">pewanalytics.text.TextDataFrame</span></code> class, which provides a variety of useful functions for working with a Pandas DataFrame that contains a column of text that you want to analyze. To set up a <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code>, you just need to pass a DataFrame and specify the name of the column that contains the text. The <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code> will automatically convert your corpus into a TF-IDF representation; you can pass additional keyword arguments to control this vectorization process, which get forwarded to a Scikit-Learn <code class="docutils literal notranslate"><span class="pre">TfidfVectorizer</span></code> class. In the following examples, we’ll be using a <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code> containing inaugural speeches:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="kn">import</span> <span class="n">TextDataFrame</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">nltk</span>
@@ -364,7 +364,7 @@
 <div class="section" id="finding-repeating-fragments">
 <h2>Finding repeating fragments<a class="headerlink" href="#finding-repeating-fragments" title="Permalink to this headline">¶</a></h2>
 <p>When working with text, sometimes it can be useful to identify repeating segments of text that occur in multiple documents. For example, you might be interested in identifying common phraess, or perhaps you want to look for common boilerplate text that you want to clear out in order to facilitate more accurate document comparison. In these cases, Pew Analytics provides several functions that can help.</p>
-<p>The <cite>TextOverlapExtractor</cite> can identify overlaps between two pieces of text:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">TextOverlapExtractor</span></code> can identify overlaps between two pieces of text:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="kn">import</span> <span class="n">TextOverlapExtractor</span>
 
 <span class="n">text1</span> <span class="o">=</span> <span class="s2">&quot;This is a sentence. This is another sentence. And a third sentence. And yet a fourth sentence.&quot;</span>
@@ -380,7 +380,7 @@
 <span class="p">[</span><span class="s1">&#39;This is another sentence.&#39;</span><span class="p">,</span> <span class="s1">&#39;And a third sentence.&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>If you want to apply this function at scale, you can make use of the <cite>TextDataFrame</cite> to search for repeating fragments of text that occur across a large corpus. This function uses the <cite>TextOverlapExtractor</cite>, which tokenizes your text into complete sentences by default. In our example, there aren’t any unique sentences that recur, but we can disable tokenization to get raw overlapping segments of text like so:</p>
+<p>If you want to apply this function at scale, you can make use of the <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code> to search for repeating fragments of text that occur across a large corpus. This function uses the <code class="docutils literal notranslate"><span class="pre">TextOverlapExtractor</span></code>, which tokenizes your text into complete sentences by default. In our example, there aren’t any unique sentences that recur, but we can disable tokenization to get raw overlapping segments of text like so:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">extract_corpus_fragments</span><span class="p">(</span><span class="n">scan_top_n_matches_per_doc</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">min_fragment_length</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 <span class="go">[&#39;s. Equal and exact justice &#39;,</span>
 <span class="go"> &#39;d by the General Government&#39;,</span>
@@ -400,7 +400,7 @@
 </div>
 <div class="section" id="finding-duplicates">
 <h2>Finding duplicates<a class="headerlink" href="#finding-duplicates" title="Permalink to this headline">¶</a></h2>
-<p>Text corpora also often contain duplicates that we want to remove prior to analysis. To efficiently identify these duplicates, the <cite>TextDataFrame</cite> provides a two-step function that uses TF-IDF to identify potential duplicate pairs, which are then filtered down by using more precise Levenshtein ratios:</p>
+<p>Text corpora also often contain duplicates that we want to remove prior to analysis. To efficiently identify these duplicates, the <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code> provides a two-step function that uses TF-IDF to identify potential duplicate pairs, which are then filtered down by using more precise Levenshtein ratios:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">find_duplicates</span><span class="p">()</span>
 <span class="go">[           speech                                               text  year</span>
 <span class="go">56  2013-Obama.txt  Thank you. Thank you so much.    Vice Presiden...  2013</span>
@@ -421,7 +421,7 @@
 </div>
 <div class="section" id="mutual-information">
 <h2>Mutual information<a class="headerlink" href="#mutual-information" title="Permalink to this headline">¶</a></h2>
-<p>Pointwise mutual information can be an enormously useful tool for identifying words and phrases that distinguish one group of documents from another. The <cite>pewanalytics.stats.mutual_info</cite> module contains a <cite>mutual_info</cite> function for computing mutual information along with a variety of other ratios that identify features that distinguish between two different sets of observations. While you can run this function on any set of features, it’s particularly informative when working with text data. Accordingly, the <cite>TextDataFrame</cite> has a shortcut function that allows you to easily run mutual information on your corpus. In this example, we can find the phrases that most distinguish 21st century inaugural speeches from those given in prior years:</p>
+<p>Pointwise mutual information can be an enormously useful tool for identifying words and phrases that distinguish one group of documents from another. The <a class="reference internal" href="stats.html#module-pewanalytics.stats.mutual_info" title="pewanalytics.stats.mutual_info"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.mutual_info</span></code></a> module contains a <code class="docutils literal notranslate"><span class="pre">mutual_info</span></code> function for computing mutual information along with a variety of other ratios that identify features that distinguish between two different sets of observations. While you can run this function on any set of features, it’s particularly informative when working with text data. Accordingly, the <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code> has a shortcut function that allows you to easily run mutual information on your corpus. In this example, we can find the phrases that most distinguish 21st century inaugural speeches from those given in prior years:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">tdf</span><span class="o">.</span><span class="n">mutual_info</span><span class="p">(</span><span class="s2">&quot;21st_century&quot;</span><span class="p">)</span>
 
 <span class="c1"># Pointwise mutual information for our positive class is stored in the &quot;M1&quot; column</span>
@@ -438,7 +438,7 @@
 </div>
 <div class="section" id="topic-modeling">
 <h2>Topic modeling<a class="headerlink" href="#topic-modeling" title="Permalink to this headline">¶</a></h2>
-<p>Just like the <cite>TextDataFrame</cite>, <cite>pewanalytics</cite> also provides a wrapper class for training a variety of different topic models. The <cite>pewanalytics.text.topics.TopicModel</cite> class accepts a Pandas DataFrame and the name of a text column, and allows you to train and apply Gensim, Scikit-Learn, and Corex topic models using a standardized interface:</p>
+<p>Just like the <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code>, <code class="docutils literal notranslate"><span class="pre">pewanalytics</span></code> also provides a wrapper class for training a variety of different topic models. The <a class="reference internal" href="text.html#pewanalytics.text.topics.TopicModel" title="pewanalytics.text.topics.TopicModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">pewanalytics.text.topics.TopicModel</span></code></a> class accepts a Pandas DataFrame and the name of a text column, and allows you to train and apply Gensim, Scikit-Learn, and Corex topic models using a standardized interface:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text.topics</span> <span class="kn">import</span> <span class="n">TopicModel</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">nltk</span>

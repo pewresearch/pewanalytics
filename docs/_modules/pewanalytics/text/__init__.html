@@ -188,8 +188,8 @@
 <div class="viewcode-block" id="has_fragment"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.has_fragment">[docs]</a><span class="k">def</span> <span class="nf">has_fragment</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">fragment</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Checks whether a substring (&quot;fragment&quot;) is contained within a larger string (&quot;text&quot;). Uses the ``pewtils.decode_text``</span>
-<span class="sd">    function to process both the text and the fragment when running this check.</span>
+<span class="sd">    Checks whether a substring (&quot;fragment&quot;) is contained within a larger string (&quot;text&quot;). Uses the \</span>
+<span class="sd">    :py:func:`pewtils.decode_text` function to process both the text and the fragment when running this check.</span>
 
 <span class="sd">    :param text: The text to search</span>
 <span class="sd">    :type text: str</span>
@@ -304,8 +304,8 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares</span>
-<span class="sd">    to the overall length of the texts. Uses the ``fuzzywuzzy`` library in Python 2, and the ``rapidfuzz`` library in \</span>
-<span class="sd">    Python 3.</span>
+<span class="sd">    to the overall length of the texts. Uses the :py:mod:`fuzzywuzzy` library in Python 2, and the :py:mod:`rapidfuzz` \</span>
+<span class="sd">    library in Python 3.</span>
 
 <span class="sd">    :param text1: First string</span>
 <span class="sd">    :type text1: str</span>
@@ -784,7 +784,7 @@
 <span class="sd">    TextDataFrame will automatically produce a TF-IDF sparse matrix representation of the text upon initialization. \</span>
 <span class="sd">    All other parameters are passed along to the scikit-learn TfidfVectorizer.</span>
 
-<span class="sd">    .. tip:: For more info on the parameters it excepts, refer to the official scikit-learn `Tfidf vectorizer \</span>
+<span class="sd">    .. tip:: For more info on the parameters it excepts, refer to the official scikit-learn `TfidfVectorizer \</span>
 <span class="sd">    documentation \</span>
 <span class="sd">    &lt;https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html&gt;`_.</span>
 
@@ -1179,7 +1179,7 @@
     <span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A wrapper around ``pewanalytics.stats.mutual_info.compute_mutual_info``</span>
+<span class="sd">        A wrapper around :py:func:`pewanalytics.stats.mutual_info.compute_mutual_info`</span>
 
 <span class="sd">        :param outcome_col: The name of the column with the binary outcome variable</span>
 <span class="sd">        :type outcome_col: str</span>
@@ -1236,7 +1236,7 @@
 <div class="viewcode-block" id="TextDataFrame.kmeans_clusters"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.kmeans_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">kmeans_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A wrapper around ``pewanalytics.stats.clustering.compute_kmeans_clusters``. Will compute clusters of documents.</span>
+<span class="sd">        A wrapper around :py:func:`pewanalytics.stats.clustering.compute_kmeans_clusters`. Will compute clusters of documents.</span>
 <span class="sd">        The resulting cluster IDs for each document are saved in the TextDataFrame&#39;s ``corpus`` in a new column called</span>
 <span class="sd">        &quot;kmeans&quot;.</span>
 
@@ -1266,9 +1266,9 @@
 <div class="viewcode-block" id="TextDataFrame.hdbscan_clusters"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">hdbscan_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A wrapper around ``pewanalytics.stats.clustering.compute_hdbscan_clusters``. Will compute clusters of documents.</span>
-<span class="sd">        The resulting cluster IDs for each document are saved in the TextDataFrame&#39;s ``corpus`` in a new column called</span>
-<span class="sd">        &quot;hdbscan&quot;.</span>
+<span class="sd">        A wrapper around :py:func:`pewanalytics.stats.clustering.compute_hdbscan_clusters`. Will compute clusters \</span>
+<span class="sd">        of documents. The resulting cluster IDs for each document are saved in the TextDataFrame&#39;s ``corpus`` in a \</span>
+<span class="sd">        new column called &quot;hdbscan&quot;.</span>
 
 <span class="sd">        :param min_cluster_size: The minimum number of documents that a cluster must contain.</span>
 <span class="sd">        :type min_cluster_size: int</span>
@@ -1345,7 +1345,7 @@
 <div class="viewcode-block" id="TextDataFrame.pca_components"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.pca_components">[docs]</a>    <span class="k">def</span> <span class="nf">pca_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A wrapper around ``pewanalytics.stats.dimensionality_reduction.get_pca``.</span>
+<span class="sd">        A wrapper around :py:func:`pewanalytics.stats.dimensionality_reduction.get_pca`.</span>
 <span class="sd">        Saves the PCA components to self.corpus as new columns (&#39;pca_1&#39;, &#39;pca_2&#39;, etc.),</span>
 <span class="sd">        saves the top component for each document as self.corpus[&#39;pca&#39;], and returns</span>
 <span class="sd">        the features-component matrix.</span>
@@ -1387,7 +1387,7 @@
 <div class="viewcode-block" id="TextDataFrame.lsa_components"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.lsa_components">[docs]</a>    <span class="k">def</span> <span class="nf">lsa_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A wrapper around ``pewanalytics.stats.dimensionality_reduction.get_lsa``.</span>
+<span class="sd">        A wrapper around :py:func:`pewanalytics.stats.dimensionality_reduction.get_lsa`.</span>
 <span class="sd">        Saves the LSA components to self.corpus as new columns (&#39;lsa_1&#39;, &#39;lsa_2&#39;, etc.),</span>
 <span class="sd">        saves the top component for each document as self.corpus[&#39;lsa&#39;], and returns</span>
 <span class="sd">        the features-component matrix</span>
@@ -1431,8 +1431,9 @@
 <div class="viewcode-block" id="TextDataFrame.get_top_documents"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.get_top_documents">[docs]</a>    <span class="k">def</span> <span class="nf">get_top_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component_prefix</span><span class="o">=</span><span class="s2">&quot;cluster&quot;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Use after running ``get_pca_components`` or ``get_lsa_components``. Returns the ``top_n`` documents with the highest</span>
-<span class="sd">        scores for each components.</span>
+<span class="sd">        Use after running :py:func:`pewanalytics.text.TextDataFrame.get_pca_components` or \</span>
+<span class="sd">        :py:func:`pewanalytics.text.TextDataFrame.get_lsa_components`. Returns the ``top_n`` documents with \</span>
+<span class="sd">        the highest scores for each components.</span>
 
 <span class="sd">        :param component_prefix: &#39;lsa&#39; or &#39;pca&#39; (you must first run get_pca_components or get_lsa_components)</span>
 <span class="sd">        :type component_prefix: str</span>

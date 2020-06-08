@@ -99,7 +99,8 @@ def kappa_sample_size_CI(kappa0, kappaL, props, kappaU=None, alpha=0.05):
     sample size returned by this function, it can provide a rough estimate of how many additional documents need \
     to be coded - assuming that the coders continue agreeing and observing positive cases at the same rate.
 
-    Translated from the ``kappaSize`` R package, CIBinary: https://github.com/cran/kappaSize/blob/master/R/CIBinary.R
+    Translated from the ``kappaSize`` R package, ``CIBinary``: \
+    https://github.com/cran/kappaSize/blob/master/R/CIBinary.R
 
     :param kappa0: The preliminary value of kappa
     :param kappa0: float
@@ -510,6 +511,7 @@ def compute_overall_scores(coder_df, document_column, outcome_column, coder_colu
     """
     Computes overall inter-rater reliability scores (Krippendorf's Alpha and Fleiss' Kappa). Allows for more than two \
     coders and code values. The input data must consist of a :py:class:`pandas.DataFrame` with the following columns:
+
         - A column with values that indicate the coder (like a name)
         - A column with values that indicate the document (like an ID)
         - A column with values that indicate the code value

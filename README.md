@@ -4,7 +4,7 @@
 
 ## Installation 
 
-To install, you can use pip: ::
+To install, you can use `pip`: ::
 
     pip install git+https://github.com/pewresearch/pewanalytics#egg=pewanalytics
 

@@ -15,7 +15,7 @@ def compute_kmeans_clusters(features, k=10, return_score=False):
     :type k: int
     :param return_score: If True, the function returns a tuple with the cluster \
     assignments and the silhouette score of the clustering; otherwise the function just returns a list of cluster \
-    labels for each row. (Defaut=False)
+    labels for each row. (Default=False)
     :type return_score: bool
     :return: A list with the cluster label for each row, or a tuple containing the \
     labels followed by the silhouette score of the K-Means model.

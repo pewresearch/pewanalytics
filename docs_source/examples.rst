@@ -6,8 +6,8 @@ Examples
 Sampling
 -----------------------------------------------------
 
-The `pewanalytics.stats.sampling` module has several useful tools for extracting samples and \
-computing sampling weights. Given a sampling frame stored in a Pandas DataFrame, you can draw \
+The :py:mod:`pewanalytics.stats.sampling` module has several useful tools for extracting samples and \
+computing sampling weights. Given a sampling frame stored in a :py:class:`pandas.DataFrame`, you can draw \
 a sample using a variety of different sampling methods, and then compute sampling weights for any \
 combination of one or more binary variables.
 
@@ -82,9 +82,9 @@ combination of one or more binary variables.
 Inter-rater reliability
 -----------------------------------------------------
 
-The `pewanalytics.stats.irr` module has several useful functions for computing a wide variety \
-of inter-rater reliability and model performance metrics. The `compute_scores` function provides \
-a one-stop shop for assessing agreement between two classifiers - whether you're comparing coders \
+The :py:mod:`pewanalytics.stats.irr` module has several useful functions for computing a wide variety \
+of inter-rater reliability and model performance metrics. The :py:func:`pewanalytics.stats.irr.compute_scores` \
+function provides a one-stop shop for assessing agreement between two classifiers - whether you're comparing coders \
 or machine learning models.
 
 .. code-block:: python
@@ -153,9 +153,9 @@ or machine learning models.
 Cleaning text
 -----------------------------------------------------
 
-When working with text data, pre-processing is an essential first task. The `pewanalytics.text` module \
-contains a wide range of tools for working with text data, among them the `TextCleaner` class that provides \
-a wide range of pre-processing options for cleaning your text.
+When working with text data, pre-processing is an essential first task. The :py:mod:`pewanalytics.text` module \
+contains a wide range of tools for working with text data, among them the :py:class:`pewanalytics.text.TextCleaner` \
+class that provides a wide range of pre-processing options for cleaning your text.
 
 .. code-block:: python
 
@@ -196,13 +196,13 @@ a wide range of pre-processing options for cleaning your text.
 The TextDataFrame class
 -----------------------------------------------------
 
-In some of the following examples, we'll be making use of the `pewanalytics.text.TextDataFrame` class, \
+In some of the following examples, we'll be making use of the :py:class:`pewanalytics.text.TextDataFrame` class, \
 which provides a variety of useful functions for working with a Pandas DataFrame that contains a column \
-of text that you want to analyze. To set up a `TextDataFrame`, you just need to pass a DataFrame and \
-specify the name of the column that contains the text. The `TextDataFrame` will automatically convert \
+of text that you want to analyze. To set up a ``TextDataFrame``, you just need to pass a DataFrame and \
+specify the name of the column that contains the text. The ``TextDataFrame`` will automatically convert \
 your corpus into a TF-IDF representation; you can pass additional keyword arguments to control this \
-vectorization process, which get forwarded to a Scikit-Learn TfidfVectorizer class. In the following examples, \
-we'll be using a `TextDataFrame` containing inaugural speeches:
+vectorization process, which get forwarded to a Scikit-Learn ``TfidfVectorizer`` class. In the following examples, \
+we'll be using a ``TextDataFrame`` containing inaugural speeches:
 
 .. code-block:: python
 
@@ -237,7 +237,7 @@ or perhaps you want to look for common boilerplate text that you want to clear o
 facilitate more accurate document comparison. In these cases, Pew Analytics provides several functions \
 that can help.
 
-The `TextOverlapExtractor` can identify overlaps between two pieces of text:
+The ``TextOverlapExtractor`` can identify overlaps between two pieces of text:
 
 .. code-block:: python
 
@@ -255,8 +255,8 @@ The `TextOverlapExtractor` can identify overlaps between two pieces of text:
     >>> extractor.get_text_overlaps(text1, text2, min_length=10, tokenize=True)
     ['This is another sentence.', 'And a third sentence.']
 
-If you want to apply this function at scale, you can make use of the `TextDataFrame` to search for \
-repeating fragments of text that occur across a large corpus. This function uses the `TextOverlapExtractor`, \
+If you want to apply this function at scale, you can make use of the ``TextDataFrame`` to search for \
+repeating fragments of text that occur across a large corpus. This function uses the ``TextOverlapExtractor``, \
 which tokenizes your text into complete sentences by default. In our example, there aren't any unique sentences \
 that recur, but we can disable tokenization to get raw overlapping segments of text like so:
 
@@ -281,7 +281,7 @@ Finding duplicates
 -----------------------------------------------------
 
 Text corpora also often contain duplicates that we want to remove prior to analysis. \
-To efficiently identify these duplicates, the `TextDataFrame` provides a two-step function \
+To efficiently identify these duplicates, the ``TextDataFrame`` provides a two-step function \
 that uses TF-IDF to identify potential duplicate pairs, which are then filtered down by using \
 more precise Levenshtein ratios:
 
@@ -308,11 +308,11 @@ Mutual information
 -----------------------------------------------------
 
 Pointwise mutual information can be an enormously useful tool for identifying words and phrases \
-that distinguish one group of documents from another. The `pewanalytics.stats.mutual_info` module \
-contains a `mutual_info` function for computing mutual information along with a variety of other \
+that distinguish one group of documents from another. The :py:mod:`pewanalytics.stats.mutual_info` module \
+contains a ``mutual_info`` function for computing mutual information along with a variety of other \
 ratios that identify features that distinguish between two different sets of observations. \
 While you can run this function on any set of features, it's particularly informative when \
-working with text data. Accordingly, the `TextDataFrame` has a shortcut function that allows you \
+working with text data. Accordingly, the ``TextDataFrame`` has a shortcut function that allows you \
 to easily run mutual information on your corpus. In this example, we can find the phrases that \
 most distinguish 21st century inaugural speeches from those given in prior years:
 
@@ -334,8 +334,8 @@ most distinguish 21st century inaugural speeches from those given in prior years
 Topic modeling
 -----------------------------------------------------
 
-Just like the `TextDataFrame`, `pewanalytics` also provides a wrapper class for training \
-a variety of different topic models. The `pewanalytics.text.topics.TopicModel` class accepts \
+Just like the ``TextDataFrame``, ``pewanalytics`` also provides a wrapper class for training \
+a variety of different topic models. The :py:class:`pewanalytics.text.topics.TopicModel` class accepts \
 a Pandas DataFrame and the name of a text column, and allows you to train and apply \
 Gensim, Scikit-Learn, and Corex topic models using a standardized interface:
 

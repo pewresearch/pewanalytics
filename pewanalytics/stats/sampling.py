@@ -10,7 +10,7 @@ import numpy as np
 def compute_sample_weights_from_frame(frame, sample, weight_vars):
 
     """
-    Takes two :py:class:`pandas.DataFrame`s and computes sampling weights for the second one, based on the first. \
+    Takes two :py:class:`pandas.DataFrame` s and computes sampling weights for the second one, based on the first. \
     The first :py:class:`pandas.DataFrame` should be equivalent to the population that the second \
     :py:class:`pandas.DataFrame`, a sample, was drawn from. Weights will be calculated based on the differences in \
     the distribution of one or more variables specified in ``weight_vars`` (these should be the names of columns). \

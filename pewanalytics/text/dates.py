@@ -9,10 +9,10 @@ from calendar import IllegalMonthError
 class DateFinder(object):
 
     """
-    A helper class to search for dates in text using a series of regular expressions and a parser from ``dateutil``. \
-    Verifies that ``dateutil`` did not auto-fill missing values in the date. Time information will be automatically \
-    cleared out, but you can also pass a list of additional regular expression patterns (as strings) to define other \
-    patterns that should be cleared out before scanning for dates.
+    A helper class to search for dates in text using a series of regular expressions and a parser from \
+    :py:mod:`dateutil`. Verifies that :py:mod:`dateutil` did not auto-fill missing values in the date. Time \
+    information will be automatically cleared out, but you can also pass a list of additional regular expression \
+    patterns (as strings) to define other patterns that should be cleared out before scanning for dates.
 
     :param preprocessing_patterns: Optional list of additional patterns to clear out prior to searching for dates.
     :type preprocessing_patterns: list
