@@ -16,7 +16,7 @@ Or you can install from source: ::
 
 ## Documentation
 
-Please refer to the [official documentation](https://pewresearch.github.io/pewanalytics) for information on how to use this package.
+Please refer to the [official documentation](https://pewresearch.github.io/pewanalytics/) for information on how to use this package.
 
 ## Use Policy 
 
