@@ -661,37 +661,40 @@ then only tokens that appear fully in both texts will be extracted. For example:
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.find_duplicates" title="pewanalytics.text.__init__.TextDataFrame.find_duplicates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_duplicates</span></code></a>([tfidf_threshold, …])</p></td>
 <td><p>Search for duplicates by using cosine similarity and Levenshtein ratios.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.get_top_documents" title="pewanalytics.text.__init__.TextDataFrame.get_top_documents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_top_documents</span></code></a>([component_prefix, top_n])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.find_related_keywords" title="pewanalytics.text.__init__.TextDataFrame.find_related_keywords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_related_keywords</span></code></a>(keyword[, n])</p></td>
+<td><p>Given a particular keyword, looks for related terms in the corpus using mutual information.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.get_top_documents" title="pewanalytics.text.__init__.TextDataFrame.get_top_documents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_top_documents</span></code></a>([component_prefix, top_n])</p></td>
 <td><p>Use after running <cite>get_pca_components</cite> or <cite>get_lsa_components</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters" title="pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hdbscan_clusters</span></code></a>([min_cluster_size, min_samples])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters" title="pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hdbscan_clusters</span></code></a>([min_cluster_size, min_samples])</p></td>
 <td><p>A wrapper around <cite>pewanalytics.stats.clustering.compute_hdbscan_clusters</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.kmeans_clusters" title="pewanalytics.text.__init__.TextDataFrame.kmeans_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kmeans_clusters</span></code></a>([k])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.kmeans_clusters" title="pewanalytics.text.__init__.TextDataFrame.kmeans_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kmeans_clusters</span></code></a>([k])</p></td>
 <td><p>A wrapper around <cite>pewanalytics.stats.clustering.compute_kmeans_clusters</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.lsa_components" title="pewanalytics.text.__init__.TextDataFrame.lsa_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lsa_components</span></code></a>([k])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.lsa_components" title="pewanalytics.text.__init__.TextDataFrame.lsa_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lsa_components</span></code></a>([k])</p></td>
 <td><p>A wrapper around <cite>pewanalytics.stats.dimensionality_reduction.get_lsa</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.make_document_cooccurrence_matrix" title="pewanalytics.text.__init__.TextDataFrame.make_document_cooccurrence_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_document_cooccurrence_matrix</span></code></a>([normalize])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.make_document_cooccurrence_matrix" title="pewanalytics.text.__init__.TextDataFrame.make_document_cooccurrence_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_document_cooccurrence_matrix</span></code></a>([normalize])</p></td>
 <td><p>Use to produce document co-occurrence matrices.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.make_word_cooccurrence_matrix" title="pewanalytics.text.__init__.TextDataFrame.make_word_cooccurrence_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_word_cooccurrence_matrix</span></code></a>([normalize, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.make_word_cooccurrence_matrix" title="pewanalytics.text.__init__.TextDataFrame.make_word_cooccurrence_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_word_cooccurrence_matrix</span></code></a>([normalize, …])</p></td>
 <td><p>Use to produce word co-occurrence matrices.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus" title="pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">match_text_to_corpus</span></code></a>(match_list[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus" title="pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">match_text_to_corpus</span></code></a>(match_list[, …])</p></td>
 <td><p>Takes a list of text values and attempts to match them to the documents in the DataFrame.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.mutual_info" title="pewanalytics.text.__init__.TextDataFrame.mutual_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutual_info</span></code></a>(outcome_col[, weight_col, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.mutual_info" title="pewanalytics.text.__init__.TextDataFrame.mutual_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutual_info</span></code></a>(outcome_col[, weight_col, …])</p></td>
 <td><p>A wrapper around <cite>pewanalytics.stats.mutual_info.compute_mutual_info</cite></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.pca_components" title="pewanalytics.text.__init__.TextDataFrame.pca_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pca_components</span></code></a>([k])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.pca_components" title="pewanalytics.text.__init__.TextDataFrame.pca_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pca_components</span></code></a>([k])</p></td>
 <td><p>A wrapper around <cite>pewanalytics.stats.dimensionality_reduction.get_pca</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.search_corpus" title="pewanalytics.text.__init__.TextDataFrame.search_corpus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">search_corpus</span></code></a>(text)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.search_corpus" title="pewanalytics.text.__init__.TextDataFrame.search_corpus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">search_corpus</span></code></a>(text)</p></td>
 <td><p>Compares the provided text against the documents in the corpus and returns the most similar documents.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.top_cluster_terms" title="pewanalytics.text.__init__.TextDataFrame.top_cluster_terms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">top_cluster_terms</span></code></a>(cluster_col[, min_size, top_n])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.top_cluster_terms" title="pewanalytics.text.__init__.TextDataFrame.top_cluster_terms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">top_cluster_terms</span></code></a>(cluster_col[, min_size, top_n])</p></td>
 <td><p>Extracts the top terms for each cluster, based on a column of cluster IDs saved to <cite>self.corpus</cite>, using mutual information.</p></td>
 </tr>
 </tbody>
@@ -870,6 +873,34 @@ each of these pairs will be compared using the more stringent <cite>fuzzy_ratio_
 <span class="go">    21st_century</span>
 <span class="go">57             1</span>
 <span class="go">57             1  ]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewanalytics.text.__init__.TextDataFrame.find_related_keywords">
+<code class="sig-name descname">find_related_keywords</code><span class="sig-paren">(</span><em class="sig-param">keyword</em>, <em class="sig-param">n=25</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.find_related_keywords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.find_related_keywords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a particular keyword, looks for related terms in the corpus using mutual information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keyword</strong> (<em>str</em>) – The keyword to use</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – Number of related terms to return</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Terms associated with the keyword</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">find_related_keywords</span><span class="p">(</span><span class="s2">&quot;war&quot;</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="go">[&#39;war&#39;, &#39;peace&#39;]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">find_related_keywords</span><span class="p">(</span><span class="s2">&quot;economy&quot;</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="go">[&#39;economy&#39;, &#39;expenditures&#39;]</span>
 </pre></div>
 </div>
 </dd></dl>
