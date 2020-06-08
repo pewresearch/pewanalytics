@@ -87,9 +87,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#dimensionality-reduction">Dimensionality Reduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inter-rater-reliability">Inter-Rater Reliability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#mutual-information">Mutual Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sampling">Sampling</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#sampling">Sampling</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="text.html">Text Tools</a></li>
@@ -284,13 +282,13 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>features</strong> – A dataframe or sparse matrix where rows are units/observations and columns are features</p></li>
+<li><p><strong>features</strong> – A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> or sparse matrix where rows are units/observations and columns     are features</p></li>
 <li><p><strong>feature_names</strong> (<em>list</em>) – An optional list of feature names (for sparse matrices)</p></li>
 <li><p><strong>k</strong> (<em>int</em>) – Number of dimensions to extract</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tuple of two dataframes, (features x components, units x components)</p>
+<dd class="field-even"><p>A tuple of two <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> s, (features x components, units x components)</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tuple</p>
@@ -335,13 +333,13 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>features</strong> – A dataframe or sparse matrix with rows are units/observations and columns are features</p></li>
+<li><p><strong>features</strong> – A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> or sparse matrix with rows are units/observations and columns     are features</p></li>
 <li><p><strong>feature_names</strong> (<em>list</em>) – An optional list of feature names (for sparse matrices)</p></li>
 <li><p><strong>k</strong> (<em>int</em>) – Number of dimensions to extract</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tuple of two dataframes, (features x components, documents x components)</p>
+<dd class="field-even"><p>A tuple of two <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> s, (features x components, documents x components)</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tuple</p>
@@ -386,12 +384,12 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>edges</strong> – A dataframe of NxN where both the rows and columns are “nodes” and the values are some sort of     closeness or similarity measure (like a cosine similarity matrix)</p></li>
+<li><p><strong>edges</strong> – A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> of NxN where both the rows and columns are “nodes” and the values     are some sort of closeness or similarity measure (like a cosine similarity matrix)</p></li>
 <li><p><strong>n</strong> (<em>int</em>) – The number of dimensions to extract</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dataframe where rows are the units and the columns correspond to the extracted dimensions.</p>
+<dd class="field-even"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> where rows are the units and the columns correspond to the extracted     dimensions.</p>
 </dd>
 </dl>
 <p>Usage:</p>
@@ -456,14 +454,14 @@
 <td><p>Helps determine the required document sample size to confirm that Cohen’s Kappa between coders is at or     above a minimum threhsold.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.stats.irr.kappa_sample_size_power" title="pewanalytics.stats.irr.kappa_sample_size_power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kappa_sample_size_power</span></code></a>(rate1, rate2, k1, k0)</p></td>
-<td><p>Python translation of the <cite>N.cohen.kappa</cite> function from the <cite>irr</cite> R package.</p></td>
+<td><p>Python translation of the <code class="docutils literal notranslate"><span class="pre">N.cohen.kappa</span></code> function from the <code class="docutils literal notranslate"><span class="pre">irr</span></code> R package.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
 <dt id="pewanalytics.stats.irr.kappa_sample_size_power">
 <code class="sig-name descname">kappa_sample_size_power</code><span class="sig-paren">(</span><em class="sig-param">rate1</em>, <em class="sig-param">rate2</em>, <em class="sig-param">k1</em>, <em class="sig-param">k0</em>, <em class="sig-param">alpha=0.05</em>, <em class="sig-param">power=0.8</em>, <em class="sig-param">twosided=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#kappa_sample_size_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.irr.kappa_sample_size_power" title="Permalink to this definition">¶</a></dt>
-<dd><p>Python translation of the <cite>N.cohen.kappa</cite> function from the <cite>irr</cite> R package.</p>
+<dd><p>Python translation of the <code class="docutils literal notranslate"><span class="pre">N.cohen.kappa</span></code> function from the <code class="docutils literal notranslate"><span class="pre">irr</span></code> R package.</p>
 <p>Source: <a class="reference external" href="https://cran.r-project.org/web/packages/irr/irr.pdf">https://cran.r-project.org/web/packages/irr/irr.pdf</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -474,7 +472,7 @@
 <li><p><strong>k0</strong> (<em>float</em>) – The value of kappa under the null hypothesis</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – Type I error of test</p></li>
 <li><p><strong>power</strong> (<em>float</em>) – The desired power to detect the difference between true kappa and hypothetical kappa</p></li>
-<li><p><strong>twosided</strong> – Set this to <cite>True</cite> if the test is two-sided</p></li>
+<li><p><strong>twosided</strong> – Set this to <code class="docutils literal notranslate"><span class="pre">True</span></code> if the test is two-sided</p></li>
 <li><p><strong>twosided</strong> – bool</p></li>
 </ul>
 </dd>
@@ -492,7 +490,7 @@
 <code class="sig-name descname">kappa_sample_size_CI</code><span class="sig-paren">(</span><em class="sig-param">kappa0</em>, <em class="sig-param">kappaL</em>, <em class="sig-param">props</em>, <em class="sig-param">kappaU=None</em>, <em class="sig-param">alpha=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/irr.html#kappa_sample_size_CI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.irr.kappa_sample_size_CI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helps determine the required document sample size to confirm that Cohen’s Kappa between coders is at or     above a minimum threhsold. Useful in situations where multiple coders code a set of documents for a binary outcome.</p>
 <p>This function takes the observed kappa and proportion of positive cases from the sample, along with a lower-bound     for the minimum acceptable kappa, and returns the sample size required to confirm that the coders’ agreement is     truly above that minimum level of kappa with 95% certainty. If the current sample size is below the required     sample size returned by this function, it can provide a rough estimate of how many additional documents need     to be coded - assuming that the coders continue agreeing and observing positive cases at the same rate.</p>
-<p>Translated from the <cite>kappaSize</cite> R package, CIBinary: <a class="reference external" href="https://github.com/cran/kappaSize/blob/master/R/CIBinary.R">https://github.com/cran/kappaSize/blob/master/R/CIBinary.R</a></p>
+<p>Translated from the <code class="docutils literal notranslate"><span class="pre">kappaSize</span></code> R package, CIBinary: <a class="reference external" href="https://github.com/cran/kappaSize/blob/master/R/CIBinary.R">https://github.com/cran/kappaSize/blob/master/R/CIBinary.R</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -534,13 +532,13 @@ and recall. The input data must consist of a <code class="xref py py-class docut
 <li><p>(Optional) A column with document weights</p></li>
 </ul>
 </div></blockquote>
-<p>This function will return a dataframe with agreement scores between the two specified coders.</p>
+<p>This function will return a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> with agreement scores between the two specified coders.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>coder_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>) – A dataframe of codes</p></li>
-<li><p><strong>coder1</strong> (<em>str</em><em> or </em><em>int</em>) – The value in <cite>coder_column</cite> for rows corresponding to the first coder</p></li>
-<li><p><strong>coder2</strong> (<em>str</em><em> or </em><em>int</em>) – The value in <cite>coder_column</cite> for rows corresponding to the second coder</p></li>
+<li><p><strong>coder_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>) – A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> of codes</p></li>
+<li><p><strong>coder1</strong> (<em>str</em><em> or </em><em>int</em>) – The value in <code class="docutils literal notranslate"><span class="pre">coder_column</span></code> for rows corresponding to the first coder</p></li>
+<li><p><strong>coder2</strong> (<em>str</em><em> or </em><em>int</em>) – The value in <code class="docutils literal notranslate"><span class="pre">coder_column</span></code> for rows corresponding to the second coder</p></li>
 <li><p><strong>outcome_column</strong> (<em>str</em>) – The column that contains the codes</p></li>
 <li><p><strong>document_column</strong> (<em>str</em>) – The column that contains IDs for the documents</p></li>
 <li><p><strong>coder_column</strong> (<em>str</em>) – The column containing values that indicate which coder assigned the code</p></li>
@@ -557,7 +555,7 @@ and recall. The input data must consist of a <code class="xref py py-class docut
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If using a multi-class (non-binary) code, some scores may come back null or not compute as expected.         We recommend running the function separately for each specific code value as a binary flag by providing         each unique value to the <cite>pos_label</cite> argument. If <cite>pos_label</cite> is not provided for multi-class codes,         this function will attempt to compute scores based on support-weighted averages.</p>
+<p>If using a multi-class (non-binary) code, some scores may come back null or not compute as expected.         We recommend running the function separately for each specific code value as a binary flag by providing         each unique value to the <code class="docutils literal notranslate"><span class="pre">pos_label</span></code> argument. If <code class="docutils literal notranslate"><span class="pre">pos_label</span></code> is not provided for multi-class codes,         this function will attempt to compute scores based on support-weighted averages.</p>
 </div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.stats.irr</span> <span class="k">import</span> <span class="n">compute_scores</span>
@@ -672,7 +670,7 @@ and recall. The input data must consist of a <code class="xref py py-class docut
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>coder_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>) – A dataframe of codes</p></li>
+<li><p><strong>coder_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>) – A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> of codes</p></li>
 <li><p><strong>document_column</strong> (<em>str</em>) – The column that contains IDs for the documents</p></li>
 <li><p><strong>outcome_column</strong> (<em>str</em>) – The column that contains the codes</p></li>
 <li><p><strong>coder_column</strong> (<em>str</em>) – The column containing values that indicate which coder assigned the code</p></li>
@@ -719,10 +717,10 @@ and recall. The input data must consist of a <code class="xref py py-class docut
 <td><p>Computes pointwise mutual information for a set of observations partitioned into two groups.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.stats.mutual_info.mutual_info_bar_plot" title="pewanalytics.stats.mutual_info.mutual_info_bar_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutual_info_bar_plot</span></code></a>(mutual_info[, …])</p></td>
-<td><p>Takes a mutual information table generated by <cite>compute_mutual_info</cite>, generates a bar plot of top features.</p></td>
+<td><p>Takes a mutual information table generated by <code class="docutils literal notranslate"><span class="pre">compute_mutual_info</span></code>, generates a bar plot of top features.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.mutual_info.mutual_info_scatter_plot" title="pewanalytics.stats.mutual_info.mutual_info_scatter_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutual_info_scatter_plot</span></code></a>(mutual_info[, …])</p></td>
-<td><p>Takes a mutual information table generated by <cite>compute_mutual_info</cite>, generates a scatter plot of top features.</p></td>
+<td><p>Takes a mutual information table generated by <code class="docutils literal notranslate"><span class="pre">compute_mutual_info</span></code>, generates a scatter plot of top features.</p></td>
 </tr>
 </tbody>
 </table>
@@ -733,8 +731,8 @@ and recall. The input data must consist of a <code class="xref py py-class docut
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>y</strong> – An array or, preferably, a pandas.Series</p></li>
-<li><p><strong>x</strong> – A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix’</p></li>
+<li><p><strong>y</strong> – An array or, preferably, a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></p></li>
+<li><p><strong>x</strong> – A matrix, <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>, or preferably a <code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csr_matrix</span></code></p></li>
 <li><p><strong>weights</strong> – (Optional) An array of weights corresponding to each observation</p></li>
 <li><p><strong>col_names</strong> (<em>list</em>) – The feature names associated with the columns in matrix ‘x’</p></li>
 <li><p><strong>l</strong> (<em>int</em><em> or </em><em>float</em>) – An optional Laplace smoothing parameter</p></li>
@@ -742,35 +740,32 @@ and recall. The input data must consist of a <code class="xref py py-class docut
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dataframe of features with a variety of computed metrics including mutual information.</p>
+<dd class="field-even"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> of features with a variety of computed metrics including mutual information.</p>
 </dd>
 </dl>
-<p>The function expects <cite>y</cite> to correspond to a list or series of values indicating which partition an observation     belongs to. <cite>y</cite> must be a binary flag. <cite>x</cite> is a set of features (either a DataFrame or sparse matrix) where the
-rows correspond to observations and the columns represent the presence of features (you can technically run
-this using non-binary features but the results will not be as readily interpretable.) The function returns
-a DataFrame of metrics computed for each feature, including the following columns:</p>
+<p>The function expects <code class="docutils literal notranslate"><span class="pre">y</span></code> to correspond to a list or series of values indicating which partition an observation     belongs to. <code class="docutils literal notranslate"><span class="pre">y</span></code> must be a binary flag. <code class="docutils literal notranslate"><span class="pre">x</span></code> is a set of features (either a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> or     sparse matrix) where the rows correspond to observations and the columns represent the presence of features (you     can technically run this using non-binary features but the results will not be as readily interpretable.) The     function returns a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> of metrics computed for each feature, including the following     columns:</p>
 <ul class="simple">
-<li><p><cite>MI1</cite>: The feature’s mutual information for the positive class</p></li>
-<li><p><cite>MI0</cite>: The feature’s mutual information for the negative class</p></li>
-<li><p><cite>total</cite>: The total number of times a feature appeared</p></li>
-<li><p><cite>total_pos_with_term</cite>: The total number of times a feature appeared in positive cases</p></li>
-<li><p><cite>total_neg_with_term</cite>: The total number of times a feature appeared in negative cases</p></li>
-<li><p><cite>total_pos_neg_with_term_diff</cite>: The raw difference in the number of times a feature appeared in positive cases     relative to negative cases</p></li>
-<li><p><cite>pct_pos_with_term</cite>: The proportion of positive cases that had the feature</p></li>
-<li><p><cite>pct_neg_with_term</cite>: The proportion of negative cases that had the feature</p></li>
-<li><p><cite>pct_pos_neg_with_term_ratio</cite>: A likelihood ratio indicating the degree to which a positive case was more likely     to have the feature than a negative case</p></li>
-<li><p><cite>pct_term_pos</cite>: Of the cases that had a feature, the proportion that were in the positive class</p></li>
-<li><p><cite>pct_term_neg</cite>: Of the cases that had a feature, the proportion that were in the negative class</p></li>
-<li><p><cite>pct_term_pos_neg_diff</cite>: The percentage point difference between the proportion of cases with the feature that     were positive vs. negative</p></li>
-<li><p><cite>pct_term_pos_neg_ratio</cite>: A likelihood ratio indicating the degree to which a feature was more likely to appear     in a positive case relative to a negative one (may not be meaningful when classes are imbalanced)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MI1</span></code>: The feature’s mutual information for the positive class</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MI0</span></code>: The feature’s mutual information for the negative class</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">total</span></code>: The total number of times a feature appeared</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">total_pos_with_term</span></code>: The total number of times a feature appeared in positive cases</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">total_neg_with_term</span></code>: The total number of times a feature appeared in negative cases</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">total_pos_neg_with_term_diff</span></code>: The raw difference in the number of times a feature appeared in positive cases     relative to negative cases</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pct_pos_with_term</span></code>: The proportion of positive cases that had the feature</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pct_neg_with_term</span></code>: The proportion of negative cases that had the feature</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pct_pos_neg_with_term_ratio</span></code>: A likelihood ratio indicating the degree to which a positive case was more likely     to have the feature than a negative case</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pct_term_pos</span></code>: Of the cases that had a feature, the proportion that were in the positive class</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pct_term_neg</span></code>: Of the cases that had a feature, the proportion that were in the negative class</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pct_term_pos_neg_diff</span></code>: The percentage point difference between the proportion of cases with the feature that     were positive vs. negative</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pct_term_pos_neg_ratio</span></code>: A likelihood ratio indicating the degree to which a feature was more likely to appear     in a positive case relative to a negative one (may not be meaningful when classes are imbalanced)</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Note that <cite>pct_term_pos</cite> and <cite>pct_term_neg</cite> may not be directly comparable if classes are imbalanced,         and in such cases a <cite>pct_term_pos_neg_diff</cite> above zero or <cite>pct_term_pos_neg_ratio</cite> above 1 may not indicate a         true association with the positive class if positive cases outnumber negative ones.</p>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">pct_term_pos</span></code> and <code class="docutils literal notranslate"><span class="pre">pct_term_neg</span></code> may not be directly comparable if classes are imbalanced,         and in such cases a <code class="docutils literal notranslate"><span class="pre">pct_term_pos_neg_diff</span></code> above zero or <code class="docutils literal notranslate"><span class="pre">pct_term_pos_neg_ratio</span></code> above 1 may not indicate a         true association with the positive class if positive cases outnumber negative ones.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Mutual information can be a difficult metric to explain to others. We’ve found that the         <cite>pct_pos_neg_with_term_ratio</cite> can serve as a more interpretable alternative method for identifying         meaningful differences between groups.</p>
+<p>Mutual information can be a difficult metric to explain to others. We’ve found that the         <code class="docutils literal notranslate"><span class="pre">pct_pos_neg_with_term_ratio</span></code> can serve as a more interpretable alternative method for identifying         meaningful differences between groups.</p>
 </div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.stats.mutual_info</span> <span class="k">import</span> <span class="n">compute_mutual_info</span>
@@ -806,22 +801,22 @@ a DataFrame of metrics computed for each feature, including the following column
 <dl class="function">
 <dt id="pewanalytics.stats.mutual_info.mutual_info_bar_plot">
 <code class="sig-name descname">mutual_info_bar_plot</code><span class="sig-paren">(</span><em class="sig-param">mutual_info</em>, <em class="sig-param">filter_col='MI1'</em>, <em class="sig-param">top_n=50</em>, <em class="sig-param">x_col='pct_term_pos_neg_ratio'</em>, <em class="sig-param">color='grey'</em>, <em class="sig-param">title=None</em>, <em class="sig-param">width=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/mutual_info.html#mutual_info_bar_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.mutual_info.mutual_info_bar_plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes a mutual information table generated by <cite>compute_mutual_info</cite>, generates a bar plot of top features.      Allows for an easy visualization of feature differences. Can subsequently call <cite>plt.show()</cite> or
-<cite>plt.savefig</cite> to display or save the plot.</p>
+<dd><p>Takes a mutual information table generated by <code class="docutils literal notranslate"><span class="pre">compute_mutual_info</span></code>, generates a bar plot of top features.      Allows for an easy visualization of feature differences. Can subsequently call <code class="docutils literal notranslate"><span class="pre">plt.show()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">plt.savefig</span></code> to display or save the plot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mutual_info</strong> – A mutual information table generated by <cite>compute_mutual_info</cite></p></li>
-<li><p><strong>filter_col</strong> (<em>str</em>) – The column to use when selecting top features; sorts in descending order and picks the     top <cite>top_n</cite></p></li>
+<li><p><strong>mutual_info</strong> – A mutual information table generated by <code class="docutils literal notranslate"><span class="pre">compute_mutual_info</span></code></p></li>
+<li><p><strong>filter_col</strong> (<em>str</em>) – The column to use when selecting top features; sorts in descending order and picks the     top <code class="docutils literal notranslate"><span class="pre">top_n</span></code></p></li>
 <li><p><strong>top_n</strong> (<em>int</em>) – The number of features to display</p></li>
-<li><p><strong>x_col</strong> (<em>str</em>) – The column by which to sort the final set of top features (after they have been selected by     <cite>filter_col</cite></p></li>
+<li><p><strong>x_col</strong> (<em>str</em>) – The column by which to sort the final set of top features (after they have been selected by     <code class="docutils literal notranslate"><span class="pre">filter_col</span></code></p></li>
 <li><p><strong>color</strong> (<em>str</em>) – The color of the bars</p></li>
 <li><p><strong>title</strong> (<em>str</em>) – The title of the plot</p></li>
 <li><p><strong>width</strong> (<em>int</em>) – The width of the plot</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A Matplotlib figure, which you can display via <cite>plt.show()</cite> or alternatively save to a file via     <cite>plt.savefig(FILEPATH)</cite></p>
+<dd class="field-even"><p>A Matplotlib figure, which you can display via <code class="docutils literal notranslate"><span class="pre">plt.show()</span></code> or alternatively save to a file via     <code class="docutils literal notranslate"><span class="pre">plt.savefig(FILEPATH)</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -829,15 +824,15 @@ a DataFrame of metrics computed for each feature, including the following column
 <dl class="function">
 <dt id="pewanalytics.stats.mutual_info.mutual_info_scatter_plot">
 <code class="sig-name descname">mutual_info_scatter_plot</code><span class="sig-paren">(</span><em class="sig-param">mutual_info</em>, <em class="sig-param">filter_col='MI1'</em>, <em class="sig-param">top_n=50</em>, <em class="sig-param">x_col='pct_term_pos_neg_ratio'</em>, <em class="sig-param">xlabel=None</em>, <em class="sig-param">scale_x_even=True</em>, <em class="sig-param">y_col='MI1'</em>, <em class="sig-param">ylabel=None</em>, <em class="sig-param">scale_y_even=True</em>, <em class="sig-param">color='grey'</em>, <em class="sig-param">color_col='MI1'</em>, <em class="sig-param">size_col='pct_pos_with_term'</em>, <em class="sig-param">title=None</em>, <em class="sig-param">figsize=(10</em>, <em class="sig-param">10)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/mutual_info.html#mutual_info_scatter_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.mutual_info.mutual_info_scatter_plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes a mutual information table generated by <cite>compute_mutual_info</cite>, generates a scatter plot of top features.
+<dd><p>Takes a mutual information table generated by <code class="docutils literal notranslate"><span class="pre">compute_mutual_info</span></code>, generates a scatter plot of top features.
 The names of the features will be displayed with varying colors and sizes depending on the variables specified
-in <cite>color_col</cite> and <cite>size_col</cite>. Allows for an easy visualization of feature differences. Can subsequently
-call <cite>plt.show()</cite> or <cite>plt.savefig</cite> to display or save the plot.</p>
+in <code class="docutils literal notranslate"><span class="pre">color_col</span></code> and <code class="docutils literal notranslate"><span class="pre">size_col</span></code>. Allows for an easy visualization of feature differences. Can subsequently
+call <code class="docutils literal notranslate"><span class="pre">plt.show()</span></code> or <code class="docutils literal notranslate"><span class="pre">plt.savefig</span></code> to display or save the plot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mutual_info</strong> – A mutual information table generated by <cite>compute_mutual_info</cite></p></li>
-<li><p><strong>filter_col</strong> (<em>str</em>) – The column to use when selecting top features; sorts in descending order and picks the top     <cite>top_n</cite></p></li>
+<li><p><strong>mutual_info</strong> – A mutual information table generated by <code class="docutils literal notranslate"><span class="pre">compute_mutual_info</span></code></p></li>
+<li><p><strong>filter_col</strong> (<em>str</em>) – The column to use when selecting top features; sorts in descending order and picks the top     <code class="docutils literal notranslate"><span class="pre">top_n</span></code></p></li>
 <li><p><strong>top_n</strong> (<em>int</em>) – The number of features to display</p></li>
 <li><p><strong>x_col</strong> (<em>str</em>) – The column to use as the x-axis</p></li>
 <li><p><strong>xlabel</strong> (<em>str</em>) – Label for the x-axis</p></li>
@@ -853,7 +848,7 @@ call <cite>plt.show()</cite> or <cite>plt.savefig</cite> to display or save the 
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A Matplotlib figure, which you can display via <cite>plt.show()</cite> or alternatively save to a file via     <cite>plt.savefig(FILEPATH)</cite></p>
+<dd class="field-even"><p>A Matplotlib figure, which you can display via <code class="docutils literal notranslate"><span class="pre">plt.show()</span></code> or alternatively save to a file via     <code class="docutils literal notranslate"><span class="pre">plt.savefig(FILEPATH)</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -882,30 +877,27 @@ call <cite>plt.show()</cite> or <cite>plt.savefig</cite> to display or save the 
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.sampling.compute_balanced_sample_weights" title="pewanalytics.stats.sampling.compute_balanced_sample_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_balanced_sample_weights</span></code></a>(sample, …)</p></td>
-<td><p>Takes a DataFrame and one or more column names (<cite>weight_vars</cite>) and computes weights such that every unique combination of values in the weighting columns are balanced (when weighted, the sum of the observations with each combination will be equal to one another).</p></td>
+<td><p>Takes a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> and one or more column names (<code class="docutils literal notranslate"><span class="pre">weight_vars</span></code>) and computes weights such     that every unique combination of values in the weighting columns are balanced (when weighted, the sum of the     observations with each combination will be equal to one another).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.stats.sampling.compute_sample_weights_from_frame" title="pewanalytics.stats.sampling.compute_sample_weights_from_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_sample_weights_from_frame</span></code></a>(frame, …)</p></td>
-<td><p>Takes two dataframes and computes sampling weights for the second one, based on the first.</p></td>
+<td><p>Takes two :py:class:<a href="#id1"><span class="problematic" id="id2">`</span></a>pandas.DataFrame`s and computes sampling weights for the second one, based on the first.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
 <dt id="pewanalytics.stats.sampling.compute_sample_weights_from_frame">
 <code class="sig-name descname">compute_sample_weights_from_frame</code><span class="sig-paren">(</span><em class="sig-param">frame</em>, <em class="sig-param">sample</em>, <em class="sig-param">weight_vars</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#compute_sample_weights_from_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.sampling.compute_sample_weights_from_frame" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes two dataframes and computes sampling weights for the second one, based on the first. The first dataframe
-should be equivalent to the population that the second dataframe, a sample, was drawn from. Weights will be
-calculated based on the differences in the distribution of one or more variables specified in <cite>weight_vars</cite>
-(these should be the names of columns). Returns a series equal in length to the <cite>sample</cite> with the computed weights.</p>
+<dd><p>Takes two <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame`s</span> <span class="pre">and</span> <span class="pre">computes</span> <span class="pre">sampling</span> <span class="pre">weights</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">second</span> <span class="pre">one,</span> <span class="pre">based</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">first.</span>&#160;&#160;&#160;&#160; <span class="pre">The</span> <span class="pre">first</span> <span class="pre">:py:class:`pandas.DataFrame</span></code> should be equivalent to the population that the second     <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>, a sample, was drawn from. Weights will be calculated based on the differences in     the distribution of one or more variables specified in <code class="docutils literal notranslate"><span class="pre">weight_vars</span></code> (these should be the names of columns).     Returns a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code> equal in length to the <code class="docutils literal notranslate"><span class="pre">sample</span></code> with the computed weights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>frame</strong> – DataFrame (must contain all of the columns specified in <cite>weight_vars</cite>)</p></li>
-<li><p><strong>sample</strong> – DataFrame (must contain all of the columns specified in <cite>weight_vars</cite>)</p></li>
+<li><p><strong>frame</strong> – <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> (must contain all of the columns specified in <code class="docutils literal notranslate"><span class="pre">weight_vars</span></code>)</p></li>
+<li><p><strong>sample</strong> – <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> (must contain all of the columns specified in <code class="docutils literal notranslate"><span class="pre">weight_vars</span></code>)</p></li>
 <li><p><strong>weight_vars</strong> (<em>list</em>) – The names of the columns to use when computing weights.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A Series containing the weights for each row in the <cite>sample</cite></p>
+<dd class="field-even"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code> containing the weights for each row in the <code class="docutils literal notranslate"><span class="pre">sample</span></code></p>
 </dd>
 </dl>
 <p>Usage:</p>
@@ -948,19 +940,17 @@ calculated based on the differences in the distribution of one or more variables
 <dl class="function">
 <dt id="pewanalytics.stats.sampling.compute_balanced_sample_weights">
 <code class="sig-name descname">compute_balanced_sample_weights</code><span class="sig-paren">(</span><em class="sig-param">sample</em>, <em class="sig-param">weight_vars</em>, <em class="sig-param">weight_column=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#compute_balanced_sample_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.sampling.compute_balanced_sample_weights" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes a DataFrame and one or more column names (<cite>weight_vars</cite>) and computes weights such that every unique
-combination of values in the weighting columns are balanced (when weighted, the sum of the observations with each
-combination will be equal to one another). Useful for balancing important groups in training datasets, etc.</p>
+<dd><p>Takes a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> and one or more column names (<code class="docutils literal notranslate"><span class="pre">weight_vars</span></code>) and computes weights such     that every unique combination of values in the weighting columns are balanced (when weighted, the sum of the     observations with each combination will be equal to one another). Useful for balancing important groups in     training datasets, etc.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sample</strong> – DataFrame (must contain all of the columns specified in <cite>weight_vars</cite>)</p></li>
+<li><p><strong>sample</strong> – <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> (must contain all of the columns specified in <code class="docutils literal notranslate"><span class="pre">weight_vars</span></code>)</p></li>
 <li><p><strong>weight_vars</strong> (<em>list</em>) – The names of the columns to use when computing weights.</p></li>
 <li><p><strong>weight_column</strong> (<em>str</em>) – An option column containing existing weights, which can be factored into the new weights.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A Series containing the weights for each row in the <cite>sample</cite></p>
+<dd class="field-even"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code> containing the weights for each row in the <code class="docutils literal notranslate"><span class="pre">sample</span></code></p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1004,7 +994,7 @@ combination will be equal to one another). Useful for balancing important groups
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>) – The sampling frame</p></li>
-<li><p><strong>id_col</strong> (<em>str</em>) – Column in the DataFrame to be used as the unique ID of observations</p></li>
+<li><p><strong>id_col</strong> (<em>str</em>) – Column in the <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to be used as the unique ID of observations</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – Whether or not to print information during the sampling process (default=False)</p></li>
 <li><p><strong>seed</strong> (<em>int</em>) – Random seed (optional)</p></li>
 </ul>
@@ -1018,14 +1008,14 @@ combination will be equal to one another). Useful for balancing important groups
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.stats.sampling.SampleExtractor.extract" title="pewanalytics.stats.sampling.SampleExtractor.extract"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract</span></code></a>(sample_size[, sampling_strategy, …])</p></td>
-<td><p>Extract a sample from a DataFrame using one of the following methods:</p></td>
+<td><p>Extract a sample from a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> using one of the following methods:</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="pewanalytics.stats.sampling.SampleExtractor.extract">
 <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">sample_size</em>, <em class="sig-param">sampling_strategy='random'</em>, <em class="sig-param">stratify_by=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/stats/sampling.html#SampleExtractor.extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.stats.sampling.SampleExtractor.extract" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract a sample from a DataFrame using one of the following methods:</p>
+<dd><p>Extract a sample from a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> using one of the following methods:</p>
 <ul class="simple">
 <li><p>all: Returns all of the IDs</p></li>
 <li><p>random: Returns a random sample</p></li>
@@ -1038,11 +1028,11 @@ combination will be equal to one another). Useful for balancing important groups
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sample_size</strong> (<em>int</em>) – The desired size of the sample</p></li>
 <li><p><strong>sampling_strategy</strong> (<em>str</em>) – The method to be used to extract samples. Options are: all, random, stratify,         stratify_even, stratify_guaranteed</p></li>
-<li><p><strong>stratify_by</strong> (<em>str</em><em>, </em><em>list</em>) – Optional name of a column or list of columns in the DataFrame to stratify on</p></li>
+<li><p><strong>stratify_by</strong> (<em>str</em><em>, </em><em>list</em>) – Optional name of a column or list of columns in the <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to         stratify on</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of IDs reflecting the observations selected from the DataFrame during sampling</p>
+<dd class="field-even"><p>A list of IDs reflecting the observations selected from the <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> during         sampling</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list</p>
@@ -1099,8 +1089,6 @@ combination will be equal to one another). Useful for balancing important groups
 
 </dd></dl>
 
-<div class="toctree-wrapper compound">
-</div>
 </div>
 </div>
 

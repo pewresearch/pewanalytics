@@ -169,17 +169,17 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A wrapper around various topic modeling algorithms and libraries, intended to provide a standardized way to train \</span>
-<span class="sd">    and apply models. When you initialize a `TopicModel`, it will fit a vectorizer, and split the data into a train \</span>
-<span class="sd">    and test set if `holdout_pct` is provided. For more information about the available implementations, refer to the \</span>
-<span class="sd">    documentation for the `fit()` method below.</span>
+<span class="sd">    and apply models. When you initialize a ``TopicModel``, it will fit a vectorizer, and split the data into a train \</span>
+<span class="sd">    and test set if ``holdout_pct`` is provided. For more information about the available implementations, refer to the \</span>
+<span class="sd">    documentation for the ``fit()`` method below.</span>
 
-<span class="sd">    :param df: Pandas DataFrame</span>
+<span class="sd">    :param df: A :py:class:`pandas.DataFrame`</span>
 <span class="sd">    :param text_col: Name of the column containing text</span>
 <span class="sd">    :type text_col: str</span>
 <span class="sd">    :param method: The topic model implementation to use. Options are: sklearn_lda, sklearn_nmf, gensim_lda, \</span>
 <span class="sd">    gensim_hdp, corex</span>
 <span class="sd">    :type method: str</span>
-<span class="sd">    :param num_topics: The number of topics to extract. Required for every method except `gensim_hdp`.</span>
+<span class="sd">    :param num_topics: The number of topics to extract. Required for every method except ``gensim_hdp``.</span>
 <span class="sd">    :type num_topics: int</span>
 <span class="sd">    :param max_ngram_size: Maximum ngram size (2=bigrams, 3=trigrams, etc)</span>
 <span class="sd">    :type max_ngram_size: int</span>
@@ -299,12 +299,13 @@
 <div class="viewcode-block" id="TopicModel.get_features"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.topics.TopicModel.get_features">[docs]</a>    <span class="k">def</span> <span class="nf">get_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">keep_sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Uses the trained vectorizer to process a dataframe and return a feature matrix.</span>
+<span class="sd">        Uses the trained vectorizer to process a :py:class:`pandas.DataFrame` and return a feature matrix.</span>
 
-<span class="sd">        :param df: The DataFrame to vectorize (must have `self.text_col` in it)</span>
+<span class="sd">        :param df: The :py:class:`pandas.DataFrame` to vectorize (must have ``self.text_col`` in it)</span>
 <span class="sd">        :param keep_sparse: Whether or not to keep the feature matrix in sparse format (default=False)</span>
 <span class="sd">        :type keep_sparse: bool</span>
-<span class="sd">        :return: A Pandas DataFrame of features or a sparse matrix, depending on the value of `keep_sparse`</span>
+<span class="sd">        :return: A :py:class:`pandas.DataFrame` of features or a sparse matrix, depending on the value of \</span>
+<span class="sd">        ``keep_sparse``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">subset_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">text_col</span><span class="p">])</span>
@@ -321,7 +322,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Internal helper function to set defaults depending on the specified model.</span>
 
-<span class="sd">        :param kwargs: Arguments passed to `self.fit()`</span>
+<span class="sd">        :param kwargs: Arguments passed to ``self.fit()``</span>
 <span class="sd">        :return: Arguments to pass to the model</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -410,7 +411,7 @@
 <div class="viewcode-block" id="TopicModel.fit"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.topics.TopicModel.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fits a model using the method specified when initializing the `TopicModel`. Details on model-specific \</span>
+<span class="sd">        Fits a model using the method specified when initializing the ``TopicModel``. Details on model-specific \</span>
 <span class="sd">        parameters are below:</span>
 
 <span class="sd">        **sklearn_lda**</span>
@@ -419,15 +420,15 @@
 <span class="sd">        available parameters, please refer to the official documentation: \</span>
 <span class="sd">        https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.LatentDirichletAllocation.html</span>
 
-<span class="sd">        :param df: The dataframe to train the model on (must contain `self.text_col`)</span>
+<span class="sd">        :param df: The :py:class:`pandas.DataFrame` to train the model on (must contain ``self.text_col``)</span>
 <span class="sd">        :param alpha: Represents document-topic density. When values are higher, documents will be comprised of more \</span>
 <span class="sd">        topics; when values are lower, documents will be primarily comprised of only a few topics. This parameter is \</span>
 <span class="sd">        used instead of the doc_topic_prior sklearn parameter, and will be passed along to sklearn using the formula: \</span>
-<span class="sd">        `doc_topic_prior = alpha / num_topics`</span>
+<span class="sd">        ``doc_topic_prior = alpha / num_topics``</span>
 <span class="sd">        :param beta: Represents topic-word density. When values are higher, topics will be comprised of more words; \</span>
 <span class="sd">        when values are lower, only a few words will be loaded onto each topic. This parameter is used instead of the \</span>
 <span class="sd">        topic_word_prior sklearn parameter, and will be passed along to sklearn using the formula: \</span>
-<span class="sd">        `topic_word_prior = beta / num_topics`.</span>
+<span class="sd">        ``topic_word_prior = beta / num_topics``.</span>
 <span class="sd">        :param learning_decay: See sklearn documentation.</span>
 <span class="sd">        :param learning_offset: See sklearn documentation.</span>
 <span class="sd">        :param learning_method: See sklearn documentation.</span>
@@ -441,7 +442,7 @@
 <span class="sd">        please refer to the official documentation: \</span>
 <span class="sd">        https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.NMF.html</span>
 
-<span class="sd">        :param df: The dataframe to train the model on (must contain `self.text_col`)</span>
+<span class="sd">        :param df: The :py:class:`pandas.DataFrame` to train the model on (must contain ``self.text_col``)</span>
 <span class="sd">        :param alpha: See sklearn documentation.</span>
 <span class="sd">        :param l1_ratio: See sklearn documentation.</span>
 <span class="sd">        :param tol: See sklearn documentation.</span>
@@ -452,21 +453,21 @@
 
 <span class="sd">        Fits an LDA model using :py:class:`gensim.models.LdaModel` or \</span>
 <span class="sd">        :py:class:`gensim.models.ldamulticore.LdaMulticore`. \</span>
-<span class="sd">        When `use_multicore` is set to `True`, the multicore implementation will be used, otherwise the standard \</span>
+<span class="sd">        When ``use_multicore`` is set to ``True``, the multicore implementation will be used, otherwise the standard \</span>
 <span class="sd">        LDA implementation will be used. \</span>
 <span class="sd">        For more information on available parameters, please refer to the official documentation below:</span>
 
 <span class="sd">            - use_multicore=True: https://radimrehurek.com/gensim/models/ldamulticore.html</span>
 <span class="sd">            - use_multicore=False: https://radimrehurek.com/gensim/models/ldamodel.html</span>
 
-<span class="sd">        :param df: The dataframe to train the model on (must contain `self.text_col`)</span>
+<span class="sd">        :param df: The :py:class:`pandas.DataFrame` to train the model on (must contain ``self.text_col``)</span>
 <span class="sd">        :param alpha: Represents document-topic density. When values are higher, documents will be comprised of \</span>
 <span class="sd">        more topics; when values are lower, documents will be primarily comprised of only a few topics. Gensim \</span>
 <span class="sd">        options are a bit different than sklearn though; refer to the documentation for the accepted values here.</span>
 <span class="sd">        :param beta: Represents topic-word density. When values are higher, topics will be comprised of more words; \</span>
 <span class="sd">        when values are lower, only a few words will be loaded onto each topic. Gensim options are a bit different \</span>
 <span class="sd">        than sklearn though; refer to the documentation for the accepted values here. Gensim calls this parameter \</span>
-<span class="sd">        `eta`. We renamed it to be consistent with the sklearn implementations.</span>
+<span class="sd">        ``eta``. We renamed it to be consistent with the sklearn implementations.</span>
 <span class="sd">        :param chunksize: See gensim documentation.</span>
 <span class="sd">        :param passes: See gensim documentation.</span>
 <span class="sd">        :param decay: See gensim documentation.</span>
@@ -477,16 +478,16 @@
 <span class="sd">        **gensim_hdp**</span>
 
 <span class="sd">        Fits an HDP model using the gensim implementation. Contrary to LDA and NMF, HDP attempts to auto-detect the</span>
-<span class="sd">        correct number of topics. In practice, it actually fits `T` topics (default is 150) but many are extremely rare</span>
+<span class="sd">        correct number of topics. In practice, it actually fits ``T`` topics (default is 150) but many are extremely rare</span>
 <span class="sd">        or occur only in a very few number of documents. To identify the topics that are actually useful, this function</span>
-<span class="sd">        passes the original DataFrame through the trained model after fitting, and identifies topics that compose at</span>
-<span class="sd">        least 1% of a document in at least 1% of all documents in the corpus. In other words, topics are thrown out if</span>
-<span class="sd">        the number of documents they appear in at a rate of at least 1% are fewer than 1% of the total number of</span>
-<span class="sd">        documents. Subsequent use of the model will only make use of topics that meet this threshold. For more \</span>
-<span class="sd">        information on available parameters, please refer to the official documentation: \</span>
+<span class="sd">        passes the original :py:class:`pandas.DataFrame` through the trained model after fitting, and identifies \</span>
+<span class="sd">        topics that compose at least 1% of a document in at least 1% of all documents in the corpus. In other words, \</span>
+<span class="sd">        topics are thrown out if the number of documents they appear in at a rate of at least 1% are fewer than 1% of \</span>
+<span class="sd">        the total number of documents. Subsequent use of the model will only make use of topics that meet this \</span>
+<span class="sd">        threshold. For more information on available parameters, please refer to the official documentation: \</span>
 <span class="sd">        https://radimrehurek.com/gensim/models/hdpmodel.html</span>
 
-<span class="sd">        :param df: The dataframe to train the model on (must contain `self.text_col`)</span>
+<span class="sd">        :param df: The :py:class:`pandas.DataFrame` to train the model on (must contain ``self.text_col``)</span>
 <span class="sd">        :param max_chunks: See gensim documentation.</span>
 <span class="sd">        :param max_time: See gensim documentation.</span>
 <span class="sd">        :param chunksize: See gensim documentation.</span>
@@ -513,12 +514,12 @@
 <span class="sd">            ]</span>
 
 <span class="sd">        The list of anchors cannot be longer than the specified number of topics, and all of the words must</span>
-<span class="sd">        exist in the vocabulary. The `anchor_strength` parameter determines the degree to which the model is able to</span>
+<span class="sd">        exist in the vocabulary. The ``anchor_strength`` parameter determines the degree to which the model is able to</span>
 <span class="sd">        override the suggested words based on the data; providing higher values are a way of &quot;insisting&quot; more strongly</span>
 <span class="sd">        that the model keep the provided words together in a single topic. For more information on available \</span>
 <span class="sd">        parameters, please refer to the official documentation: https://github.com/gregversteeg/corex_topic</span>
 
-<span class="sd">        :param df: The dataframe to train the model on (must contain `self.text_col`)</span>
+<span class="sd">        :param df: The :py:class:`pandas.DataFrame` to train the model on (must contain ``self.text_col``)</span>
 <span class="sd">        :param anchors: A list of lists that contain words that the model should try to group together into topics</span>
 <span class="sd">        :param anchor_strength: The degree to which the provided anchors should be preserved regardless of the data</span>
 
@@ -612,9 +613,10 @@
 <div class="viewcode-block" id="TopicModel.get_document_topics"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.topics.TopicModel.get_document_topics">[docs]</a>    <span class="k">def</span> <span class="nf">get_document_topics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Takes a DataFrame and returns a document-topic DataFrame (rows=documents, columns=topics)</span>
+<span class="sd">        Takes a :py:class:`pandas.DataFrame` and returns a document-topic :py:class:`pandas.DataFrame` \</span>
+<span class="sd">        (rows=documents, columns=topics)</span>
 
-<span class="sd">        :param df: The DataFrame to process (must have `self.text_col` in it)</span>
+<span class="sd">        :param df: The :py:class:`pandas.DataFrame` to process (must have ``self.text_col`` in it)</span>
 <span class="sd">        :param min_probability: (gensim_lda use_multicore=False only) Topics with a probability lower than this \</span>
 <span class="sd">        threshold will be filtered out (Default=0.0)</span>
 <span class="sd">        :type min_probability: float</span>

@@ -188,7 +188,7 @@
 <div class="viewcode-block" id="has_fragment"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.has_fragment">[docs]</a><span class="k">def</span> <span class="nf">has_fragment</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">fragment</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Checks whether a substring (&quot;fragment&quot;) is contained within a larger string (&quot;text&quot;). Uses the `pewtils.decode_text`</span>
+<span class="sd">    Checks whether a substring (&quot;fragment&quot;) is contained within a larger string (&quot;text&quot;). Uses the ``pewtils.decode_text``</span>
 <span class="sd">    function to process both the text and the fragment when running this check.</span>
 
 <span class="sd">    :param text: The text to search</span>
@@ -259,8 +259,8 @@
 <div class="viewcode-block" id="filter_parts_of_speech"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.filter_parts_of_speech">[docs]</a><span class="k">def</span> <span class="nf">filter_parts_of_speech</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">filter_pos</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Retain words associated with parts of speech in the text if `exclude=False`.</span>
-<span class="sd">    If `exclude=True`, exclude words associated with parts of speech.</span>
+<span class="sd">    Retain words associated with parts of speech in the text if ``exclude=False``.</span>
+<span class="sd">    If ``exclude=True``, exclude words associated with parts of speech.</span>
 <span class="sd">    Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)</span>
 
 <span class="sd">    | The full list of POS is here: https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html</span>
@@ -269,10 +269,10 @@
 <span class="sd">    :type text: str</span>
 <span class="sd">    :param filter_pos: Array of part of speech tags (default is &#39;NN&#39;, &#39;NNP&#39;, and &#39;JJ&#39;)</span>
 <span class="sd">    :type filter_pos: list</span>
-<span class="sd">    :param exclude: If `True`, the function will remove words that match to the specified parts of speech; by default \</span>
+<span class="sd">    :param exclude: If ``True``, the function will remove words that match to the specified parts of speech; by default \</span>
 <span class="sd">    this function *filters to* POS matches instead.</span>
 <span class="sd">    :return: A string comprised solely of words that matched (or did not match) to the specified parts of speech, \</span>
-<span class="sd">    depending on the value of `exclude`</span>
+<span class="sd">    depending on the value of ``exclude``</span>
 <span class="sd">    :rtype: str</span>
 
 <span class="sd">    Usage::</span>
@@ -304,7 +304,7 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares</span>
-<span class="sd">    to the overall length of the texts. Uses the `fuzzywuzzy` library in Python 2, and the `rapidfuzz` library in \</span>
+<span class="sd">    to the overall length of the texts. Uses the ``fuzzywuzzy`` library in Python 2, and the ``rapidfuzz`` library in \</span>
 <span class="sd">    Python 3.</span>
 
 <span class="sd">    :param text1: First string</span>
@@ -382,7 +382,7 @@
 <div class="viewcode-block" id="SentenceTokenizer"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.SentenceTokenizer">[docs]</a><span class="k">class</span> <span class="nc">SentenceTokenizer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Initializes a tokenizer that can be be used to break text into tokens using the `tokenize` function</span>
+<span class="sd">    Initializes a tokenizer that can be be used to break text into tokens using the ``tokenize`` function</span>
 
 <span class="sd">    :param base_tokenizer: The tokenizer to use (default = NLTK&#39;s English Punkt tokenizer)</span>
 <span class="sd">    :param regex_split_trailing: A compiled regex object used to define the end of sentences</span>
@@ -503,7 +503,7 @@
 <div class="viewcode-block" id="TextOverlapExtractor.get_text_overlaps"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextOverlapExtractor.get_text_overlaps">[docs]</a>    <span class="k">def</span> <span class="nf">get_text_overlaps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extracts all overlapping segments of at least `min_length` characters between the two texts. If `tokenize=True`</span>
+<span class="sd">        Extracts all overlapping segments of at least ``min_length`` characters between the two texts. If ``tokenize=True``</span>
 <span class="sd">        then only tokens that appear fully in both texts will be extracted. For example:</span>
 
 <span class="sd">        :param text1: A piece of text</span>
@@ -780,16 +780,16 @@
 <span class="sd">    potential duplicates, identifying recurring segments of text, computing metrics like mutual information, \</span>
 <span class="sd">    extracting clusters of documents, and more.</span>
 
-<span class="sd">    Given a DataFrame and the name of the column that contains the text to be analyzed, the TextDataFrame will \</span>
-<span class="sd">    automatically produce a TF-IDF sparse matrix representation of the text upon initialization. All other \</span>
-<span class="sd">    parameters are passed along to the scikit-learn TfidfVectorizer.</span>
+<span class="sd">    Given a :py:class:`pandas.DataFrame` and the name of the column that contains the text to be analyzed, the \</span>
+<span class="sd">    TextDataFrame will automatically produce a TF-IDF sparse matrix representation of the text upon initialization. \</span>
+<span class="sd">    All other parameters are passed along to the scikit-learn TfidfVectorizer.</span>
 
 <span class="sd">    .. tip:: For more info on the parameters it excepts, refer to the official scikit-learn `Tfidf vectorizer \</span>
 <span class="sd">    documentation \</span>
 <span class="sd">    &lt;https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html&gt;`_.</span>
 
-<span class="sd">    :param df: A dataframe of documents.  Must contain a column with text.</span>
-<span class="sd">    :param text_column: The name of the column in the dataframe that contains the text</span>
+<span class="sd">    :param df: A :py:class:`pandas.DataFrame` of documents.  Must contain a column with text.</span>
+<span class="sd">    :param text_column: The name of the column in the :py:class:`pandas.DataFrame` that contains the text</span>
 <span class="sd">    :type text_column: str</span>
 <span class="sd">    :param vectorizer_kwargs: All remaining keyword arguments are passed to TfidfVectorizer</span>
 
@@ -835,11 +835,12 @@
 
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compares the provided text against the documents in the corpus and returns the most similar documents. \</span>
-<span class="sd">        A new column called &#39;cosine_similarity&#39; is generated, which is used to sort and return the dataframe.</span>
+<span class="sd">        A new column called &#39;cosine_similarity&#39; is generated, which is used to sort and return the \</span>
+<span class="sd">        :py:class:`pandas.DataFrame`.</span>
 
 <span class="sd">        :param text: The text to compare documents against</span>
 <span class="sd">        :type text: str</span>
-<span class="sd">        :return: The corpus dataframe sorted by cosine similarity</span>
+<span class="sd">        :return: The corpus :py:class:`pandas.DataFrame` sorted by cosine similarity</span>
 
 <span class="sd">        Usage::</span>
 
@@ -862,10 +863,11 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">match_list</span><span class="p">,</span> <span class="n">allow_multiple</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_similarity</span><span class="o">=</span><span class="mf">0.9</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Takes a list of text values and attempts to match them to the documents in the DataFrame. Each document will</span>
-<span class="sd">        be matched to the value in the list to which it is most similar, based on cosine similarity.</span>
+<span class="sd">        Takes a list of text values and attempts to match them to the documents in the :py:class:`pandas.DataFrame`. \</span>
+<span class="sd">        Each document will be matched to the value in the list to which it is most similar, based on cosine similarity.</span>
 
-<span class="sd">        :param match_list: A list of strings (other documents) to be matched to documents in the dataframe</span>
+<span class="sd">        :param match_list: A list of strings (other documents) to be matched to documents in the \</span>
+<span class="sd">        :py:class:`pandas.DataFrame`</span>
 <span class="sd">        :type match_list: str</span>
 <span class="sd">        :param allow_multiple: If set to True, each document in your corpus will be matched with its closes valid \</span>
 <span class="sd">        match in the list. If set to False (default), documents in the list will only be matched to their best match \</span>
@@ -873,7 +875,8 @@
 <span class="sd">        :type allow_multiple: bool</span>
 <span class="sd">        :param min_similarity: Minimum cosine similarity required for any match to be made.</span>
 <span class="sd">        :type min_similarity: float</span>
-<span class="sd">        :return: Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity</span>
+<span class="sd">        :return: Your corpus :py:class:`pandas.DataFrame`, with new columns match_text, match_index, \</span>
+<span class="sd">        and cosine_similarity</span>
 
 <span class="sd">        Usage::</span>
 
@@ -952,11 +955,11 @@
         <span class="n">tokenizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus</span>
-<span class="sd">        using TF-IDF cosine similarity. During each comparison, overlapping fragments are identified.  This can be</span>
-<span class="sd">        useful for identifying common boilerplate sentences, repeated paragraphs, etc. By default, the text is</span>
-<span class="sd">        tokenized into complete sentences (so only complete sentences that recur will be returned), but you can set</span>
-<span class="sd">        `tokenize=False` to get raw segments of text that occur multiple times.</span>
+<span class="sd">        Iterate over the corpus :py:class:`pandas.DataFrame` and, for each document, scan the most similar other \</span>
+<span class="sd">        documents in the corpus using TF-IDF cosine similarity. During each comparison, overlapping fragments are \</span>
+<span class="sd">        identified.  This can be useful for identifying common boilerplate sentences, repeated paragraphs, etc. \</span>
+<span class="sd">        By default, the text is tokenized into complete sentences (so only complete sentences that recur will be \</span>
+<span class="sd">        returned), but you can set ``tokenize=False`` to get raw segments of text that occur multiple times.</span>
 
 <span class="sd">        :param scan_top_n_matches_per_doc: The number of other documents to compare each document against.</span>
 <span class="sd">        :type scan_top_n_matches_per_doc: int</span>
@@ -1038,8 +1041,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Search for duplicates by using cosine similarity and Levenshtein ratios.  This will struggle with large</span>
 <span class="sd">        corpora, so we recommend trying to filter down to potential duplicates first.  The corpus will first be</span>
-<span class="sd">        scanned for document pairs with a cosine similarity greater or equal to the `tfidf_threshold`.  Then,</span>
-<span class="sd">        each of these pairs will be compared using the more stringent `fuzzy_ratio_threshold`.</span>
+<span class="sd">        scanned for document pairs with a cosine similarity greater or equal to the ``tfidf_threshold``.  Then,</span>
+<span class="sd">        each of these pairs will be compared using the more stringent ``fuzzy_ratio_threshold``.</span>
 
 <span class="sd">        :param tfidf_threshold: Minimum cosine similarity for two documents to be considered potential dupes.</span>
 <span class="sd">        :type tfidf_threshold: float</span>
@@ -1057,7 +1060,7 @@
 <span class="sd">        :param decode_text: Whether to decode the text prior to making comparisons</span>
 <span class="sd">        :type decode_text: bool</span>
 <span class="sd">        :return: A list of lists, containing groups of duplicate documents (represented as rows from the corpus \</span>
-<span class="sd">        dataframe)</span>
+<span class="sd">        :py:class:`pandas.DataFrame`)</span>
 
 <span class="sd">        Usage::</span>
 
@@ -1176,20 +1179,20 @@
     <span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A wrapper around `pewanalytics.stats.mutual_info.compute_mutual_info`</span>
+<span class="sd">        A wrapper around ``pewanalytics.stats.mutual_info.compute_mutual_info``</span>
 
 <span class="sd">        :param outcome_col: The name of the column with the binary outcome variable</span>
 <span class="sd">        :type outcome_col: str</span>
 <span class="sd">        :param weight_col: (Optional) Name of the column to use in weighting</span>
 <span class="sd">        :type weight_col: str</span>
 <span class="sd">        :param sample_size: (Optional) If provided, a random sample of this size will be used instead of the full \</span>
-<span class="sd">        dataframe</span>
+<span class="sd">        :py:class:`pandas.DataFrame`</span>
 <span class="sd">        :type sample_size: int</span>
 <span class="sd">        :param l: An optional Laplace smoothing parameter</span>
 <span class="sd">        :type l: float</span>
 <span class="sd">        :param normalize: Toggle normalization on or off (to control for feature prevalence), on by default</span>
 <span class="sd">        :type normalize: bool</span>
-<span class="sd">        :return: A DataFrame of ngrams and various metrics about them, including mutual information</span>
+<span class="sd">        :return: A :py:class:`pandas.DataFrame` of ngrams and various metrics about them, including mutual information</span>
 
 <span class="sd">        Usage::</span>
 
@@ -1233,8 +1236,8 @@
 <div class="viewcode-block" id="TextDataFrame.kmeans_clusters"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.kmeans_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">kmeans_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A wrapper around `pewanalytics.stats.clustering.compute_kmeans_clusters`. Will compute clusters of documents.</span>
-<span class="sd">        The resulting cluster IDs for each document are saved in the TextDataFrame&#39;s `corpus` in a new column called</span>
+<span class="sd">        A wrapper around ``pewanalytics.stats.clustering.compute_kmeans_clusters``. Will compute clusters of documents.</span>
+<span class="sd">        The resulting cluster IDs for each document are saved in the TextDataFrame&#39;s ``corpus`` in a new column called</span>
 <span class="sd">        &quot;kmeans&quot;.</span>
 
 <span class="sd">        :param k: The number of clusters to extract</span>
@@ -1263,8 +1266,8 @@
 <div class="viewcode-block" id="TextDataFrame.hdbscan_clusters"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">hdbscan_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A wrapper around `pewanalytics.stats.clustering.compute_hdbscan_clusters`. Will compute clusters of documents.</span>
-<span class="sd">        The resulting cluster IDs for each document are saved in the TextDataFrame&#39;s `corpus` in a new column called</span>
+<span class="sd">        A wrapper around ``pewanalytics.stats.clustering.compute_hdbscan_clusters``. Will compute clusters of documents.</span>
+<span class="sd">        The resulting cluster IDs for each document are saved in the TextDataFrame&#39;s ``corpus`` in a new column called</span>
 <span class="sd">        &quot;hdbscan&quot;.</span>
 
 <span class="sd">        :param min_cluster_size: The minimum number of documents that a cluster must contain.</span>
@@ -1287,8 +1290,8 @@
 <div class="viewcode-block" id="TextDataFrame.top_cluster_terms"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.top_cluster_terms">[docs]</a>    <span class="k">def</span> <span class="nf">top_cluster_terms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster_col</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extracts the top terms for each cluster, based on a column of cluster IDs saved to `self.corpus`, using</span>
-<span class="sd">        mutual information. Returns the `top_n` terms for each cluster.</span>
+<span class="sd">        Extracts the top terms for each cluster, based on a column of cluster IDs saved to ``self.corpus``, using</span>
+<span class="sd">        mutual information. Returns the ``top_n`` terms for each cluster.</span>
 
 <span class="sd">        :param cluster_col: The name of the column that contains the document cluster IDs</span>
 <span class="sd">        :type cluster_col: str</span>
@@ -1342,14 +1345,14 @@
 <div class="viewcode-block" id="TextDataFrame.pca_components"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.pca_components">[docs]</a>    <span class="k">def</span> <span class="nf">pca_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A wrapper around `pewanalytics.stats.dimensionality_reduction.get_pca`.</span>
+<span class="sd">        A wrapper around ``pewanalytics.stats.dimensionality_reduction.get_pca``.</span>
 <span class="sd">        Saves the PCA components to self.corpus as new columns (&#39;pca_1&#39;, &#39;pca_2&#39;, etc.),</span>
 <span class="sd">        saves the top component for each document as self.corpus[&#39;pca&#39;], and returns</span>
 <span class="sd">        the features-component matrix.</span>
 
 <span class="sd">        :param k: Number of dimensions to extract</span>
 <span class="sd">        :type k: int</span>
-<span class="sd">        :return: A dataframe of (features x components)</span>
+<span class="sd">        :return: A :py:class:`pandas.DataFrame` of (features x components)</span>
 
 <span class="sd">        Usage::</span>
 
@@ -1384,14 +1387,14 @@
 <div class="viewcode-block" id="TextDataFrame.lsa_components"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.lsa_components">[docs]</a>    <span class="k">def</span> <span class="nf">lsa_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A wrapper around `pewanalytics.stats.dimensionality_reduction.get_lsa`.</span>
+<span class="sd">        A wrapper around ``pewanalytics.stats.dimensionality_reduction.get_lsa``.</span>
 <span class="sd">        Saves the LSA components to self.corpus as new columns (&#39;lsa_1&#39;, &#39;lsa_2&#39;, etc.),</span>
 <span class="sd">        saves the top component for each document as self.corpus[&#39;lsa&#39;], and returns</span>
 <span class="sd">        the features-component matrix</span>
 
 <span class="sd">        :param k: Number of dimensions to extract</span>
 <span class="sd">        :type k: int</span>
-<span class="sd">        :return: A dataframe of (features x components)</span>
+<span class="sd">        :return: A :py:class:`pandas.DataFrame` of (features x components)</span>
 
 <span class="sd">        Usage::</span>
 
@@ -1428,7 +1431,7 @@
 <div class="viewcode-block" id="TextDataFrame.get_top_documents"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.__init__.TextDataFrame.get_top_documents">[docs]</a>    <span class="k">def</span> <span class="nf">get_top_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component_prefix</span><span class="o">=</span><span class="s2">&quot;cluster&quot;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Use after running `get_pca_components` or `get_lsa_components`. Returns the `top_n` documents with the highest</span>
+<span class="sd">        Use after running ``get_pca_components`` or ``get_lsa_components``. Returns the ``top_n`` documents with the highest</span>
 <span class="sd">        scores for each components.</span>
 
 <span class="sd">        :param component_prefix: &#39;lsa&#39; or &#39;pca&#39; (you must first run get_pca_components or get_lsa_components)</span>
@@ -1436,7 +1439,7 @@
 <span class="sd">        :param top_n: Number of documents to return for each component</span>
 <span class="sd">        :type top_n: int</span>
 <span class="sd">        :return: A dictionary where keys are the component, and values are the text values for the component&#39;s \</span>
-<span class="sd">        `top_n` documents</span>
+<span class="sd">        ``top_n`` documents</span>
 <span class="sd">        :rtype: dict</span>
 
 <span class="sd">        Usage::</span>

@@ -38,7 +38,7 @@ from pewanalytics.stats.dimensionality_reduction import get_lsa, get_pca
 def has_fragment(text, fragment):
 
     """
-    Checks whether a substring ("fragment") is contained within a larger string ("text"). Uses the `pewtils.decode_text`
+    Checks whether a substring ("fragment") is contained within a larger string ("text"). Uses the ``pewtils.decode_text``
     function to process both the text and the fragment when running this check.
 
     :param text: The text to search
@@ -109,8 +109,8 @@ def remove_fragments(text, fragments, throw_loud_fail=False):
 def filter_parts_of_speech(text, filter_pos=None, exclude=False):
 
     """
-    Retain words associated with parts of speech in the text if `exclude=False`.
-    If `exclude=True`, exclude words associated with parts of speech.
+    Retain words associated with parts of speech in the text if ``exclude=False``.
+    If ``exclude=True``, exclude words associated with parts of speech.
     Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)
 
     | The full list of POS is here: https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
@@ -119,10 +119,10 @@ def filter_parts_of_speech(text, filter_pos=None, exclude=False):
     :type text: str
     :param filter_pos: Array of part of speech tags (default is 'NN', 'NNP', and 'JJ')
     :type filter_pos: list
-    :param exclude: If `True`, the function will remove words that match to the specified parts of speech; by default \
+    :param exclude: If ``True``, the function will remove words that match to the specified parts of speech; by default \
     this function *filters to* POS matches instead.
     :return: A string comprised solely of words that matched (or did not match) to the specified parts of speech, \
-    depending on the value of `exclude`
+    depending on the value of ``exclude``
     :rtype: str
 
     Usage::
@@ -154,7 +154,7 @@ def get_fuzzy_ratio(text1, text2, throw_loud_fail=False):
 
     """
     Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares
-    to the overall length of the texts. Uses the `fuzzywuzzy` library in Python 2, and the `rapidfuzz` library in \
+    to the overall length of the texts. Uses the ``fuzzywuzzy`` library in Python 2, and the ``rapidfuzz`` library in \
     Python 3.
 
     :param text1: First string
@@ -232,7 +232,7 @@ def get_fuzzy_partial_ratio(text1, text2, throw_loud_fail=False, timeout=5):
 class SentenceTokenizer(object):
 
     """
-    Initializes a tokenizer that can be be used to break text into tokens using the `tokenize` function
+    Initializes a tokenizer that can be be used to break text into tokens using the ``tokenize`` function
 
     :param base_tokenizer: The tokenizer to use (default = NLTK's English Punkt tokenizer)
     :param regex_split_trailing: A compiled regex object used to define the end of sentences
@@ -353,7 +353,7 @@ class TextOverlapExtractor(object):
     def get_text_overlaps(self, text1, text2, min_length=20, tokenize=True):
 
         """
-        Extracts all overlapping segments of at least `min_length` characters between the two texts. If `tokenize=True`
+        Extracts all overlapping segments of at least ``min_length`` characters between the two texts. If ``tokenize=True``
         then only tokens that appear fully in both texts will be extracted. For example:
 
         :param text1: A piece of text
@@ -630,16 +630,16 @@ class TextDataFrame(object):
     potential duplicates, identifying recurring segments of text, computing metrics like mutual information, \
     extracting clusters of documents, and more.
 
-    Given a DataFrame and the name of the column that contains the text to be analyzed, the TextDataFrame will \
-    automatically produce a TF-IDF sparse matrix representation of the text upon initialization. All other \
-    parameters are passed along to the scikit-learn TfidfVectorizer.
+    Given a :py:class:`pandas.DataFrame` and the name of the column that contains the text to be analyzed, the \
+    TextDataFrame will automatically produce a TF-IDF sparse matrix representation of the text upon initialization. \
+    All other parameters are passed along to the scikit-learn TfidfVectorizer.
 
     .. tip:: For more info on the parameters it excepts, refer to the official scikit-learn `Tfidf vectorizer \
     documentation \
     <https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html>`_.
 
-    :param df: A dataframe of documents.  Must contain a column with text.
-    :param text_column: The name of the column in the dataframe that contains the text
+    :param df: A :py:class:`pandas.DataFrame` of documents.  Must contain a column with text.
+    :param text_column: The name of the column in the :py:class:`pandas.DataFrame` that contains the text
     :type text_column: str
     :param vectorizer_kwargs: All remaining keyword arguments are passed to TfidfVectorizer
 
@@ -685,11 +685,12 @@ class TextDataFrame(object):
 
         """
         Compares the provided text against the documents in the corpus and returns the most similar documents. \
-        A new column called 'cosine_similarity' is generated, which is used to sort and return the dataframe.
+        A new column called 'cosine_similarity' is generated, which is used to sort and return the \
+        :py:class:`pandas.DataFrame`.
 
         :param text: The text to compare documents against
         :type text: str
-        :return: The corpus dataframe sorted by cosine similarity
+        :return: The corpus :py:class:`pandas.DataFrame` sorted by cosine similarity
 
         Usage::
 
@@ -712,10 +713,11 @@ class TextDataFrame(object):
         self, match_list, allow_multiple=False, min_similarity=0.9
     ):
         """
-        Takes a list of text values and attempts to match them to the documents in the DataFrame. Each document will
-        be matched to the value in the list to which it is most similar, based on cosine similarity.
+        Takes a list of text values and attempts to match them to the documents in the :py:class:`pandas.DataFrame`. \
+        Each document will be matched to the value in the list to which it is most similar, based on cosine similarity.
 
-        :param match_list: A list of strings (other documents) to be matched to documents in the dataframe
+        :param match_list: A list of strings (other documents) to be matched to documents in the \
+        :py:class:`pandas.DataFrame`
         :type match_list: str
         :param allow_multiple: If set to True, each document in your corpus will be matched with its closes valid \
         match in the list. If set to False (default), documents in the list will only be matched to their best match \
@@ -723,7 +725,8 @@ class TextDataFrame(object):
         :type allow_multiple: bool
         :param min_similarity: Minimum cosine similarity required for any match to be made.
         :type min_similarity: float
-        :return: Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity
+        :return: Your corpus :py:class:`pandas.DataFrame`, with new columns match_text, match_index, \
+        and cosine_similarity
 
         Usage::
 
@@ -802,11 +805,11 @@ class TextDataFrame(object):
         tokenizer=None,
     ):
         """
-        Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus
-        using TF-IDF cosine similarity. During each comparison, overlapping fragments are identified.  This can be
-        useful for identifying common boilerplate sentences, repeated paragraphs, etc. By default, the text is
-        tokenized into complete sentences (so only complete sentences that recur will be returned), but you can set
-        `tokenize=False` to get raw segments of text that occur multiple times.
+        Iterate over the corpus :py:class:`pandas.DataFrame` and, for each document, scan the most similar other \
+        documents in the corpus using TF-IDF cosine similarity. During each comparison, overlapping fragments are \
+        identified.  This can be useful for identifying common boilerplate sentences, repeated paragraphs, etc. \
+        By default, the text is tokenized into complete sentences (so only complete sentences that recur will be \
+        returned), but you can set ``tokenize=False`` to get raw segments of text that occur multiple times.
 
         :param scan_top_n_matches_per_doc: The number of other documents to compare each document against.
         :type scan_top_n_matches_per_doc: int
@@ -888,8 +891,8 @@ class TextDataFrame(object):
         """
         Search for duplicates by using cosine similarity and Levenshtein ratios.  This will struggle with large
         corpora, so we recommend trying to filter down to potential duplicates first.  The corpus will first be
-        scanned for document pairs with a cosine similarity greater or equal to the `tfidf_threshold`.  Then,
-        each of these pairs will be compared using the more stringent `fuzzy_ratio_threshold`.
+        scanned for document pairs with a cosine similarity greater or equal to the ``tfidf_threshold``.  Then,
+        each of these pairs will be compared using the more stringent ``fuzzy_ratio_threshold``.
 
         :param tfidf_threshold: Minimum cosine similarity for two documents to be considered potential dupes.
         :type tfidf_threshold: float
@@ -907,7 +910,7 @@ class TextDataFrame(object):
         :param decode_text: Whether to decode the text prior to making comparisons
         :type decode_text: bool
         :return: A list of lists, containing groups of duplicate documents (represented as rows from the corpus \
-        dataframe)
+        :py:class:`pandas.DataFrame`)
 
         Usage::
 
@@ -1026,20 +1029,20 @@ class TextDataFrame(object):
     ):
 
         """
-        A wrapper around `pewanalytics.stats.mutual_info.compute_mutual_info`
+        A wrapper around ``pewanalytics.stats.mutual_info.compute_mutual_info``
 
         :param outcome_col: The name of the column with the binary outcome variable
         :type outcome_col: str
         :param weight_col: (Optional) Name of the column to use in weighting
         :type weight_col: str
         :param sample_size: (Optional) If provided, a random sample of this size will be used instead of the full \
-        dataframe
+        :py:class:`pandas.DataFrame`
         :type sample_size: int
         :param l: An optional Laplace smoothing parameter
         :type l: float
         :param normalize: Toggle normalization on or off (to control for feature prevalence), on by default
         :type normalize: bool
-        :return: A DataFrame of ngrams and various metrics about them, including mutual information
+        :return: A :py:class:`pandas.DataFrame` of ngrams and various metrics about them, including mutual information
 
         Usage::
 
@@ -1083,8 +1086,8 @@ class TextDataFrame(object):
     def kmeans_clusters(self, k=10):
 
         """
-        A wrapper around `pewanalytics.stats.clustering.compute_kmeans_clusters`. Will compute clusters of documents.
-        The resulting cluster IDs for each document are saved in the TextDataFrame's `corpus` in a new column called
+        A wrapper around ``pewanalytics.stats.clustering.compute_kmeans_clusters``. Will compute clusters of documents.
+        The resulting cluster IDs for each document are saved in the TextDataFrame's ``corpus`` in a new column called
         "kmeans".
 
         :param k: The number of clusters to extract
@@ -1113,8 +1116,8 @@ class TextDataFrame(object):
     def hdbscan_clusters(self, min_cluster_size=100, min_samples=1):
 
         """
-        A wrapper around `pewanalytics.stats.clustering.compute_hdbscan_clusters`. Will compute clusters of documents.
-        The resulting cluster IDs for each document are saved in the TextDataFrame's `corpus` in a new column called
+        A wrapper around ``pewanalytics.stats.clustering.compute_hdbscan_clusters``. Will compute clusters of documents.
+        The resulting cluster IDs for each document are saved in the TextDataFrame's ``corpus`` in a new column called
         "hdbscan".
 
         :param min_cluster_size: The minimum number of documents that a cluster must contain.
@@ -1137,8 +1140,8 @@ class TextDataFrame(object):
     def top_cluster_terms(self, cluster_col, min_size=50, top_n=10):
 
         """
-        Extracts the top terms for each cluster, based on a column of cluster IDs saved to `self.corpus`, using
-        mutual information. Returns the `top_n` terms for each cluster.
+        Extracts the top terms for each cluster, based on a column of cluster IDs saved to ``self.corpus``, using
+        mutual information. Returns the ``top_n`` terms for each cluster.
 
         :param cluster_col: The name of the column that contains the document cluster IDs
         :type cluster_col: str
@@ -1192,14 +1195,14 @@ class TextDataFrame(object):
     def pca_components(self, k=20):
 
         """
-        A wrapper around `pewanalytics.stats.dimensionality_reduction.get_pca`.
+        A wrapper around ``pewanalytics.stats.dimensionality_reduction.get_pca``.
         Saves the PCA components to self.corpus as new columns ('pca_1', 'pca_2', etc.),
         saves the top component for each document as self.corpus['pca'], and returns
         the features-component matrix.
 
         :param k: Number of dimensions to extract
         :type k: int
-        :return: A dataframe of (features x components)
+        :return: A :py:class:`pandas.DataFrame` of (features x components)
 
         Usage::
 
@@ -1234,14 +1237,14 @@ class TextDataFrame(object):
     def lsa_components(self, k=20):
 
         """
-        A wrapper around `pewanalytics.stats.dimensionality_reduction.get_lsa`.
+        A wrapper around ``pewanalytics.stats.dimensionality_reduction.get_lsa``.
         Saves the LSA components to self.corpus as new columns ('lsa_1', 'lsa_2', etc.),
         saves the top component for each document as self.corpus['lsa'], and returns
         the features-component matrix
 
         :param k: Number of dimensions to extract
         :type k: int
-        :return: A dataframe of (features x components)
+        :return: A :py:class:`pandas.DataFrame` of (features x components)
 
         Usage::
 
@@ -1278,7 +1281,7 @@ class TextDataFrame(object):
     def get_top_documents(self, component_prefix="cluster", top_n=5):
 
         """
-        Use after running `get_pca_components` or `get_lsa_components`. Returns the `top_n` documents with the highest
+        Use after running ``get_pca_components`` or ``get_lsa_components``. Returns the ``top_n`` documents with the highest
         scores for each components.
 
         :param component_prefix: 'lsa' or 'pca' (you must first run get_pca_components or get_lsa_components)
@@ -1286,7 +1289,7 @@ class TextDataFrame(object):
         :param top_n: Number of documents to return for each component
         :type top_n: int
         :return: A dictionary where keys are the component, and values are the text values for the component's \
-        `top_n` documents
+        ``top_n`` documents
         :rtype: dict
 
         Usage::

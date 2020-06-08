@@ -22,7 +22,7 @@ def kappa_sample_size_power(
 ):
 
     """
-    Python translation of the `N.cohen.kappa` function from the `irr` R package.
+    Python translation of the ``N.cohen.kappa`` function from the ``irr`` R package.
 
     Source: https://cran.r-project.org/web/packages/irr/irr.pdf
 
@@ -38,7 +38,7 @@ def kappa_sample_size_power(
     :type alpha: float
     :param power: The desired power to detect the difference between true kappa and hypothetical kappa
     :type power: float
-    :param twosided: Set this to `True` if the test is two-sided
+    :param twosided: Set this to ``True`` if the test is two-sided
     :param twosided: bool
     :return: Returns the required sample size
     :rtype: int
@@ -99,7 +99,7 @@ def kappa_sample_size_CI(kappa0, kappaL, props, kappaU=None, alpha=0.05):
     sample size returned by this function, it can provide a rough estimate of how many additional documents need \
     to be coded - assuming that the coders continue agreeing and observing positive cases at the same rate.
 
-    Translated from the `kappaSize` R package, CIBinary: https://github.com/cran/kappaSize/blob/master/R/CIBinary.R
+    Translated from the ``kappaSize`` R package, CIBinary: https://github.com/cran/kappaSize/blob/master/R/CIBinary.R
 
     :param kappa0: The preliminary value of kappa
     :param kappa0: float
@@ -186,13 +186,13 @@ def compute_scores(
         - A column with values that indicate the code value
         - (Optional) A column with document weights
 
-    This function will return a dataframe with agreement scores between the two specified coders.
+    This function will return a :py:class:`pandas.DataFrame` with agreement scores between the two specified coders.
 
-    :param coder_df: A dataframe of codes
+    :param coder_df: A :py:class:`pandas.DataFrame` of codes
     :type coder_df: :py:class:`pandas.DataFrame`
-    :param coder1: The value in `coder_column` for rows corresponding to the first coder
+    :param coder1: The value in ``coder_column`` for rows corresponding to the first coder
     :type coder1: str or int
-    :param coder2: The value in `coder_column` for rows corresponding to the second coder
+    :param coder2: The value in ``coder_column`` for rows corresponding to the second coder
     :type coder2: str or int
     :param outcome_column: The column that contains the codes
     :type outcome_column: str
@@ -209,7 +209,7 @@ def compute_scores(
 
     .. note:: If using a multi-class (non-binary) code, some scores may come back null or not compute as expected. \
         We recommend running the function separately for each specific code value as a binary flag by providing \
-        each unique value to the `pos_label` argument. If `pos_label` is not provided for multi-class codes, \
+        each unique value to the ``pos_label`` argument. If ``pos_label`` is not provided for multi-class codes, \
         this function will attempt to compute scores based on support-weighted averages.
 
     Usage::
@@ -514,7 +514,7 @@ def compute_overall_scores(coder_df, document_column, outcome_column, coder_colu
         - A column with values that indicate the document (like an ID)
         - A column with values that indicate the code value
 
-    :param coder_df: A dataframe of codes
+    :param coder_df: A :py:class:`pandas.DataFrame` of codes
     :type coder_df: :py:class:`pandas.DataFrame`
     :param document_column: The column that contains IDs for the documents
     :type document_column: str

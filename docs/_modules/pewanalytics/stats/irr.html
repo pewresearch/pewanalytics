@@ -170,7 +170,7 @@
 <span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Python translation of the `N.cohen.kappa` function from the `irr` R package.</span>
+<span class="sd">    Python translation of the ``N.cohen.kappa`` function from the ``irr`` R package.</span>
 
 <span class="sd">    Source: https://cran.r-project.org/web/packages/irr/irr.pdf</span>
 
@@ -186,7 +186,7 @@
 <span class="sd">    :type alpha: float</span>
 <span class="sd">    :param power: The desired power to detect the difference between true kappa and hypothetical kappa</span>
 <span class="sd">    :type power: float</span>
-<span class="sd">    :param twosided: Set this to `True` if the test is two-sided</span>
+<span class="sd">    :param twosided: Set this to ``True`` if the test is two-sided</span>
 <span class="sd">    :param twosided: bool</span>
 <span class="sd">    :return: Returns the required sample size</span>
 <span class="sd">    :rtype: int</span>
@@ -247,7 +247,7 @@
 <span class="sd">    sample size returned by this function, it can provide a rough estimate of how many additional documents need \</span>
 <span class="sd">    to be coded - assuming that the coders continue agreeing and observing positive cases at the same rate.</span>
 
-<span class="sd">    Translated from the `kappaSize` R package, CIBinary: https://github.com/cran/kappaSize/blob/master/R/CIBinary.R</span>
+<span class="sd">    Translated from the ``kappaSize`` R package, CIBinary: https://github.com/cran/kappaSize/blob/master/R/CIBinary.R</span>
 
 <span class="sd">    :param kappa0: The preliminary value of kappa</span>
 <span class="sd">    :param kappa0: float</span>
@@ -334,13 +334,13 @@
 <span class="sd">        - A column with values that indicate the code value</span>
 <span class="sd">        - (Optional) A column with document weights</span>
 
-<span class="sd">    This function will return a dataframe with agreement scores between the two specified coders.</span>
+<span class="sd">    This function will return a :py:class:`pandas.DataFrame` with agreement scores between the two specified coders.</span>
 
-<span class="sd">    :param coder_df: A dataframe of codes</span>
+<span class="sd">    :param coder_df: A :py:class:`pandas.DataFrame` of codes</span>
 <span class="sd">    :type coder_df: :py:class:`pandas.DataFrame`</span>
-<span class="sd">    :param coder1: The value in `coder_column` for rows corresponding to the first coder</span>
+<span class="sd">    :param coder1: The value in ``coder_column`` for rows corresponding to the first coder</span>
 <span class="sd">    :type coder1: str or int</span>
-<span class="sd">    :param coder2: The value in `coder_column` for rows corresponding to the second coder</span>
+<span class="sd">    :param coder2: The value in ``coder_column`` for rows corresponding to the second coder</span>
 <span class="sd">    :type coder2: str or int</span>
 <span class="sd">    :param outcome_column: The column that contains the codes</span>
 <span class="sd">    :type outcome_column: str</span>
@@ -357,7 +357,7 @@
 
 <span class="sd">    .. note:: If using a multi-class (non-binary) code, some scores may come back null or not compute as expected. \</span>
 <span class="sd">        We recommend running the function separately for each specific code value as a binary flag by providing \</span>
-<span class="sd">        each unique value to the `pos_label` argument. If `pos_label` is not provided for multi-class codes, \</span>
+<span class="sd">        each unique value to the ``pos_label`` argument. If ``pos_label`` is not provided for multi-class codes, \</span>
 <span class="sd">        this function will attempt to compute scores based on support-weighted averages.</span>
 
 <span class="sd">    Usage::</span>
@@ -662,7 +662,7 @@
 <span class="sd">        - A column with values that indicate the document (like an ID)</span>
 <span class="sd">        - A column with values that indicate the code value</span>
 
-<span class="sd">    :param coder_df: A dataframe of codes</span>
+<span class="sd">    :param coder_df: A :py:class:`pandas.DataFrame` of codes</span>
 <span class="sd">    :type coder_df: :py:class:`pandas.DataFrame`</span>
 <span class="sd">    :param document_column: The column that contains IDs for the documents</span>
 <span class="sd">    :type document_column: str</span>

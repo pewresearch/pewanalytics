@@ -169,7 +169,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.SentenceTokenizer" title="pewanalytics.text.__init__.SentenceTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SentenceTokenizer</span></code></a>([base_tokenizer, …])</p></td>
-<td><p>Initializes a tokenizer that can be be used to break text into tokens using the <cite>tokenize</cite> function</p></td>
+<td><p>Initializes a tokenizer that can be be used to break text into tokens using the <code class="docutils literal notranslate"><span class="pre">tokenize</span></code> function</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextCleaner" title="pewanalytics.text.__init__.TextCleaner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TextCleaner</span></code></a>([process_method, processor, …])</p></td>
 <td><p>A class for cleaning text up, in preparation for NLP, etc.</p></td>
@@ -190,7 +190,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.filter_parts_of_speech" title="pewanalytics.text.__init__.filter_parts_of_speech"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_parts_of_speech</span></code></a>(text[, filter_pos, …])</p></td>
-<td><p>Retain words associated with parts of speech in the text if <cite>exclude=False</cite>.</p></td>
+<td><p>Retain words associated with parts of speech in the text if <code class="docutils literal notranslate"><span class="pre">exclude=False</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.get_fuzzy_partial_ratio" title="pewanalytics.text.__init__.get_fuzzy_partial_ratio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_fuzzy_partial_ratio</span></code></a>(text1, text2[, …])</p></td>
 <td><p>Useful to calculate similarity of two strings that are of noticeably different lengths.</p></td>
@@ -209,7 +209,7 @@
 <dl class="function">
 <dt id="pewanalytics.text.__init__.has_fragment">
 <code class="sig-name descname">has_fragment</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">fragment</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#has_fragment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.has_fragment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks whether a substring (“fragment”) is contained within a larger string (“text”). Uses the <cite>pewtils.decode_text</cite>
+<dd><p>Checks whether a substring (“fragment”) is contained within a larger string (“text”). Uses the <code class="docutils literal notranslate"><span class="pre">pewtils.decode_text</span></code>
 function to process both the text and the fragment when running this check.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -275,8 +275,8 @@ function to process both the text and the fragment when running this check.</p>
 <dl class="function">
 <dt id="pewanalytics.text.__init__.filter_parts_of_speech">
 <code class="sig-name descname">filter_parts_of_speech</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">filter_pos=None</em>, <em class="sig-param">exclude=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#filter_parts_of_speech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.filter_parts_of_speech" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retain words associated with parts of speech in the text if <cite>exclude=False</cite>.
-If <cite>exclude=True</cite>, exclude words associated with parts of speech.
+<dd><p>Retain words associated with parts of speech in the text if <code class="docutils literal notranslate"><span class="pre">exclude=False</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">exclude=True</span></code>, exclude words associated with parts of speech.
 Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)</p>
 <div class="line-block">
 <div class="line">The full list of POS is here: <a class="reference external" href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html</a></div>
@@ -286,11 +286,11 @@ Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> (<em>str</em>) – The string to process</p></li>
 <li><p><strong>filter_pos</strong> (<em>list</em>) – Array of part of speech tags (default is ‘NN’, ‘NNP’, and ‘JJ’)</p></li>
-<li><p><strong>exclude</strong> – If <cite>True</cite>, the function will remove words that match to the specified parts of speech; by default     this function <em>filters to</em> POS matches instead.</p></li>
+<li><p><strong>exclude</strong> – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the function will remove words that match to the specified parts of speech; by default     this function <em>filters to</em> POS matches instead.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A string comprised solely of words that matched (or did not match) to the specified parts of speech,     depending on the value of <cite>exclude</cite></p>
+<dd class="field-even"><p>A string comprised solely of words that matched (or did not match) to the specified parts of speech,     depending on the value of <code class="docutils literal notranslate"><span class="pre">exclude</span></code></p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
@@ -314,7 +314,7 @@ Default is Noun (NN), Proper Noun (NNP) and Adjective (JJ)</p>
 <dt id="pewanalytics.text.__init__.get_fuzzy_ratio">
 <code class="sig-name descname">get_fuzzy_ratio</code><span class="sig-paren">(</span><em class="sig-param">text1</em>, <em class="sig-param">text2</em>, <em class="sig-param">throw_loud_fail=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#get_fuzzy_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.get_fuzzy_ratio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses Levenshtein Distance to calculate similarity of two strings.  Measures how the edit distance compares
-to the overall length of the texts. Uses the <cite>fuzzywuzzy</cite> library in Python 2, and the <cite>rapidfuzz</cite> library in     Python 3.</p>
+to the overall length of the texts. Uses the <code class="docutils literal notranslate"><span class="pre">fuzzywuzzy</span></code> library in Python 2, and the <code class="docutils literal notranslate"><span class="pre">rapidfuzz</span></code> library in     Python 3.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -380,7 +380,7 @@ that one text is a subset of the other; finds the largest overlap and computes t
 <dl class="class">
 <dt id="pewanalytics.text.__init__.SentenceTokenizer">
 <em class="property">class </em><code class="sig-name descname">SentenceTokenizer</code><span class="sig-paren">(</span><em class="sig-param">base_tokenizer=None</em>, <em class="sig-param">regex_split_trailing=None</em>, <em class="sig-param">regex_split_leading=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#SentenceTokenizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.SentenceTokenizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initializes a tokenizer that can be be used to break text into tokens using the <cite>tokenize</cite> function</p>
+<dd><p>Initializes a tokenizer that can be be used to break text into tokens using the <code class="docutils literal notranslate"><span class="pre">tokenize</span></code> function</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -465,14 +465,14 @@ that one text is a subset of the other; finds the largest overlap and computes t
 <td><p>Returns the largest overlapping segment of text between the two texts (this doesn’t use the tokenizer).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextOverlapExtractor.get_text_overlaps" title="pewanalytics.text.__init__.TextOverlapExtractor.get_text_overlaps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_text_overlaps</span></code></a>(text1, text2[, …])</p></td>
-<td><p>Extracts all overlapping segments of at least <cite>min_length</cite> characters between the two texts.</p></td>
+<td><p>Extracts all overlapping segments of at least <code class="docutils literal notranslate"><span class="pre">min_length</span></code> characters between the two texts.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="pewanalytics.text.__init__.TextOverlapExtractor.get_text_overlaps">
 <code class="sig-name descname">get_text_overlaps</code><span class="sig-paren">(</span><em class="sig-param">text1</em>, <em class="sig-param">text2</em>, <em class="sig-param">min_length=20</em>, <em class="sig-param">tokenize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextOverlapExtractor.get_text_overlaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextOverlapExtractor.get_text_overlaps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extracts all overlapping segments of at least <cite>min_length</cite> characters between the two texts. If <cite>tokenize=True</cite>
+<dd><p>Extracts all overlapping segments of at least <code class="docutils literal notranslate"><span class="pre">min_length</span></code> characters between the two texts. If <code class="docutils literal notranslate"><span class="pre">tokenize=True</span></code>
 then only tokens that appear fully in both texts will be extracted. For example:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -643,7 +643,7 @@ then only tokens that appear fully in both texts will be extracted. For example:
 <dt id="pewanalytics.text.__init__.TextDataFrame">
 <em class="property">class </em><code class="sig-name descname">TextDataFrame</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">text_column</em>, <em class="sig-param">**vectorizer_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is a class full of functions for working with dataframes of documents. It contains utilities for identifying     potential duplicates, identifying recurring segments of text, computing metrics like mutual information,     extracting clusters of documents, and more.</p>
-<p>Given a DataFrame and the name of the column that contains the text to be analyzed, the TextDataFrame will     automatically produce a TF-IDF sparse matrix representation of the text upon initialization. All other     parameters are passed along to the scikit-learn TfidfVectorizer.</p>
+<p>Given a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> and the name of the column that contains the text to be analyzed, the     TextDataFrame will automatically produce a TF-IDF sparse matrix representation of the text upon initialization.     All other parameters are passed along to the scikit-learn TfidfVectorizer.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>For more info on the parameters it excepts, refer to the official scikit-learn <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html">Tfidf vectorizer     documentation</a>.</p>
@@ -656,7 +656,7 @@ then only tokens that appear fully in both texts will be extracted. For example:
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.extract_corpus_fragments" title="pewanalytics.text.__init__.TextDataFrame.extract_corpus_fragments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_corpus_fragments</span></code></a>([…])</p></td>
-<td><p>Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus using TF-IDF cosine similarity.</p></td>
+<td><p>Iterate over the corpus <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> and, for each document, scan the most similar other         documents in the corpus using TF-IDF cosine similarity.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.find_duplicates" title="pewanalytics.text.__init__.TextDataFrame.find_duplicates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_duplicates</span></code></a>([tfidf_threshold, …])</p></td>
 <td><p>Search for duplicates by using cosine similarity and Levenshtein ratios.</p></td>
@@ -665,16 +665,16 @@ then only tokens that appear fully in both texts will be extracted. For example:
 <td><p>Given a particular keyword, looks for related terms in the corpus using mutual information.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.get_top_documents" title="pewanalytics.text.__init__.TextDataFrame.get_top_documents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_top_documents</span></code></a>([component_prefix, top_n])</p></td>
-<td><p>Use after running <cite>get_pca_components</cite> or <cite>get_lsa_components</cite>.</p></td>
+<td><p>Use after running <code class="docutils literal notranslate"><span class="pre">get_pca_components</span></code> or <code class="docutils literal notranslate"><span class="pre">get_lsa_components</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters" title="pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hdbscan_clusters</span></code></a>([min_cluster_size, min_samples])</p></td>
-<td><p>A wrapper around <cite>pewanalytics.stats.clustering.compute_hdbscan_clusters</cite>.</p></td>
+<td><p>A wrapper around <code class="docutils literal notranslate"><span class="pre">pewanalytics.stats.clustering.compute_hdbscan_clusters</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.kmeans_clusters" title="pewanalytics.text.__init__.TextDataFrame.kmeans_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kmeans_clusters</span></code></a>([k])</p></td>
-<td><p>A wrapper around <cite>pewanalytics.stats.clustering.compute_kmeans_clusters</cite>.</p></td>
+<td><p>A wrapper around <code class="docutils literal notranslate"><span class="pre">pewanalytics.stats.clustering.compute_kmeans_clusters</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.lsa_components" title="pewanalytics.text.__init__.TextDataFrame.lsa_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lsa_components</span></code></a>([k])</p></td>
-<td><p>A wrapper around <cite>pewanalytics.stats.dimensionality_reduction.get_lsa</cite>.</p></td>
+<td><p>A wrapper around <code class="docutils literal notranslate"><span class="pre">pewanalytics.stats.dimensionality_reduction.get_lsa</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.make_document_cooccurrence_matrix" title="pewanalytics.text.__init__.TextDataFrame.make_document_cooccurrence_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_document_cooccurrence_matrix</span></code></a>([normalize])</p></td>
 <td><p>Use to produce document co-occurrence matrices.</p></td>
@@ -683,27 +683,27 @@ then only tokens that appear fully in both texts will be extracted. For example:
 <td><p>Use to produce word co-occurrence matrices.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus" title="pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">match_text_to_corpus</span></code></a>(match_list[, …])</p></td>
-<td><p>Takes a list of text values and attempts to match them to the documents in the DataFrame.</p></td>
+<td><p>Takes a list of text values and attempts to match them to the documents in the <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.mutual_info" title="pewanalytics.text.__init__.TextDataFrame.mutual_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutual_info</span></code></a>(outcome_col[, weight_col, …])</p></td>
-<td><p>A wrapper around <cite>pewanalytics.stats.mutual_info.compute_mutual_info</cite></p></td>
+<td><p>A wrapper around <code class="docutils literal notranslate"><span class="pre">pewanalytics.stats.mutual_info.compute_mutual_info</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.pca_components" title="pewanalytics.text.__init__.TextDataFrame.pca_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pca_components</span></code></a>([k])</p></td>
-<td><p>A wrapper around <cite>pewanalytics.stats.dimensionality_reduction.get_pca</cite>.</p></td>
+<td><p>A wrapper around <code class="docutils literal notranslate"><span class="pre">pewanalytics.stats.dimensionality_reduction.get_pca</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.search_corpus" title="pewanalytics.text.__init__.TextDataFrame.search_corpus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">search_corpus</span></code></a>(text)</p></td>
 <td><p>Compares the provided text against the documents in the corpus and returns the most similar documents.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.__init__.TextDataFrame.top_cluster_terms" title="pewanalytics.text.__init__.TextDataFrame.top_cluster_terms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">top_cluster_terms</span></code></a>(cluster_col[, min_size, top_n])</p></td>
-<td><p>Extracts the top terms for each cluster, based on a column of cluster IDs saved to <cite>self.corpus</cite>, using mutual information.</p></td>
+<td><p>Extracts the top terms for each cluster, based on a column of cluster IDs saved to <code class="docutils literal notranslate"><span class="pre">self.corpus</span></code>, using mutual information.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – A dataframe of documents.  Must contain a column with text.</p></li>
-<li><p><strong>text_column</strong> (<em>str</em>) – The name of the column in the dataframe that contains the text</p></li>
+<li><p><strong>df</strong> – A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> of documents.  Must contain a column with text.</p></li>
+<li><p><strong>text_column</strong> (<em>str</em>) – The name of the column in the <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> that contains the text</p></li>
 <li><p><strong>vectorizer_kwargs</strong> – All remaining keyword arguments are passed to TfidfVectorizer</p></li>
 </ul>
 </dd>
@@ -741,13 +741,13 @@ then only tokens that appear fully in both texts will be extracted. For example:
 <dl class="method">
 <dt id="pewanalytics.text.__init__.TextDataFrame.search_corpus">
 <code class="sig-name descname">search_corpus</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.search_corpus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.search_corpus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compares the provided text against the documents in the corpus and returns the most similar documents.         A new column called ‘cosine_similarity’ is generated, which is used to sort and return the dataframe.</p>
+<dd><p>Compares the provided text against the documents in the corpus and returns the most similar documents.         A new column called ‘cosine_similarity’ is generated, which is used to sort and return the         <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to compare documents against</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The corpus dataframe sorted by cosine similarity</p>
+<dd class="field-even"><p>The corpus <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> sorted by cosine similarity</p>
 </dd>
 </dl>
 <p>Usage:</p>
@@ -765,18 +765,17 @@ then only tokens that appear fully in both texts will be extracted. For example:
 <dl class="method">
 <dt id="pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus">
 <code class="sig-name descname">match_text_to_corpus</code><span class="sig-paren">(</span><em class="sig-param">match_list</em>, <em class="sig-param">allow_multiple=False</em>, <em class="sig-param">min_similarity=0.9</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.match_text_to_corpus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.match_text_to_corpus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes a list of text values and attempts to match them to the documents in the DataFrame. Each document will
-be matched to the value in the list to which it is most similar, based on cosine similarity.</p>
+<dd><p>Takes a list of text values and attempts to match them to the documents in the <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>.         Each document will be matched to the value in the list to which it is most similar, based on cosine similarity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>match_list</strong> (<em>str</em>) – A list of strings (other documents) to be matched to documents in the dataframe</p></li>
+<li><p><strong>match_list</strong> (<em>str</em>) – A list of strings (other documents) to be matched to documents in the         <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p></li>
 <li><p><strong>allow_multiple</strong> (<em>bool</em>) – If set to True, each document in your corpus will be matched with its closes valid         match in the list. If set to False (default), documents in the list will only be matched to their best match         in the corpus.</p></li>
 <li><p><strong>min_similarity</strong> (<em>float</em>) – Minimum cosine similarity required for any match to be made.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Your corpus dataframe, with new columns match_text, match_index, and cosine_similarity</p>
+<dd class="field-even"><p>Your corpus <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>, with new columns match_text, match_index,         and cosine_similarity</p>
 </dd>
 </dl>
 <p>Usage:</p>
@@ -792,11 +791,7 @@ be matched to the value in the list to which it is most similar, based on cosine
 <dl class="method">
 <dt id="pewanalytics.text.__init__.TextDataFrame.extract_corpus_fragments">
 <code class="sig-name descname">extract_corpus_fragments</code><span class="sig-paren">(</span><em class="sig-param">scan_top_n_matches_per_doc=20</em>, <em class="sig-param">min_fragment_length=15</em>, <em class="sig-param">tokenize=True</em>, <em class="sig-param">tokenizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.extract_corpus_fragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.extract_corpus_fragments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Iterate over the corpus dataframe and, for each document, scan the most similar other documents in the corpus
-using TF-IDF cosine similarity. During each comparison, overlapping fragments are identified.  This can be
-useful for identifying common boilerplate sentences, repeated paragraphs, etc. By default, the text is
-tokenized into complete sentences (so only complete sentences that recur will be returned), but you can set
-<cite>tokenize=False</cite> to get raw segments of text that occur multiple times.</p>
+<dd><p>Iterate over the corpus <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> and, for each document, scan the most similar other         documents in the corpus using TF-IDF cosine similarity. During each comparison, overlapping fragments are         identified.  This can be useful for identifying common boilerplate sentences, repeated paragraphs, etc.         By default, the text is tokenized into complete sentences (so only complete sentences that recur will be         returned), but you can set <code class="docutils literal notranslate"><span class="pre">tokenize=False</span></code> to get raw segments of text that occur multiple times.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -839,8 +834,8 @@ that have less than .997 cosine similarity.</p>
 <code class="sig-name descname">find_duplicates</code><span class="sig-paren">(</span><em class="sig-param">tfidf_threshold=0.9</em>, <em class="sig-param">fuzzy_ratio_threshold=90</em>, <em class="sig-param">allow_partial=False</em>, <em class="sig-param">max_partial_difference=40</em>, <em class="sig-param">filter_function=None</em>, <em class="sig-param">partial_ratio_timeout=5</em>, <em class="sig-param">decode_text=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.find_duplicates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.find_duplicates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search for duplicates by using cosine similarity and Levenshtein ratios.  This will struggle with large
 corpora, so we recommend trying to filter down to potential duplicates first.  The corpus will first be
-scanned for document pairs with a cosine similarity greater or equal to the <cite>tfidf_threshold</cite>.  Then,
-each of these pairs will be compared using the more stringent <cite>fuzzy_ratio_threshold</cite>.</p>
+scanned for document pairs with a cosine similarity greater or equal to the <code class="docutils literal notranslate"><span class="pre">tfidf_threshold</span></code>.  Then,
+each of these pairs will be compared using the more stringent <code class="docutils literal notranslate"><span class="pre">fuzzy_ratio_threshold</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -854,7 +849,7 @@ each of these pairs will be compared using the more stringent <cite>fuzzy_ratio_
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of lists, containing groups of duplicate documents (represented as rows from the corpus         dataframe)</p>
+<dd class="field-even"><p>A list of lists, containing groups of duplicate documents (represented as rows from the corpus         <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>)</p>
 </dd>
 </dl>
 <p>Usage:</p>
@@ -908,19 +903,19 @@ each of these pairs will be compared using the more stringent <cite>fuzzy_ratio_
 <dl class="method">
 <dt id="pewanalytics.text.__init__.TextDataFrame.mutual_info">
 <code class="sig-name descname">mutual_info</code><span class="sig-paren">(</span><em class="sig-param">outcome_col</em>, <em class="sig-param">weight_col=None</em>, <em class="sig-param">sample_size=None</em>, <em class="sig-param">l=0</em>, <em class="sig-param">normalize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.mutual_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.mutual_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper around <cite>pewanalytics.stats.mutual_info.compute_mutual_info</cite></p>
+<dd><p>A wrapper around <code class="docutils literal notranslate"><span class="pre">pewanalytics.stats.mutual_info.compute_mutual_info</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>outcome_col</strong> (<em>str</em>) – The name of the column with the binary outcome variable</p></li>
 <li><p><strong>weight_col</strong> (<em>str</em>) – (Optional) Name of the column to use in weighting</p></li>
-<li><p><strong>sample_size</strong> (<em>int</em>) – (Optional) If provided, a random sample of this size will be used instead of the full         dataframe</p></li>
+<li><p><strong>sample_size</strong> (<em>int</em>) – (Optional) If provided, a random sample of this size will be used instead of the full         <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p></li>
 <li><p><strong>l</strong> (<em>float</em>) – An optional Laplace smoothing parameter</p></li>
 <li><p><strong>normalize</strong> (<em>bool</em>) – Toggle normalization on or off (to control for feature prevalence), on by default</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A DataFrame of ngrams and various metrics about them, including mutual information</p>
+<dd class="field-even"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> of ngrams and various metrics about them, including mutual information</p>
 </dd>
 </dl>
 <p>Usage:</p>
@@ -940,8 +935,8 @@ each of these pairs will be compared using the more stringent <cite>fuzzy_ratio_
 <dl class="method">
 <dt id="pewanalytics.text.__init__.TextDataFrame.kmeans_clusters">
 <code class="sig-name descname">kmeans_clusters</code><span class="sig-paren">(</span><em class="sig-param">k=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.kmeans_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.kmeans_clusters" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper around <cite>pewanalytics.stats.clustering.compute_kmeans_clusters</cite>. Will compute clusters of documents.
-The resulting cluster IDs for each document are saved in the TextDataFrame’s <cite>corpus</cite> in a new column called
+<dd><p>A wrapper around <code class="docutils literal notranslate"><span class="pre">pewanalytics.stats.clustering.compute_kmeans_clusters</span></code>. Will compute clusters of documents.
+The resulting cluster IDs for each document are saved in the TextDataFrame’s <code class="docutils literal notranslate"><span class="pre">corpus</span></code> in a new column called
 “kmeans”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -967,8 +962,8 @@ The resulting cluster IDs for each document are saved in the TextDataFrame’s <
 <dl class="method">
 <dt id="pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters">
 <code class="sig-name descname">hdbscan_clusters</code><span class="sig-paren">(</span><em class="sig-param">min_cluster_size=100</em>, <em class="sig-param">min_samples=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.hdbscan_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.hdbscan_clusters" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper around <cite>pewanalytics.stats.clustering.compute_hdbscan_clusters</cite>. Will compute clusters of documents.
-The resulting cluster IDs for each document are saved in the TextDataFrame’s <cite>corpus</cite> in a new column called
+<dd><p>A wrapper around <code class="docutils literal notranslate"><span class="pre">pewanalytics.stats.clustering.compute_hdbscan_clusters</span></code>. Will compute clusters of documents.
+The resulting cluster IDs for each document are saved in the TextDataFrame’s <code class="docutils literal notranslate"><span class="pre">corpus</span></code> in a new column called
 “hdbscan”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -989,8 +984,8 @@ The resulting cluster IDs for each document are saved in the TextDataFrame’s <
 <dl class="method">
 <dt id="pewanalytics.text.__init__.TextDataFrame.top_cluster_terms">
 <code class="sig-name descname">top_cluster_terms</code><span class="sig-paren">(</span><em class="sig-param">cluster_col</em>, <em class="sig-param">min_size=50</em>, <em class="sig-param">top_n=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.top_cluster_terms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.top_cluster_terms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extracts the top terms for each cluster, based on a column of cluster IDs saved to <cite>self.corpus</cite>, using
-mutual information. Returns the <cite>top_n</cite> terms for each cluster.</p>
+<dd><p>Extracts the top terms for each cluster, based on a column of cluster IDs saved to <code class="docutils literal notranslate"><span class="pre">self.corpus</span></code>, using
+mutual information. Returns the <code class="docutils literal notranslate"><span class="pre">top_n</span></code> terms for each cluster.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1021,7 +1016,7 @@ mutual information. Returns the <cite>top_n</cite> terms for each cluster.</p>
 <dl class="method">
 <dt id="pewanalytics.text.__init__.TextDataFrame.pca_components">
 <code class="sig-name descname">pca_components</code><span class="sig-paren">(</span><em class="sig-param">k=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.pca_components"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.pca_components" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper around <cite>pewanalytics.stats.dimensionality_reduction.get_pca</cite>.
+<dd><p>A wrapper around <code class="docutils literal notranslate"><span class="pre">pewanalytics.stats.dimensionality_reduction.get_pca</span></code>.
 Saves the PCA components to self.corpus as new columns (‘pca_1’, ‘pca_2’, etc.),
 saves the top component for each document as self.corpus[‘pca’], and returns
 the features-component matrix.</p>
@@ -1030,7 +1025,7 @@ the features-component matrix.</p>
 <dd class="field-odd"><p><strong>k</strong> (<em>int</em>) – Number of dimensions to extract</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dataframe of (features x components)</p>
+<dd class="field-even"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> of (features x components)</p>
 </dd>
 </dl>
 <p>Usage:</p>
@@ -1056,7 +1051,7 @@ the features-component matrix.</p>
 <dl class="method">
 <dt id="pewanalytics.text.__init__.TextDataFrame.lsa_components">
 <code class="sig-name descname">lsa_components</code><span class="sig-paren">(</span><em class="sig-param">k=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.lsa_components"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.lsa_components" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper around <cite>pewanalytics.stats.dimensionality_reduction.get_lsa</cite>.
+<dd><p>A wrapper around <code class="docutils literal notranslate"><span class="pre">pewanalytics.stats.dimensionality_reduction.get_lsa</span></code>.
 Saves the LSA components to self.corpus as new columns (‘lsa_1’, ‘lsa_2’, etc.),
 saves the top component for each document as self.corpus[‘lsa’], and returns
 the features-component matrix</p>
@@ -1065,7 +1060,7 @@ the features-component matrix</p>
 <dd class="field-odd"><p><strong>k</strong> (<em>int</em>) – Number of dimensions to extract</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dataframe of (features x components)</p>
+<dd class="field-even"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> of (features x components)</p>
 </dd>
 </dl>
 <p>Usage:</p>
@@ -1092,7 +1087,7 @@ the features-component matrix</p>
 <dl class="method">
 <dt id="pewanalytics.text.__init__.TextDataFrame.get_top_documents">
 <code class="sig-name descname">get_top_documents</code><span class="sig-paren">(</span><em class="sig-param">component_prefix='cluster'</em>, <em class="sig-param">top_n=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/__init__.html#TextDataFrame.get_top_documents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.__init__.TextDataFrame.get_top_documents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Use after running <cite>get_pca_components</cite> or <cite>get_lsa_components</cite>. Returns the <cite>top_n</cite> documents with the highest
+<dd><p>Use after running <code class="docutils literal notranslate"><span class="pre">get_pca_components</span></code> or <code class="docutils literal notranslate"><span class="pre">get_lsa_components</span></code>. Returns the <code class="docutils literal notranslate"><span class="pre">top_n</span></code> documents with the highest
 scores for each components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1102,7 +1097,7 @@ scores for each components.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary where keys are the component, and values are the text values for the component’s         <cite>top_n</cite> documents</p>
+<dd class="field-even"><p>A dictionary where keys are the component, and values are the text values for the component’s         <code class="docutils literal notranslate"><span class="pre">top_n</span></code> documents</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -1188,14 +1183,14 @@ scores for each components.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.dates.DateFinder" title="pewanalytics.text.dates.DateFinder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DateFinder</span></code></a>([preprocessing_patterns])</p></td>
-<td><p>A helper class to search for dates in text using a series of regular expressions and a parser from <cite>dateutil</cite>.</p></td>
+<td><p>A helper class to search for dates in text using a series of regular expressions and a parser from <code class="docutils literal notranslate"><span class="pre">dateutil</span></code>.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="class">
 <dt id="pewanalytics.text.dates.DateFinder">
 <em class="property">class </em><code class="sig-name descname">DateFinder</code><span class="sig-paren">(</span><em class="sig-param">preprocessing_patterns=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/dates.html#DateFinder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.dates.DateFinder" title="Permalink to this definition">¶</a></dt>
-<dd><p>A helper class to search for dates in text using a series of regular expressions and a parser from <cite>dateutil</cite>.     Verifies that <cite>dateutil</cite> did not auto-fill missing values in the date. Time information will be automatically     cleared out, but you can also pass a list of additional regular expression patterns (as strings) to define other     patterns that should be cleared out before scanning for dates.</p>
+<dd><p>A helper class to search for dates in text using a series of regular expressions and a parser from <code class="docutils literal notranslate"><span class="pre">dateutil</span></code>.     Verifies that <code class="docutils literal notranslate"><span class="pre">dateutil</span></code> did not auto-fill missing values in the date. Time information will be automatically     cleared out, but you can also pass a list of additional regular expression patterns (as strings) to define other     patterns that should be cleared out before scanning for dates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>preprocessing_patterns</strong> (<em>list</em>) – Optional list of additional patterns to clear out prior to searching for dates.</p>
@@ -1378,14 +1373,14 @@ scores for each components.</p>
 <dl class="class">
 <dt id="pewanalytics.text.topics.TopicModel">
 <em class="property">class </em><code class="sig-name descname">TopicModel</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">text_col</em>, <em class="sig-param">method</em>, <em class="sig-param">num_topics=None</em>, <em class="sig-param">max_ngram_size=2</em>, <em class="sig-param">holdout_pct=0.25</em>, <em class="sig-param">use_tfidf=False</em>, <em class="sig-param">**vec_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.topics.TopicModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper around various topic modeling algorithms and libraries, intended to provide a standardized way to train     and apply models. When you initialize a <cite>TopicModel</cite>, it will fit a vectorizer, and split the data into a train     and test set if <cite>holdout_pct</cite> is provided. For more information about the available implementations, refer to the     documentation for the <cite>fit()</cite> method below.</p>
+<dd><p>A wrapper around various topic modeling algorithms and libraries, intended to provide a standardized way to train     and apply models. When you initialize a <code class="docutils literal notranslate"><span class="pre">TopicModel</span></code>, it will fit a vectorizer, and split the data into a train     and test set if <code class="docutils literal notranslate"><span class="pre">holdout_pct</span></code> is provided. For more information about the available implementations, refer to the     documentation for the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method below.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – Pandas DataFrame</p></li>
+<li><p><strong>df</strong> – A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p></li>
 <li><p><strong>text_col</strong> (<em>str</em>) – Name of the column containing text</p></li>
 <li><p><strong>method</strong> (<em>str</em>) – The topic model implementation to use. Options are: sklearn_lda, sklearn_nmf, gensim_lda,     gensim_hdp, corex</p></li>
-<li><p><strong>num_topics</strong> (<em>int</em>) – The number of topics to extract. Required for every method except <cite>gensim_hdp</cite>.</p></li>
+<li><p><strong>num_topics</strong> (<em>int</em>) – The number of topics to extract. Required for every method except <code class="docutils literal notranslate"><span class="pre">gensim_hdp</span></code>.</p></li>
 <li><p><strong>max_ngram_size</strong> (<em>int</em>) – Maximum ngram size (2=bigrams, 3=trigrams, etc)</p></li>
 <li><p><strong>holdout_pct</strong> (<em>float</em>) – Proportion of the documents to hold out for goodness-of-fit scoring</p></li>
 <li><p><strong>use_tfidf</strong> (<em>bool</em>) – Whether to use binary counts or a TF-IDF representation</p></li>
@@ -1401,13 +1396,13 @@ scores for each components.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.topics.TopicModel.fit" title="pewanalytics.text.topics.TopicModel.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>([df])</p></td>
-<td><p>Fits a model using the method specified when initializing the <cite>TopicModel</cite>.</p></td>
+<td><p>Fits a model using the method specified when initializing the <code class="docutils literal notranslate"><span class="pre">TopicModel</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.topics.TopicModel.get_document_topics" title="pewanalytics.text.topics.TopicModel.get_document_topics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_document_topics</span></code></a>(df, **kwargs)</p></td>
-<td><p>Takes a DataFrame and returns a document-topic DataFrame (rows=documents, columns=topics)</p></td>
+<td><p>Takes a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> and returns a document-topic <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>         (rows=documents, columns=topics)</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewanalytics.text.topics.TopicModel.get_features" title="pewanalytics.text.topics.TopicModel.get_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_features</span></code></a>(df[, keep_sparse])</p></td>
-<td><p>Uses the trained vectorizer to process a dataframe and return a feature matrix.</p></td>
+<td><p>Uses the trained vectorizer to process a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> and return a feature matrix.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewanalytics.text.topics.TopicModel.get_fit_params" title="pewanalytics.text.topics.TopicModel.get_fit_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_fit_params</span></code></a>(**kwargs)</p></td>
 <td><p>Internal helper function to set defaults depending on the specified model.</p></td>
@@ -1465,16 +1460,16 @@ scores for each components.</p>
 <dl class="method">
 <dt id="pewanalytics.text.topics.TopicModel.get_features">
 <code class="sig-name descname">get_features</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">keep_sparse=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.get_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.topics.TopicModel.get_features" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the trained vectorizer to process a dataframe and return a feature matrix.</p>
+<dd><p>Uses the trained vectorizer to process a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> and return a feature matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – The DataFrame to vectorize (must have <cite>self.text_col</cite> in it)</p></li>
+<li><p><strong>df</strong> – The <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to vectorize (must have <code class="docutils literal notranslate"><span class="pre">self.text_col</span></code> in it)</p></li>
 <li><p><strong>keep_sparse</strong> (<em>bool</em>) – Whether or not to keep the feature matrix in sparse format (default=False)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A Pandas DataFrame of features or a sparse matrix, depending on the value of <cite>keep_sparse</cite></p>
+<dd class="field-even"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> of features or a sparse matrix, depending on the value of         <code class="docutils literal notranslate"><span class="pre">keep_sparse</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1485,7 +1480,7 @@ scores for each components.</p>
 <dd><p>Internal helper function to set defaults depending on the specified model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kwargs</strong> – Arguments passed to <cite>self.fit()</cite></p>
+<dd class="field-odd"><p><strong>kwargs</strong> – Arguments passed to <code class="docutils literal notranslate"><span class="pre">self.fit()</span></code></p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Arguments to pass to the model</p>
@@ -1496,15 +1491,15 @@ scores for each components.</p>
 <dl class="method">
 <dt id="pewanalytics.text.topics.TopicModel.fit">
 <code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.topics.TopicModel.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fits a model using the method specified when initializing the <cite>TopicModel</cite>. Details on model-specific         parameters are below:</p>
+<dd><p>Fits a model using the method specified when initializing the <code class="docutils literal notranslate"><span class="pre">TopicModel</span></code>. Details on model-specific         parameters are below:</p>
 <p><strong>sklearn_lda</strong></p>
 <p>Fits a model using <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.decomposition.LatentDirichletAllocation</span></code>. For more information on         available parameters, please refer to the official documentation:         <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.LatentDirichletAllocation.html">https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.LatentDirichletAllocation.html</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – The dataframe to train the model on (must contain <cite>self.text_col</cite>)</p></li>
-<li><p><strong>alpha</strong> – Represents document-topic density. When values are higher, documents will be comprised of more         topics; when values are lower, documents will be primarily comprised of only a few topics. This parameter is         used instead of the doc_topic_prior sklearn parameter, and will be passed along to sklearn using the formula:         <cite>doc_topic_prior = alpha / num_topics</cite></p></li>
-<li><p><strong>beta</strong> – Represents topic-word density. When values are higher, topics will be comprised of more words;         when values are lower, only a few words will be loaded onto each topic. This parameter is used instead of the         topic_word_prior sklearn parameter, and will be passed along to sklearn using the formula:         <cite>topic_word_prior = beta / num_topics</cite>.</p></li>
+<li><p><strong>df</strong> – The <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to train the model on (must contain <code class="docutils literal notranslate"><span class="pre">self.text_col</span></code>)</p></li>
+<li><p><strong>alpha</strong> – Represents document-topic density. When values are higher, documents will be comprised of more         topics; when values are lower, documents will be primarily comprised of only a few topics. This parameter is         used instead of the doc_topic_prior sklearn parameter, and will be passed along to sklearn using the formula:         <code class="docutils literal notranslate"><span class="pre">doc_topic_prior</span> <span class="pre">=</span> <span class="pre">alpha</span> <span class="pre">/</span> <span class="pre">num_topics</span></code></p></li>
+<li><p><strong>beta</strong> – Represents topic-word density. When values are higher, topics will be comprised of more words;         when values are lower, only a few words will be loaded onto each topic. This parameter is used instead of the         topic_word_prior sklearn parameter, and will be passed along to sklearn using the formula:         <code class="docutils literal notranslate"><span class="pre">topic_word_prior</span> <span class="pre">=</span> <span class="pre">beta</span> <span class="pre">/</span> <span class="pre">num_topics</span></code>.</p></li>
 <li><p><strong>learning_decay</strong> – See sklearn documentation.</p></li>
 <li><p><strong>learning_offset</strong> – See sklearn documentation.</p></li>
 <li><p><strong>learning_method</strong> – See sklearn documentation.</p></li>
@@ -1519,7 +1514,7 @@ scores for each components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – The dataframe to train the model on (must contain <cite>self.text_col</cite>)</p></li>
+<li><p><strong>df</strong> – The <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to train the model on (must contain <code class="docutils literal notranslate"><span class="pre">self.text_col</span></code>)</p></li>
 <li><p><strong>alpha</strong> – See sklearn documentation.</p></li>
 <li><p><strong>l1_ratio</strong> – See sklearn documentation.</p></li>
 <li><p><strong>tol</strong> – See sklearn documentation.</p></li>
@@ -1529,7 +1524,7 @@ scores for each components.</p>
 </dd>
 </dl>
 <p><strong>gensim_lda</strong></p>
-<p>Fits an LDA model using <code class="xref py py-class docutils literal notranslate"><span class="pre">gensim.models.LdaModel</span></code> or         <code class="xref py py-class docutils literal notranslate"><span class="pre">gensim.models.ldamulticore.LdaMulticore</span></code>.         When <cite>use_multicore</cite> is set to <cite>True</cite>, the multicore implementation will be used, otherwise the standard         LDA implementation will be used.         For more information on available parameters, please refer to the official documentation below:</p>
+<p>Fits an LDA model using <code class="xref py py-class docutils literal notranslate"><span class="pre">gensim.models.LdaModel</span></code> or         <code class="xref py py-class docutils literal notranslate"><span class="pre">gensim.models.ldamulticore.LdaMulticore</span></code>.         When <code class="docutils literal notranslate"><span class="pre">use_multicore</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the multicore implementation will be used, otherwise the standard         LDA implementation will be used.         For more information on available parameters, please refer to the official documentation below:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>use_multicore=True: <a class="reference external" href="https://radimrehurek.com/gensim/models/ldamulticore.html">https://radimrehurek.com/gensim/models/ldamulticore.html</a></p></li>
@@ -1539,9 +1534,9 @@ scores for each components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – The dataframe to train the model on (must contain <cite>self.text_col</cite>)</p></li>
+<li><p><strong>df</strong> – The <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to train the model on (must contain <code class="docutils literal notranslate"><span class="pre">self.text_col</span></code>)</p></li>
 <li><p><strong>alpha</strong> – Represents document-topic density. When values are higher, documents will be comprised of         more topics; when values are lower, documents will be primarily comprised of only a few topics. Gensim         options are a bit different than sklearn though; refer to the documentation for the accepted values here.</p></li>
-<li><p><strong>beta</strong> – Represents topic-word density. When values are higher, topics will be comprised of more words;         when values are lower, only a few words will be loaded onto each topic. Gensim options are a bit different         than sklearn though; refer to the documentation for the accepted values here. Gensim calls this parameter         <cite>eta</cite>. We renamed it to be consistent with the sklearn implementations.</p></li>
+<li><p><strong>beta</strong> – Represents topic-word density. When values are higher, topics will be comprised of more words;         when values are lower, only a few words will be loaded onto each topic. Gensim options are a bit different         than sklearn though; refer to the documentation for the accepted values here. Gensim calls this parameter         <code class="docutils literal notranslate"><span class="pre">eta</span></code>. We renamed it to be consistent with the sklearn implementations.</p></li>
 <li><p><strong>chunksize</strong> – See gensim documentation.</p></li>
 <li><p><strong>passes</strong> – See gensim documentation.</p></li>
 <li><p><strong>decay</strong> – See gensim documentation.</p></li>
@@ -1553,16 +1548,13 @@ scores for each components.</p>
 </dl>
 <p><strong>gensim_hdp</strong></p>
 <p>Fits an HDP model using the gensim implementation. Contrary to LDA and NMF, HDP attempts to auto-detect the
-correct number of topics. In practice, it actually fits <cite>T</cite> topics (default is 150) but many are extremely rare
+correct number of topics. In practice, it actually fits <code class="docutils literal notranslate"><span class="pre">T</span></code> topics (default is 150) but many are extremely rare
 or occur only in a very few number of documents. To identify the topics that are actually useful, this function
-passes the original DataFrame through the trained model after fitting, and identifies topics that compose at
-least 1% of a document in at least 1% of all documents in the corpus. In other words, topics are thrown out if
-the number of documents they appear in at a rate of at least 1% are fewer than 1% of the total number of
-documents. Subsequent use of the model will only make use of topics that meet this threshold. For more         information on available parameters, please refer to the official documentation:         <a class="reference external" href="https://radimrehurek.com/gensim/models/hdpmodel.html">https://radimrehurek.com/gensim/models/hdpmodel.html</a></p>
+passes the original <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> through the trained model after fitting, and identifies         topics that compose at least 1% of a document in at least 1% of all documents in the corpus. In other words,         topics are thrown out if the number of documents they appear in at a rate of at least 1% are fewer than 1% of         the total number of documents. Subsequent use of the model will only make use of topics that meet this         threshold. For more information on available parameters, please refer to the official documentation:         <a class="reference external" href="https://radimrehurek.com/gensim/models/hdpmodel.html">https://radimrehurek.com/gensim/models/hdpmodel.html</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – The dataframe to train the model on (must contain <cite>self.text_col</cite>)</p></li>
+<li><p><strong>df</strong> – The <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to train the model on (must contain <code class="docutils literal notranslate"><span class="pre">self.text_col</span></code>)</p></li>
 <li><p><strong>max_chunks</strong> – See gensim documentation.</p></li>
 <li><p><strong>max_time</strong> – See gensim documentation.</p></li>
 <li><p><strong>chunksize</strong> – See gensim documentation.</p></li>
@@ -1588,13 +1580,13 @@ corresponding to a set of words to be used to seed a topic. For example:</p>
 </pre></div>
 </div>
 <p>The list of anchors cannot be longer than the specified number of topics, and all of the words must
-exist in the vocabulary. The <cite>anchor_strength</cite> parameter determines the degree to which the model is able to
+exist in the vocabulary. The <code class="docutils literal notranslate"><span class="pre">anchor_strength</span></code> parameter determines the degree to which the model is able to
 override the suggested words based on the data; providing higher values are a way of “insisting” more strongly
 that the model keep the provided words together in a single topic. For more information on available         parameters, please refer to the official documentation: <a class="reference external" href="https://github.com/gregversteeg/corex_topic">https://github.com/gregversteeg/corex_topic</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – The dataframe to train the model on (must contain <cite>self.text_col</cite>)</p></li>
+<li><p><strong>df</strong> – The <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to train the model on (must contain <code class="docutils literal notranslate"><span class="pre">self.text_col</span></code>)</p></li>
 <li><p><strong>anchors</strong> – A list of lists that contain words that the model should try to group together into topics</p></li>
 <li><p><strong>anchor_strength</strong> – The degree to which the provided anchors should be preserved regardless of the data</p></li>
 </ul>
@@ -1628,11 +1620,11 @@ that the model keep the provided words together in a single topic. For more info
 <dl class="method">
 <dt id="pewanalytics.text.topics.TopicModel.get_document_topics">
 <code class="sig-name descname">get_document_topics</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewanalytics/text/topics.html#TopicModel.get_document_topics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewanalytics.text.topics.TopicModel.get_document_topics" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes a DataFrame and returns a document-topic DataFrame (rows=documents, columns=topics)</p>
+<dd><p>Takes a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> and returns a document-topic <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>         (rows=documents, columns=topics)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – The DataFrame to process (must have <cite>self.text_col</cite> in it)</p></li>
+<li><p><strong>df</strong> – The <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to process (must have <code class="docutils literal notranslate"><span class="pre">self.text_col</span></code> in it)</p></li>
 <li><p><strong>min_probability</strong> (<em>float</em>) – (gensim_lda use_multicore=False only) Topics with a probability lower than this         threshold will be filtered out (Default=0.0)</p></li>
 </ul>
 </dd>

@@ -16,7 +16,6 @@ clusters from your data.
   :autosummary-members:
   :members:
 
-
 Dimensionality Reduction
 --------------------------------------------
 
@@ -29,7 +28,6 @@ analysis.
   :autosummary-members:
   :members:
 
-
 Inter-Rater Reliability
 -----------------------
 
@@ -41,7 +39,6 @@ precision, recall, and much more.
   :autosummary:
   :autosummary-members:
   :members:
-
 
 Mutual Information
 ------------------------------
@@ -56,7 +53,6 @@ of one group versus another.
   :autosummary-members:
   :members:
 
-
 Sampling
 ---------------------------
 
@@ -67,7 +63,3 @@ weighting samples based on a known sampling frame.
   :autosummary:
   :autosummary-members:
   :members:
-
-.. toctree::
-   :caption: Navigation
-   :maxdepth: 2

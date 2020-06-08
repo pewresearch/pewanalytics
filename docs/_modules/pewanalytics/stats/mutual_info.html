@@ -161,8 +161,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes pointwise mutual information for a set of observations partitioned into two groups.</span>
 
-<span class="sd">    :param y: An array or, preferably, a pandas.Series</span>
-<span class="sd">    :param x: A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix&#39;</span>
+<span class="sd">    :param y: An array or, preferably, a :py:class:`pandas.Series`</span>
+<span class="sd">    :param x: A matrix, :py:class:`pandas.DataFrame`, or preferably a :py:class:`scipy.sparse.csr_matrix`</span>
 <span class="sd">    :param weights: (Optional) An array of weights corresponding to each observation</span>
 <span class="sd">    :param col_names: The feature names associated with the columns in matrix &#39;x&#39;</span>
 <span class="sd">    :type col_names: list</span>
@@ -170,38 +170,39 @@
 <span class="sd">    :type l: int or float</span>
 <span class="sd">    :param normalize: Toggle normalization on or off (to control for feature prevalance), on by default</span>
 <span class="sd">    :type normalize: bool</span>
-<span class="sd">    :return: A dataframe of features with a variety of computed metrics including mutual information.</span>
+<span class="sd">    :return: A :py:class:`pandas.DataFrame` of features with a variety of computed metrics including mutual information.</span>
 
-<span class="sd">    The function expects `y` to correspond to a list or series of values indicating which partition an observation \</span>
-<span class="sd">    belongs to. `y` must be a binary flag. `x` is a set of features (either a DataFrame or sparse matrix) where the</span>
-<span class="sd">    rows correspond to observations and the columns represent the presence of features (you can technically run</span>
-<span class="sd">    this using non-binary features but the results will not be as readily interpretable.) The function returns</span>
-<span class="sd">    a DataFrame of metrics computed for each feature, including the following columns:</span>
+<span class="sd">    The function expects ``y`` to correspond to a list or series of values indicating which partition an observation \</span>
+<span class="sd">    belongs to. ``y`` must be a binary flag. ``x`` is a set of features (either a :py:class:`pandas.DataFrame` or \</span>
+<span class="sd">    sparse matrix) where the rows correspond to observations and the columns represent the presence of features (you \</span>
+<span class="sd">    can technically run this using non-binary features but the results will not be as readily interpretable.) The \</span>
+<span class="sd">    function returns a :py:class:`pandas.DataFrame` of metrics computed for each feature, including the following \</span>
+<span class="sd">    columns:</span>
 
-<span class="sd">    - `MI1`: The feature&#39;s mutual information for the positive class</span>
-<span class="sd">    - `MI0`: The feature&#39;s mutual information for the negative class</span>
-<span class="sd">    - `total`: The total number of times a feature appeared</span>
-<span class="sd">    - `total_pos_with_term`: The total number of times a feature appeared in positive cases</span>
-<span class="sd">    - `total_neg_with_term`: The total number of times a feature appeared in negative cases</span>
-<span class="sd">    - `total_pos_neg_with_term_diff`: The raw difference in the number of times a feature appeared in positive cases \</span>
+<span class="sd">    - ``MI1``: The feature&#39;s mutual information for the positive class</span>
+<span class="sd">    - ``MI0``: The feature&#39;s mutual information for the negative class</span>
+<span class="sd">    - ``total``: The total number of times a feature appeared</span>
+<span class="sd">    - ``total_pos_with_term``: The total number of times a feature appeared in positive cases</span>
+<span class="sd">    - ``total_neg_with_term``: The total number of times a feature appeared in negative cases</span>
+<span class="sd">    - ``total_pos_neg_with_term_diff``: The raw difference in the number of times a feature appeared in positive cases \</span>
 <span class="sd">    relative to negative cases</span>
-<span class="sd">    - `pct_pos_with_term`: The proportion of positive cases that had the feature</span>
-<span class="sd">    - `pct_neg_with_term`: The proportion of negative cases that had the feature</span>
-<span class="sd">    - `pct_pos_neg_with_term_ratio`: A likelihood ratio indicating the degree to which a positive case was more likely \</span>
+<span class="sd">    - ``pct_pos_with_term``: The proportion of positive cases that had the feature</span>
+<span class="sd">    - ``pct_neg_with_term``: The proportion of negative cases that had the feature</span>
+<span class="sd">    - ``pct_pos_neg_with_term_ratio``: A likelihood ratio indicating the degree to which a positive case was more likely \</span>
 <span class="sd">    to have the feature than a negative case</span>
-<span class="sd">    - `pct_term_pos`: Of the cases that had a feature, the proportion that were in the positive class</span>
-<span class="sd">    - `pct_term_neg`: Of the cases that had a feature, the proportion that were in the negative class</span>
-<span class="sd">    - `pct_term_pos_neg_diff`: The percentage point difference between the proportion of cases with the feature that \</span>
+<span class="sd">    - ``pct_term_pos``: Of the cases that had a feature, the proportion that were in the positive class</span>
+<span class="sd">    - ``pct_term_neg``: Of the cases that had a feature, the proportion that were in the negative class</span>
+<span class="sd">    - ``pct_term_pos_neg_diff``: The percentage point difference between the proportion of cases with the feature that \</span>
 <span class="sd">    were positive vs. negative</span>
-<span class="sd">    - `pct_term_pos_neg_ratio`: A likelihood ratio indicating the degree to which a feature was more likely to appear \</span>
+<span class="sd">    - ``pct_term_pos_neg_ratio``: A likelihood ratio indicating the degree to which a feature was more likely to appear \</span>
 <span class="sd">    in a positive case relative to a negative one (may not be meaningful when classes are imbalanced)</span>
 
-<span class="sd">    .. note:: Note that `pct_term_pos` and `pct_term_neg` may not be directly comparable if classes are imbalanced, \</span>
-<span class="sd">        and in such cases a `pct_term_pos_neg_diff` above zero or `pct_term_pos_neg_ratio` above 1 may not indicate a \</span>
+<span class="sd">    .. note:: Note that ``pct_term_pos`` and ``pct_term_neg`` may not be directly comparable if classes are imbalanced, \</span>
+<span class="sd">        and in such cases a ``pct_term_pos_neg_diff`` above zero or ``pct_term_pos_neg_ratio`` above 1 may not indicate a \</span>
 <span class="sd">        true association with the positive class if positive cases outnumber negative ones.</span>
 
 <span class="sd">    .. note:: Mutual information can be a difficult metric to explain to others. We&#39;ve found that the \</span>
-<span class="sd">        `pct_pos_neg_with_term_ratio` can serve as a more interpretable alternative method for identifying \</span>
+<span class="sd">        ``pct_pos_neg_with_term_ratio`` can serve as a more interpretable alternative method for identifying \</span>
 <span class="sd">        meaningful differences between groups.</span>
 
 <span class="sd">    Usage::</span>
@@ -335,18 +336,18 @@
     <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Takes a mutual information table generated by `compute_mutual_info`, generates a bar plot of top features.  \</span>
-<span class="sd">    Allows for an easy visualization of feature differences. Can subsequently call `plt.show()` or</span>
-<span class="sd">    `plt.savefig` to display or save the plot.</span>
+<span class="sd">    Takes a mutual information table generated by ``compute_mutual_info``, generates a bar plot of top features.  \</span>
+<span class="sd">    Allows for an easy visualization of feature differences. Can subsequently call ``plt.show()`` or</span>
+<span class="sd">    ``plt.savefig`` to display or save the plot.</span>
 
-<span class="sd">    :param mutual_info: A mutual information table generated by `compute_mutual_info`</span>
+<span class="sd">    :param mutual_info: A mutual information table generated by ``compute_mutual_info``</span>
 <span class="sd">    :param filter_col: The column to use when selecting top features; sorts in descending order and picks the \</span>
-<span class="sd">    top `top_n`</span>
+<span class="sd">    top ``top_n``</span>
 <span class="sd">    :type filter_col: str</span>
 <span class="sd">    :param top_n: The number of features to display</span>
 <span class="sd">    :type top_n: int</span>
 <span class="sd">    :param x_col: The column by which to sort the final set of top features (after they have been selected by \</span>
-<span class="sd">    `filter_col`</span>
+<span class="sd">    ``filter_col``</span>
 <span class="sd">    :type x_col: str</span>
 <span class="sd">    :param color: The color of the bars</span>
 <span class="sd">    :type color: str</span>
@@ -354,8 +355,8 @@
 <span class="sd">    :type title: str</span>
 <span class="sd">    :param width: The width of the plot</span>
 <span class="sd">    :type width: int</span>
-<span class="sd">    :return: A Matplotlib figure, which you can display via `plt.show()` or alternatively save to a file via \</span>
-<span class="sd">    `plt.savefig(FILEPATH)`</span>
+<span class="sd">    :return: A Matplotlib figure, which you can display via ``plt.show()`` or alternatively save to a file via \</span>
+<span class="sd">    ``plt.savefig(FILEPATH)``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
@@ -403,14 +404,14 @@
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="sd">    Takes a mutual information table generated by `compute_mutual_info`, generates a scatter plot of top features.</span>
+<span class="sd">    Takes a mutual information table generated by ``compute_mutual_info``, generates a scatter plot of top features.</span>
 <span class="sd">    The names of the features will be displayed with varying colors and sizes depending on the variables specified</span>
-<span class="sd">    in `color_col` and `size_col`. Allows for an easy visualization of feature differences. Can subsequently</span>
-<span class="sd">    call `plt.show()` or `plt.savefig` to display or save the plot.</span>
+<span class="sd">    in ``color_col`` and ``size_col``. Allows for an easy visualization of feature differences. Can subsequently</span>
+<span class="sd">    call ``plt.show()`` or ``plt.savefig`` to display or save the plot.</span>
 
-<span class="sd">    :param mutual_info: A mutual information table generated by `compute_mutual_info`</span>
+<span class="sd">    :param mutual_info: A mutual information table generated by ``compute_mutual_info``</span>
 <span class="sd">    :param filter_col: The column to use when selecting top features; sorts in descending order and picks the top \</span>
-<span class="sd">    `top_n`</span>
+<span class="sd">    ``top_n``</span>
 <span class="sd">    :type filter_col: str</span>
 <span class="sd">    :param top_n: The number of features to display</span>
 <span class="sd">    :type top_n: int</span>
@@ -436,8 +437,8 @@
 <span class="sd">    :type title: str</span>
 <span class="sd">    :param figsize: The size of the plot (tuple)</span>
 <span class="sd">    :type figsize: tuple</span>
-<span class="sd">    :return: A Matplotlib figure, which you can display via `plt.show()` or alternatively save to a file via \</span>
-<span class="sd">    `plt.savefig(FILEPATH)`</span>
+<span class="sd">    :return: A Matplotlib figure, which you can display via ``plt.show()`` or alternatively save to a file via \</span>
+<span class="sd">    ``plt.savefig(FILEPATH)``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>

@@ -13,8 +13,8 @@ def compute_mutual_info(y, x, weights=None, col_names=None, l=0, normalize=True)
     """
     Computes pointwise mutual information for a set of observations partitioned into two groups.
 
-    :param y: An array or, preferably, a pandas.Series
-    :param x: A matrix, pandas.DataFrame, or preferably a Scipy csr_matrix'
+    :param y: An array or, preferably, a :py:class:`pandas.Series`
+    :param x: A matrix, :py:class:`pandas.DataFrame`, or preferably a :py:class:`scipy.sparse.csr_matrix`
     :param weights: (Optional) An array of weights corresponding to each observation
     :param col_names: The feature names associated with the columns in matrix 'x'
     :type col_names: list
@@ -22,38 +22,39 @@ def compute_mutual_info(y, x, weights=None, col_names=None, l=0, normalize=True)
     :type l: int or float
     :param normalize: Toggle normalization on or off (to control for feature prevalance), on by default
     :type normalize: bool
-    :return: A dataframe of features with a variety of computed metrics including mutual information.
+    :return: A :py:class:`pandas.DataFrame` of features with a variety of computed metrics including mutual information.
 
-    The function expects `y` to correspond to a list or series of values indicating which partition an observation \
-    belongs to. `y` must be a binary flag. `x` is a set of features (either a DataFrame or sparse matrix) where the
-    rows correspond to observations and the columns represent the presence of features (you can technically run
-    this using non-binary features but the results will not be as readily interpretable.) The function returns
-    a DataFrame of metrics computed for each feature, including the following columns:
+    The function expects ``y`` to correspond to a list or series of values indicating which partition an observation \
+    belongs to. ``y`` must be a binary flag. ``x`` is a set of features (either a :py:class:`pandas.DataFrame` or \
+    sparse matrix) where the rows correspond to observations and the columns represent the presence of features (you \
+    can technically run this using non-binary features but the results will not be as readily interpretable.) The \
+    function returns a :py:class:`pandas.DataFrame` of metrics computed for each feature, including the following \
+    columns:
 
-    - `MI1`: The feature's mutual information for the positive class
-    - `MI0`: The feature's mutual information for the negative class
-    - `total`: The total number of times a feature appeared
-    - `total_pos_with_term`: The total number of times a feature appeared in positive cases
-    - `total_neg_with_term`: The total number of times a feature appeared in negative cases
-    - `total_pos_neg_with_term_diff`: The raw difference in the number of times a feature appeared in positive cases \
+    - ``MI1``: The feature's mutual information for the positive class
+    - ``MI0``: The feature's mutual information for the negative class
+    - ``total``: The total number of times a feature appeared
+    - ``total_pos_with_term``: The total number of times a feature appeared in positive cases
+    - ``total_neg_with_term``: The total number of times a feature appeared in negative cases
+    - ``total_pos_neg_with_term_diff``: The raw difference in the number of times a feature appeared in positive cases \
     relative to negative cases
-    - `pct_pos_with_term`: The proportion of positive cases that had the feature
-    - `pct_neg_with_term`: The proportion of negative cases that had the feature
-    - `pct_pos_neg_with_term_ratio`: A likelihood ratio indicating the degree to which a positive case was more likely \
+    - ``pct_pos_with_term``: The proportion of positive cases that had the feature
+    - ``pct_neg_with_term``: The proportion of negative cases that had the feature
+    - ``pct_pos_neg_with_term_ratio``: A likelihood ratio indicating the degree to which a positive case was more likely \
     to have the feature than a negative case
-    - `pct_term_pos`: Of the cases that had a feature, the proportion that were in the positive class
-    - `pct_term_neg`: Of the cases that had a feature, the proportion that were in the negative class
-    - `pct_term_pos_neg_diff`: The percentage point difference between the proportion of cases with the feature that \
+    - ``pct_term_pos``: Of the cases that had a feature, the proportion that were in the positive class
+    - ``pct_term_neg``: Of the cases that had a feature, the proportion that were in the negative class
+    - ``pct_term_pos_neg_diff``: The percentage point difference between the proportion of cases with the feature that \
     were positive vs. negative
-    - `pct_term_pos_neg_ratio`: A likelihood ratio indicating the degree to which a feature was more likely to appear \
+    - ``pct_term_pos_neg_ratio``: A likelihood ratio indicating the degree to which a feature was more likely to appear \
     in a positive case relative to a negative one (may not be meaningful when classes are imbalanced)
 
-    .. note:: Note that `pct_term_pos` and `pct_term_neg` may not be directly comparable if classes are imbalanced, \
-        and in such cases a `pct_term_pos_neg_diff` above zero or `pct_term_pos_neg_ratio` above 1 may not indicate a \
+    .. note:: Note that ``pct_term_pos`` and ``pct_term_neg`` may not be directly comparable if classes are imbalanced, \
+        and in such cases a ``pct_term_pos_neg_diff`` above zero or ``pct_term_pos_neg_ratio`` above 1 may not indicate a \
         true association with the positive class if positive cases outnumber negative ones.
 
     .. note:: Mutual information can be a difficult metric to explain to others. We've found that the \
-        `pct_pos_neg_with_term_ratio` can serve as a more interpretable alternative method for identifying \
+        ``pct_pos_neg_with_term_ratio`` can serve as a more interpretable alternative method for identifying \
         meaningful differences between groups.
 
     Usage::
@@ -187,18 +188,18 @@ def mutual_info_bar_plot(
     width=10,
 ):
     """
-    Takes a mutual information table generated by `compute_mutual_info`, generates a bar plot of top features.  \
-    Allows for an easy visualization of feature differences. Can subsequently call `plt.show()` or
-    `plt.savefig` to display or save the plot.
+    Takes a mutual information table generated by ``compute_mutual_info``, generates a bar plot of top features.  \
+    Allows for an easy visualization of feature differences. Can subsequently call ``plt.show()`` or
+    ``plt.savefig`` to display or save the plot.
 
-    :param mutual_info: A mutual information table generated by `compute_mutual_info`
+    :param mutual_info: A mutual information table generated by ``compute_mutual_info``
     :param filter_col: The column to use when selecting top features; sorts in descending order and picks the \
-    top `top_n`
+    top ``top_n``
     :type filter_col: str
     :param top_n: The number of features to display
     :type top_n: int
     :param x_col: The column by which to sort the final set of top features (after they have been selected by \
-    `filter_col`
+    ``filter_col``
     :type x_col: str
     :param color: The color of the bars
     :type color: str
@@ -206,8 +207,8 @@ def mutual_info_bar_plot(
     :type title: str
     :param width: The width of the plot
     :type width: int
-    :return: A Matplotlib figure, which you can display via `plt.show()` or alternatively save to a file via \
-    `plt.savefig(FILEPATH)`
+    :return: A Matplotlib figure, which you can display via ``plt.show()`` or alternatively save to a file via \
+    ``plt.savefig(FILEPATH)``
     """
 
     import seaborn as sns
@@ -255,14 +256,14 @@ def mutual_info_scatter_plot(
 ):
     """
 
-    Takes a mutual information table generated by `compute_mutual_info`, generates a scatter plot of top features.
+    Takes a mutual information table generated by ``compute_mutual_info``, generates a scatter plot of top features.
     The names of the features will be displayed with varying colors and sizes depending on the variables specified
-    in `color_col` and `size_col`. Allows for an easy visualization of feature differences. Can subsequently
-    call `plt.show()` or `plt.savefig` to display or save the plot.
+    in ``color_col`` and ``size_col``. Allows for an easy visualization of feature differences. Can subsequently
+    call ``plt.show()`` or ``plt.savefig`` to display or save the plot.
 
-    :param mutual_info: A mutual information table generated by `compute_mutual_info`
+    :param mutual_info: A mutual information table generated by ``compute_mutual_info``
     :param filter_col: The column to use when selecting top features; sorts in descending order and picks the top \
-    `top_n`
+    ``top_n``
     :type filter_col: str
     :param top_n: The number of features to display
     :type top_n: int
@@ -288,8 +289,8 @@ def mutual_info_scatter_plot(
     :type title: str
     :param figsize: The size of the plot (tuple)
     :type figsize: tuple
-    :return: A Matplotlib figure, which you can display via `plt.show()` or alternatively save to a file via \
-    `plt.savefig(FILEPATH)`
+    :return: A Matplotlib figure, which you can display via ``plt.show()`` or alternatively save to a file via \
+    ``plt.savefig(FILEPATH)``
     """
 
     import matplotlib.pyplot as plt

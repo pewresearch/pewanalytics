@@ -10,16 +10,17 @@ import numpy as np
 def compute_sample_weights_from_frame(frame, sample, weight_vars):
 
     """
-    Takes two dataframes and computes sampling weights for the second one, based on the first. The first dataframe
-    should be equivalent to the population that the second dataframe, a sample, was drawn from. Weights will be
-    calculated based on the differences in the distribution of one or more variables specified in `weight_vars`
-    (these should be the names of columns). Returns a series equal in length to the `sample` with the computed weights.
+    Takes two :py:class:`pandas.DataFrame`s and computes sampling weights for the second one, based on the first. \
+    The first :py:class:`pandas.DataFrame` should be equivalent to the population that the second \
+    :py:class:`pandas.DataFrame`, a sample, was drawn from. Weights will be calculated based on the differences in \
+    the distribution of one or more variables specified in ``weight_vars`` (these should be the names of columns). \
+    Returns a :py:class:`pandas.Series` equal in length to the ``sample`` with the computed weights.
 
-    :param frame: DataFrame (must contain all of the columns specified in `weight_vars`)
-    :param sample: DataFrame (must contain all of the columns specified in `weight_vars`)
+    :param frame: :py:class:`pandas.DataFrame` (must contain all of the columns specified in ``weight_vars``)
+    :param sample: :py:class:`pandas.DataFrame` (must contain all of the columns specified in ``weight_vars``)
     :param weight_vars: The names of the columns to use when computing weights.
     :type weight_vars: list
-    :return: A Series containing the weights for each row in the `sample`
+    :return: A :py:class:`pandas.Series` containing the weights for each row in the ``sample``
 
     Usage::
 
@@ -91,16 +92,17 @@ def compute_sample_weights_from_frame(frame, sample, weight_vars):
 def compute_balanced_sample_weights(sample, weight_vars, weight_column=None):
 
     """
-    Takes a DataFrame and one or more column names (`weight_vars`) and computes weights such that every unique
-    combination of values in the weighting columns are balanced (when weighted, the sum of the observations with each
-    combination will be equal to one another). Useful for balancing important groups in training datasets, etc.
+    Takes a :py:class:`pandas.DataFrame` and one or more column names (``weight_vars``) and computes weights such \
+    that every unique combination of values in the weighting columns are balanced (when weighted, the sum of the \
+    observations with each combination will be equal to one another). Useful for balancing important groups in \
+    training datasets, etc.
 
-    :param sample: DataFrame (must contain all of the columns specified in `weight_vars`)
+    :param sample: :py:class:`pandas.DataFrame` (must contain all of the columns specified in ``weight_vars``)
     :param weight_vars: The names of the columns to use when computing weights.
     :type weight_vars: list
     :param weight_column: An option column containing existing weights, which can be factored into the new weights.
     :type weight_column: str
-    :return: A Series containing the weights for each row in the `sample`
+    :return: A :py:class:`pandas.Series` containing the weights for each row in the ``sample``
 
     .. note:: All weight variables must be binary flags (1 or 0); if you want to weight using a non-binary variable, \
         you should convert it into a set of dummy variables and then pass those in as multiple columns.
@@ -202,7 +204,7 @@ class SampleExtractor(object):
 
     :param df: The sampling frame
     :type df: :py:class:`pandas.DataFrame`
-    :param id_col: Column in the DataFrame to be used as the unique ID of observations
+    :param id_col: Column in the :py:class:`pandas.DataFrame` to be used as the unique ID of observations
     :type id_col: str
     :param verbose: Whether or not to print information during the sampling process (default=False)
     :type verbose: bool
@@ -224,7 +226,7 @@ class SampleExtractor(object):
     def extract(self, sample_size, sampling_strategy="random", stratify_by=None):
 
         """
-        Extract a sample from a DataFrame using one of the following methods:
+        Extract a sample from a :py:class:`pandas.DataFrame` using one of the following methods:
 
         - all: Returns all of the IDs
         - random: Returns a random sample
@@ -239,9 +241,11 @@ class SampleExtractor(object):
         :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify, \
         stratify_even, stratify_guaranteed
         :type sampling_strategy: str
-        :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on
+        :param stratify_by: Optional name of a column or list of columns in the :py:class:`pandas.DataFrame` to \
+        stratify on
         :type stratify_by: str, list
-        :return: A list of IDs reflecting the observations selected from the DataFrame during sampling
+        :return: A list of IDs reflecting the observations selected from the :py:class:`pandas.DataFrame` during \
+        sampling
         :rtype: list
 
         Usage::

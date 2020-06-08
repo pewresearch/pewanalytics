@@ -158,16 +158,17 @@
 <div class="viewcode-block" id="compute_sample_weights_from_frame"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.sampling.compute_sample_weights_from_frame">[docs]</a><span class="k">def</span> <span class="nf">compute_sample_weights_from_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">weight_vars</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Takes two dataframes and computes sampling weights for the second one, based on the first. The first dataframe</span>
-<span class="sd">    should be equivalent to the population that the second dataframe, a sample, was drawn from. Weights will be</span>
-<span class="sd">    calculated based on the differences in the distribution of one or more variables specified in `weight_vars`</span>
-<span class="sd">    (these should be the names of columns). Returns a series equal in length to the `sample` with the computed weights.</span>
+<span class="sd">    Takes two :py:class:`pandas.DataFrame`s and computes sampling weights for the second one, based on the first. \</span>
+<span class="sd">    The first :py:class:`pandas.DataFrame` should be equivalent to the population that the second \</span>
+<span class="sd">    :py:class:`pandas.DataFrame`, a sample, was drawn from. Weights will be calculated based on the differences in \</span>
+<span class="sd">    the distribution of one or more variables specified in ``weight_vars`` (these should be the names of columns). \</span>
+<span class="sd">    Returns a :py:class:`pandas.Series` equal in length to the ``sample`` with the computed weights.</span>
 
-<span class="sd">    :param frame: DataFrame (must contain all of the columns specified in `weight_vars`)</span>
-<span class="sd">    :param sample: DataFrame (must contain all of the columns specified in `weight_vars`)</span>
+<span class="sd">    :param frame: :py:class:`pandas.DataFrame` (must contain all of the columns specified in ``weight_vars``)</span>
+<span class="sd">    :param sample: :py:class:`pandas.DataFrame` (must contain all of the columns specified in ``weight_vars``)</span>
 <span class="sd">    :param weight_vars: The names of the columns to use when computing weights.</span>
 <span class="sd">    :type weight_vars: list</span>
-<span class="sd">    :return: A Series containing the weights for each row in the `sample`</span>
+<span class="sd">    :return: A :py:class:`pandas.Series` containing the weights for each row in the ``sample``</span>
 
 <span class="sd">    Usage::</span>
 
@@ -239,16 +240,17 @@
 <div class="viewcode-block" id="compute_balanced_sample_weights"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.sampling.compute_balanced_sample_weights">[docs]</a><span class="k">def</span> <span class="nf">compute_balanced_sample_weights</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">weight_vars</span><span class="p">,</span> <span class="n">weight_column</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Takes a DataFrame and one or more column names (`weight_vars`) and computes weights such that every unique</span>
-<span class="sd">    combination of values in the weighting columns are balanced (when weighted, the sum of the observations with each</span>
-<span class="sd">    combination will be equal to one another). Useful for balancing important groups in training datasets, etc.</span>
+<span class="sd">    Takes a :py:class:`pandas.DataFrame` and one or more column names (``weight_vars``) and computes weights such \</span>
+<span class="sd">    that every unique combination of values in the weighting columns are balanced (when weighted, the sum of the \</span>
+<span class="sd">    observations with each combination will be equal to one another). Useful for balancing important groups in \</span>
+<span class="sd">    training datasets, etc.</span>
 
-<span class="sd">    :param sample: DataFrame (must contain all of the columns specified in `weight_vars`)</span>
+<span class="sd">    :param sample: :py:class:`pandas.DataFrame` (must contain all of the columns specified in ``weight_vars``)</span>
 <span class="sd">    :param weight_vars: The names of the columns to use when computing weights.</span>
 <span class="sd">    :type weight_vars: list</span>
 <span class="sd">    :param weight_column: An option column containing existing weights, which can be factored into the new weights.</span>
 <span class="sd">    :type weight_column: str</span>
-<span class="sd">    :return: A Series containing the weights for each row in the `sample`</span>
+<span class="sd">    :return: A :py:class:`pandas.Series` containing the weights for each row in the ``sample``</span>
 
 <span class="sd">    .. note:: All weight variables must be binary flags (1 or 0); if you want to weight using a non-binary variable, \</span>
 <span class="sd">        you should convert it into a set of dummy variables and then pass those in as multiple columns.</span>
@@ -350,7 +352,7 @@
 
 <span class="sd">    :param df: The sampling frame</span>
 <span class="sd">    :type df: :py:class:`pandas.DataFrame`</span>
-<span class="sd">    :param id_col: Column in the DataFrame to be used as the unique ID of observations</span>
+<span class="sd">    :param id_col: Column in the :py:class:`pandas.DataFrame` to be used as the unique ID of observations</span>
 <span class="sd">    :type id_col: str</span>
 <span class="sd">    :param verbose: Whether or not to print information during the sampling process (default=False)</span>
 <span class="sd">    :type verbose: bool</span>
@@ -372,7 +374,7 @@
 <div class="viewcode-block" id="SampleExtractor.extract"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.sampling.SampleExtractor.extract">[docs]</a>    <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">,</span> <span class="n">sampling_strategy</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="n">stratify_by</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extract a sample from a DataFrame using one of the following methods:</span>
+<span class="sd">        Extract a sample from a :py:class:`pandas.DataFrame` using one of the following methods:</span>
 
 <span class="sd">        - all: Returns all of the IDs</span>
 <span class="sd">        - random: Returns a random sample</span>
@@ -387,9 +389,11 @@
 <span class="sd">        :param sampling_strategy: The method to be used to extract samples. Options are: all, random, stratify, \</span>
 <span class="sd">        stratify_even, stratify_guaranteed</span>
 <span class="sd">        :type sampling_strategy: str</span>
-<span class="sd">        :param stratify_by: Optional name of a column or list of columns in the DataFrame to stratify on</span>
+<span class="sd">        :param stratify_by: Optional name of a column or list of columns in the :py:class:`pandas.DataFrame` to \</span>
+<span class="sd">        stratify on</span>
 <span class="sd">        :type stratify_by: str, list</span>
-<span class="sd">        :return: A list of IDs reflecting the observations selected from the DataFrame during sampling</span>
+<span class="sd">        :return: A list of IDs reflecting the observations selected from the :py:class:`pandas.DataFrame` during \</span>
+<span class="sd">        sampling</span>
 <span class="sd">        :rtype: list</span>
 
 <span class="sd">        Usage::</span>

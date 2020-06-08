@@ -14,14 +14,14 @@ def _decompose(
     Internal function used to break apart a set of features using a scikit-learn decomposition class and return \
     the resulting matrices.
 
-    :param features: A dataframe or sparse matrix with rows are documents and columns are features
+    :param features: A :py:class:`pandas.DataFrame` or sparse matrix with rows are documents and columns are features
     :param feature_names: An optional list of feature names (for sparse matrices)
     :type feature_names: list
     :param k: Number of dimensions to extract
     :type k: int
     :param component_prefix: A prefix for the column names
     :type component_prefix: str
-    :return: A tuple of two dataframes, (features x components, documents x components)
+    :return: A tuple of two :py:class:`pandas.DataFrame`s, (features x components, documents x components)
     :rtype: tuple
     """
 
@@ -61,12 +61,13 @@ def get_pca(features, feature_names=None, k=20):
     For more information about how PCA is implemented, visit the \
     `Scikit-Learn Documentation <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html>`__.
 
-    :param features: A dataframe or sparse matrix where rows are units/observations and columns are features
+    :param features: A :py:class:`pandas.DataFrame` or sparse matrix where rows are units/observations and columns \
+    are features
     :param feature_names: An optional list of feature names (for sparse matrices)
     :type feature_names: list
     :param k: Number of dimensions to extract
     :type k: int
-    :return: A tuple of two dataframes, (features x components, units x components)
+    :return: A tuple of two :py:class:`pandas.DataFrame` s, (features x components, units x components)
     :rtype: tuple
 
     Usage::
@@ -115,12 +116,13 @@ def get_lsa(features, feature_names=None, k=20):
     `Scikit-Learn Documentation \
     <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html>`__.
 
-    :param features: A dataframe or sparse matrix with rows are units/observations and columns are features
+    :param features: A :py:class:`pandas.DataFrame` or sparse matrix with rows are units/observations and columns \
+    are features
     :param feature_names: An optional list of feature names (for sparse matrices)
     :type feature_names: list
     :param k: Number of dimensions to extract
     :type k: int
-    :return: A tuple of two dataframes, (features x components, documents x components)
+    :return: A tuple of two :py:class:`pandas.DataFrame` s, (features x components, documents x components)
     :rtype: tuple
 
     Usage::
@@ -169,11 +171,12 @@ def correspondence_analysis(edges, n=1):
     or not they follow one another (when news and political accounts are included, the \
     underlying dimension often appears to approximate the left-right political spectrum.)
 
-    :param edges: A dataframe of NxN where both the rows and columns are "nodes" and the values are some sort of \
-    closeness or similarity measure (like a cosine similarity matrix)
+    :param edges: A :py:class:`pandas.DataFrame` of NxN where both the rows and columns are "nodes" and the values \
+    are some sort of closeness or similarity measure (like a cosine similarity matrix)
     :param n: The number of dimensions to extract
     :type n: int
-    :return: A dataframe where rows are the units and the columns correspond to the extracted dimensions.
+    :return: A :py:class:`pandas.DataFrame` where rows are the units and the columns correspond to the extracted \
+    dimensions.
 
     Usage::
 
