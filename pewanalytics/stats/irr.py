@@ -358,15 +358,21 @@ def compute_scores(
             unweighted_stats = DescrStatsW(labelset, weights=[1.0 for x in labelset])
             if unweighted_stats:
                 row["{}_mean_unweighted".format(labelsetname)] = unweighted_stats.mean
-                row["{}_std_unweighted".format(labelsetname)] = unweighted_stats.std_mean
+                row[
+                    "{}_std_unweighted".format(labelsetname)
+                ] = unweighted_stats.std_mean
         except (TypeError, ValueError):
             try:
                 unweighted_stats = DescrStatsW(
                     labelset.astype(int), weights=[1.0 for x in labelset]
                 )
                 if unweighted_stats:
-                    row["{}_mean_unweighted".format(labelsetname)] = unweighted_stats.mean
-                    row["{}_std_unweighted".format(labelsetname)] = unweighted_stats.std_mean
+                    row[
+                        "{}_mean_unweighted".format(labelsetname)
+                    ] = unweighted_stats.mean
+                    row[
+                        "{}_std_unweighted".format(labelsetname)
+                    ] = unweighted_stats.std_mean
             except (TypeError, ValueError):
                 pass
 
