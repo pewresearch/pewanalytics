@@ -253,8 +253,6 @@ class SampleExtractor(object):
             from pewanalytics.stats.sampling import SampleExtractor
             import nltk
             import pandas as pd
-            from sklearn.metrics.pairwise import linear_kernel
-            from sklearn.feature_extraction.text import TfidfVectorizer
 
             nltk.download("inaugural")
             frame = pd.DataFrame([
