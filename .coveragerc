@@ -1,0 +1,18 @@
+# .coveragerc to control coverage.py
+[run]
+branch = False
+cover_pylib = False
+source = pewanalytics
+omit =
+    */site-packages/*
+    pewanalytics/internal/*
+
+[report]
+ignore_errors = True
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    except
+omit =
+    */site-packages/*
+    pewanalytics/internal/*

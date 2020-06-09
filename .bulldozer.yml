@@ -1,0 +1,14 @@
+version: 1
+
+merge:
+  method: merge
+  whitelist:
+    labels: ["automerge"]
+    comment_substrings: ["==AUTOMERGE=="]
+  blacklist:
+    labels: ["block"]
+    comment_substrings: ["==BLOCK=="]
+
+update:
+  whitelist:
+    labels: ["wip", "update me"]

@@ -1,0 +1,32 @@
+policy:
+  approval:
+  - or:
+    - deploy updates
+    - submodule updates
+    - at least one human approval
+
+approval_rules:
+- name: at least one human approval
+  options:
+    allow_contributor: true
+    invalidate_on_push: true
+  requires:
+    count: 1
+    organizations: ["pewresearch"]
+    write_collaborators: true
+
+- name: deploy updates
+  options:
+    invalidate_on_push: true
+  if:
+    only_changed_files:
+      paths:
+      - '^deploy/.*'
+
+- name: submodule updates
+  options:
+    invalidate_on_push: true
+  if:
+    only_changed_files:
+      paths:
+      - '^src/.*'
