@@ -19,7 +19,6 @@ numpy<1.17.0; python_version < '3.0'
 numpy>=1.16.0; python_version >= '3.0'
 pandas<0.25.0; python_version < '3.0'
 pandas>=0.25.0; python_version >= '3.0'
-polyglot>=16.7.4
 pycparser>=2.20
 python-dateutil>=2.6.0
 python-levenshtein>=0.12.0
