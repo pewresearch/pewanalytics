@@ -163,18 +163,64 @@
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>To install, you can use <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pewresearch</span><span class="o">/</span><span class="n">pewanalytics</span><span class="c1">#egg=pewanalytics</span>
-</pre></div>
-</div>
+<blockquote>
+<div><p>pip install git+https://github.com/pewresearch/pewanalytics#egg=pewanalytics</p>
+</div></blockquote>
 <p>Or you can install from source:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pewresearch</span><span class="o">/</span><span class="n">pewanalytics</span><span class="o">.</span><span class="n">git</span>
-<span class="n">cd</span> <span class="n">pewanalytics</span>
-<span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
-</pre></div>
-</div>
+<blockquote>
+<div><p>git clone <a class="reference external" href="https://github.com/pewresearch/pewanalytics.git">https://github.com/pewresearch/pewanalytics.git</a>
+cd pewanalytics
+python setup.py install</p>
+</div></blockquote>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This is a Python 3 package. Though it is compatible with Python 2, many of its dependencies are planning to drop support for earlier versions if they haven’t already. We highly recommend you upgrade to Python 3.</p>
+</div>
+<div class="section" id="installation-troubleshooting">
+<h3>Installation Troubleshooting<a class="headerlink" href="#installation-troubleshooting" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="using-64-bit-python">
+<h4>Using 64-bit Python<a class="headerlink" href="#using-64-bit-python" title="Permalink to this headline">¶</a></h4>
+<p>Some of our libraries require the use of 64-bit Python. If you encounter errors during installation that are related to missing libraries, you may be using 32-bit Python. We recommend that you uninstall this version and switch to a 64-bit version instead. On Windows, these will be marked with <code class="docutils literal notranslate"><span class="pre">x86-64</span></code>; you can find the latest 64-bit versions of Python <a class="reference external" href="http://www.python.org/downloads">here</a>.</p>
+</div>
+<div class="section" id="installing-ssdeep">
+<h4>Installing ssdeep<a class="headerlink" href="#installing-ssdeep" title="Permalink to this headline">¶</a></h4>
+<p>ssdeep is an optional dependency that can be used by the <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.get_hash()</span></code> function in Pewtils. Installation instructions for various Linux distributions can be found in the library’s <a class="reference external" href="https://python-ssdeep.readthedocs.io/en/latest/installation.html">documentation</a>. The ssdeep Python library is not currently compatible with Windows. Installing ssdeep on Mac OS may involve a few additional steps, detailed below:</p>
+<ol class="arabic">
+<li><p>Install Homebrew</p></li>
+<li><p>Install xcode</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>xcode-select --install
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Install system dependencies</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew install pkg-config libffi libtool automake
+ln -s /usr/local/bin/glibtoolize /usr/local/bin/libtoolize
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Install ssdeep with an additional flag to build the required libraries</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">BUILD_LIB</span><span class="o">=</span><span class="m">1</span> pip install ssdeep
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>If step 4 fails, you may need to redirect your system to the new libraries by setting the following flags:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">LIBTOOL</span><span class="o">=</span><span class="sb">`</span>which glibtool<span class="sb">`</span>
+<span class="nb">export</span> <span class="nv">LIBTOOLIZE</span><span class="o">=</span><span class="sb">`</span>which glibtoolize<span class="sb">`</span>
+</pre></div>
+</div>
+<p>Do this and try step 4 again.</p>
+</div></blockquote>
+</li>
+<li><p>Now you should be able to run the main installation process detailed above.</p></li>
+</ol>
+</div>
 </div>
 </div>
 </div>
