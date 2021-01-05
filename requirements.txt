@@ -40,5 +40,5 @@ unicode>=2.7
 unidecode>=0.4.20
 xlrd>=1.2.0
 zipcodes @ git+ssh://git@github.com/seanpianka/zipcodes.git#egg=zipcodes
-pewtils @ git+ssh://git@github.com/pewresearch/pewtils.git#egg=pewtils
+pewtils @ git+ssh://git@github.com/pewresearch/pewtils_dev.git#egg=pewtils
 corextopic @ git+ssh://git@github.com/gregversteeg/corex_topic#egg=corextopic
