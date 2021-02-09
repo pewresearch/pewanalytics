@@ -8,7 +8,7 @@ import scipy.sparse as sp
 
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 import nltk
 
@@ -492,7 +492,7 @@ class TextCleaner(object):
             Of course, there are plenty of other examples we could use though. \
             http://example.com \
             </body>"
-        
+
         >>> cleaner = TextCleaner(process_method="stem")
         >>> cleaner.clean(text)
         'exampl is_not great exampl cours plenti exampl could use though'
