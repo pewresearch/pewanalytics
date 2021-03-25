@@ -1,4 +1,4 @@
-from distutils.core import setup
+from distutils.core import setup, find_packages
 
 
 with open("README.md") as README:
@@ -17,7 +17,7 @@ setup(
     author="Pew Research Center",
     author_email="info@pewresearch.org",
     install_requires=install_requires,
-    packages=["pewanalytics"],
+    packages=find_packages(),
     include_package_data=True,
     keywords="statistics, nlp, text analysis, text processing, sampling, pew pew pew",
     license="GPLv2+",
