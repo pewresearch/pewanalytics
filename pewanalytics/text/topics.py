@@ -575,10 +575,10 @@ class TopicModel(object):
         elif self.method == "corex":
 
             topics = defaultdict(list)
-            for topic_id, topic_ngrams in enumerate(
+            for topic_id, topic_ngrams, _ in enumerate(
                 self.model.get_topics(n_words=top_n)
             ):
-                for ngram, weight, _ in topic_ngrams:
+                for ngram, weight in topic_ngrams:
                     if include_weights:
                         topics[topic_id].append((ngram, weight))
                     else:
