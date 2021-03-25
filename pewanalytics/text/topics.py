@@ -578,7 +578,7 @@ class TopicModel(object):
             for topic_id, topic_ngrams in enumerate(
                 self.model.get_topics(n_words=top_n)
             ):
-                for ngram, weight in topic_ngrams:
+                for ngram, weight, _ in topic_ngrams:
                     if include_weights:
                         topics[topic_id].append((ngram, weight))
                     else:
