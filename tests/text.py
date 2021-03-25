@@ -354,8 +354,8 @@ class TextTests(unittest.TestCase):
         tdf.kmeans_clusters(k=2)
         terms = tdf.top_cluster_terms("kmeans")
         self.assertEqual(len(terms.keys()), 2)
-        self.assertIn(terms[1][0], ["alien", "husband"])
-        self.assertIn(terms[0][0], ["alien", "husband"])
+        self.assertIn("husband", terms[1])
+        self.assertIn("alien", terms[0])
 
     def test_tdf_hdbscan_clusters(self):
         from pewanalytics.text import TextDataFrame
