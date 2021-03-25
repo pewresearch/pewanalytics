@@ -18,7 +18,7 @@ setup(
     author="Pew Research Center",
     author_email="info@pewresearch.org",
     install_requires=install_requires,
-    packages=find_packages(),
+    packages=[p for p in find_packages() if p != "tests"],
     include_package_data=True,
     keywords="statistics, nlp, text analysis, text processing, sampling, pew pew pew",
     license="GPLv2+",
