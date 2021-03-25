@@ -3,7 +3,7 @@ beautifulsoup4>=4.5.3
 boto3>=1.4.4
 boto>=2.46.1
 chardet>=2.3.0
-corex_topic @ git+https://github.com/gregversteeg/corex_topic
+corextopic>=1.0.6
 cython>=0.25.2
 future>=0.18.2
 gensim>=3.8.1
@@ -36,4 +36,4 @@ tqdm>=4.11.2
 unicode>=2.7
 unidecode>=0.4.20
 xlrd>=1.2.0
-zipcodes @ git+https://github.com/seanpianka/zipcodes
+zipcodes>=1.1.2
