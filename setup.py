@@ -5,9 +5,14 @@ from setuptools import find_packages
 with open("README.md") as README:
     readme = str(README.read())
 
+install_requires = []
+dependency_links = []
 with open("requirements.txt") as reqs:
-    lines = reqs.read().split("\n")
-    install_requires = [line for line in lines if line]
+    for line in reqs.read().split("\n"):
+        if line.startswith(("--", "git+ssh", "git+http")):
+            dependency_links.append(line)
+        else:
+            install_requires.append(line)
 
 setup(
     name="pewanalytics",
@@ -18,7 +23,8 @@ setup(
     author="Pew Research Center",
     author_email="info@pewresearch.org",
     install_requires=install_requires,
-    packages=[p for p in find_packages() if p != "tests"],
+    dependency_links=dependency_links,
+    packages=find_packages(exclude=["contrib", "docs", "tests"]),
     include_package_data=True,
     keywords="statistics, nlp, text analysis, text processing, sampling, pew pew pew",
     license="GPLv2+",
