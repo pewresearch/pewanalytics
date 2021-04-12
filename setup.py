@@ -9,10 +9,10 @@ install_requires = []
 dependency_links = []
 with open("requirements.txt") as reqs:
     for line in reqs.read().split("\n"):
-        if line.startswith(("--", "git")):
-            dependency_links.append(line)
-        else:
-            install_requires.append(line)
+        # if line.startswith(("--", "git")):
+        #     dependency_links.append(line)
+        # else:
+        install_requires.append(line)
 
 setup(
     name="pewanalytics",
