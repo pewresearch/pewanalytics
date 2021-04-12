@@ -6,13 +6,10 @@ with open("README.md") as README:
     readme = str(README.read())
 
 install_requires = []
-dependency_links = []
 with open("requirements.txt") as reqs:
     for line in reqs.read().split("\n"):
-        # if line.startswith(("--", "git")):
-        #     dependency_links.append(line)
-        # else:
-        install_requires.append(line)
+        if not line.startswith("#"):
+            install_requires.append(line)
 
 setup(
     name="pewanalytics",
@@ -23,7 +20,6 @@ setup(
     author="Pew Research Center",
     author_email="info@pewresearch.org",
     install_requires=install_requires,
-    dependency_links=dependency_links,
     packages=find_packages(exclude=["contrib", "docs", "tests"]),
     include_package_data=True,
     keywords="statistics, nlp, text analysis, text processing, sampling, pew pew pew",
