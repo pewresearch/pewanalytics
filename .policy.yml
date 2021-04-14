@@ -3,16 +3,17 @@ policy:
   - or:
     - deploy updates
     - submodule updates
-    - at least one human approval
+    - anointed maintainers say yes
 
 approval_rules:
-- name: at least one human approval
+- name: anointed maintainers say yes
   options:
     allow_contributor: true
     invalidate_on_push: true
   requires:
     count: 1
-    organizations: ["pewresearch"]
+    teams:
+      - "pewresearch/pewanalytics-maintainers"
     write_collaborators: true
 
 - name: deploy updates
