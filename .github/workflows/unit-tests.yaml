@@ -1,0 +1,31 @@
+name: unit-tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  unit-tests:
+    name: unit-tests
+    runs-on: labs-runner
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install python dependencies
+        run: |
+          pip install --user -r requirements.txt
+
+      - name: Lint with flake8
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          make python_lint_errors
+          make github_lint_flake8
+
+      - name: Run unit tests
+        run: |
+          make python_test

@@ -1,0 +1,49 @@
+# For help debugging build failures open an issue on the RStudio community with the 'github-actions' tag.
+# https://community.rstudio.com/new-topic?category=Package%20development&tags=github-actions
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+name: build-release
+
+jobs:
+  build-release:
+    runs-on: labs-runner
+    name: build release package
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install python dependencies
+        run : |
+          pip install --user -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          make python_lint_errors
+          make python_lint_quality
+
+      - name: Run unit tests
+        run: |
+          make python_test
+
+      - name: Build Python package
+        run: |
+          bumpversion --allow-dirty release
+          make python_build
+
+      - name: Upload to Nexus Repository
+        run: |
+          twine upload --non-interactive --repository-url https://nexus.pewresearch.io/repository/python-internal/ --username deploy-user --password '${{ secrets.NEXUS_DEPLOY_PASSWORD }}' dist/*
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          prerelease: False
+          files: |
+            *.whl
