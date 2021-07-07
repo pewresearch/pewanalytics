@@ -10,7 +10,6 @@ import random
 
 class TextTests(unittest.TestCase):
     def setUp(self):
-
         self.df = pd.read_csv(os.path.join("tests", "test_data.csv"))
         self.df["sentiment"] = self.df["fileid"].map(lambda x: x.split("/")[0])
         self.doc = self.df["text"].values[0]
@@ -51,6 +50,8 @@ class TextTests(unittest.TestCase):
             self.assertEqual(remove_fragments(val, frags), expected)
 
     def test_filter_parts_of_speech(self):
+        import nltk
+        nltk.download("averaged_perceptron_tagger")
         from pewanalytics.text import filter_parts_of_speech
 
         for pos, expected in [
@@ -110,6 +111,8 @@ class TextTests(unittest.TestCase):
             self.assertEqual(expected, tokenized)
 
     def test_text_overlap_extractor(self):
+        import nltk
+        nltk.download("punkt")
         from pewanalytics.text import TextOverlapExtractor
 
         extractor = TextOverlapExtractor()
@@ -146,6 +149,9 @@ class TextTests(unittest.TestCase):
         )
 
     def test_text_cleaner(self):
+        import nltk
+        nltk.download("wordnet")
+        nltk.download("averaged_perceptron_tagger")
         from pewanalytics.text import TextCleaner
 
         for params, text, expected in [
@@ -185,6 +191,8 @@ class TextTests(unittest.TestCase):
             self.assertEqual(expected, cleaned)
 
     def test_tdf_search_corpus(self):
+        import nltk
+        nltk.download("stopwords")
         from pewanalytics.text import TextDataFrame
 
         tdf = TextDataFrame(self.df, "text")
