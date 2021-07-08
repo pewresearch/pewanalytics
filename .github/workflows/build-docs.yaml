@@ -27,5 +27,4 @@ jobs:
 
       - name: Build docs html
         run: |
-          make github_docs
-
+          make docs

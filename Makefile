@@ -17,9 +17,10 @@ help:
 
 .PHONY: help Makefile
 
-github_docs:
-	@make html
-	@cp -a _build/html/. ./docs
+docs:
+	-rm -rf _build/
+	make html
+	aws s3 sync --delete _build/html/ s3://docs.pewresearch.tech/pewanalytics/
 
 python_lint_errors:
 	# stop the build if there are Python syntax errors or undefined names
