@@ -1,0 +1,31 @@
+# For help debugging build failures open an issue on the RStudio community with the 'github-actions' tag.
+# https://community.rstudio.com/new-topic?category=Package%20development&tags=github-actions
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/build-docs.yaml
+      - Makefile
+      - docs_source/**
+
+name: build-main
+
+jobs:
+  build-main:
+    runs-on: labs-runner
+    name: build main branch package
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install python dependencies
+        run : |
+          conda install --file requirements.txt
+
+      - name: Build docs html
+        run: |
+          make github_docs
+
