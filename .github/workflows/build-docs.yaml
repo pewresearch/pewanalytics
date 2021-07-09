@@ -9,10 +9,10 @@ on:
       - Makefile
       - docs_source/**
 
-name: build-main
+name: build-docs
 
 jobs:
-  build-main:
+  build-docs:
     runs-on: labs-runner
     name: build docs
     env:
