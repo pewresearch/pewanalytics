@@ -14,7 +14,7 @@ name: build-main
 jobs:
   build-main:
     runs-on: labs-runner
-    name: build main branch package
+    name: build docs
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
