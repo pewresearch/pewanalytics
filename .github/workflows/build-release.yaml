@@ -19,7 +19,7 @@ jobs:
 
       - name: Install python dependencies
         run : |
-          while read requirement; do conda install --yes $requirement; done < requirements.txt
+          while read requirement; do conda install --yes $requirement || true; done < requirements.txt
           pip install -r requirements.txt
 
       - name: Lint with flake8
