@@ -212,7 +212,7 @@ def mutual_info_bar_plot(
     ``plt.savefig(FILEPATH)``
     """
 
-    import seaborn as sns
+    import seaborn
     import matplotlib.pyplot as plt
 
     mutual_info = mutual_info.sort_values(filter_col, ascending=False)[:top_n]
@@ -220,9 +220,9 @@ def mutual_info_bar_plot(
     mutual_info["ngram"] = mutual_info.index
     buffer = 0.02 * abs(mutual_info[x_col].max() - mutual_info[x_col].min())
     plt.figure(figsize=(width, float(len(mutual_info) * 0.35)))
-    sns.set_color_codes("pastel")
-    g = sns.barplot(x=x_col, y="ngram", data=mutual_info, color=color)
-    sns.despine(offset=10, trim=True)
+    seaborn.set_color_codes("pastel")  # noqa: F821
+    g = seaborn.barplot(x=x_col, y="ngram", data=mutual_info, color=color)  # noqa: F821
+    seaborn.despine(offset=10, trim=True)  # noqa: F821
     for i, row in enumerate(mutual_info.iterrows()):
         index, row = row
         g.text(
