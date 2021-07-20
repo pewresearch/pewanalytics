@@ -1,3 +1,4 @@
+adjustText>=0.7.3
 autodocsumm>=0.1.13
 beautifulsoup4>=4.5.3
 boto3>=1.4.4

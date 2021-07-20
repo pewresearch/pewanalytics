@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 
 from scipy.sparse import csr_matrix
+from adjustText import adjust_text
 
 from pewtils import is_not_null, scale_range
 
@@ -254,6 +255,7 @@ def mutual_info_scatter_plot(
     size_col="pct_pos_with_term",
     title=None,
     figsize=(10, 10),
+    adjust_text=False,
 ):
     """
 
@@ -292,6 +294,8 @@ def mutual_info_scatter_plot(
     :type title: str
     :param figsize: The size of the plot (tuple)
     :type figsize: tuple
+    :param adjust_text: If True, attempts to adjusts the text so it doesn't overlap
+    :type adjust_text: bool
     :return: A Matplotlib figure, which you can display via ``plt.show()`` or alternatively save to a file via \
     ``plt.savefig(FILEPATH)``
     """
@@ -318,10 +322,17 @@ def mutual_info_scatter_plot(
         "red": plt.cm.Reds,
     }
 
-    f, ax = plt.subplots(figsize=figsize)
+    _, ax = plt.subplots(figsize=figsize)
+    sns.scatterplot(x_col, y_col, data=mutual_info, legend=False, alpha=0.0, ax=ax)
+    sns.set_color_codes("pastel")
+
     mutual_info["size"] = mutual_info[size_col].map(
         lambda x: scale_range(
-            x, mutual_info[size_col].min(), mutual_info[size_col].max(), 15, 25
+            x,
+            mutual_info[size_col].min(),
+            mutual_info[size_col].max(),
+            (figsize[0] * 3),
+            (figsize[0] * 5),
         )
     )
     mutual_info["color"] = mutual_info[color_col].map(
@@ -334,15 +345,33 @@ def mutual_info_scatter_plot(
     mutual_info["x"] = mutual_info[x_col]
     mutual_info["y"] = mutual_info[y_col]
     ax.set_title(title)
-    ax.set_xlim((mutual_info["x"].min() * 0.9, mutual_info["x"].max() * 1.1))
-    ax.set_ylim((mutual_info["y"].min() * 0.9, mutual_info["y"].max() * 1.1))
+    ax.set_xlim((mutual_info["x"].min(), mutual_info["x"].max()))
+    ax.set_ylim((mutual_info["y"].min(), mutual_info["y"].max()))
     ax.set_ylabel(ylabel)
     ax.set_xlabel(xlabel)
 
     texts = []
     for index, row in mutual_info.iterrows():
         texts.append(
-            ax.text(row["x"], row["y"], index, size=row["size"], color=row["color"])
+            ax.text(
+                row["x"],
+                row["y"],
+                index,
+                size=row["size"],
+                color=row["color"],
+                horizontalalignment="right"
+                if row["x"] > (mutual_info["x"].max() / 2.0)
+                else "left",
+                verticalalignment="top"
+                if row["y"] > (mutual_info["y"].max() / 2.0)
+                else "bottom",
+            )
         )
+    if adjust_text:
+        adjust_text_function(
+            texts, arrowprops=dict(arrowstyle="-", color="black", lw=0.5, alpha=0.5)
+        )
+
+    sns.despine(offset=10, trim=True)
 
     return ax
