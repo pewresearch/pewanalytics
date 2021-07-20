@@ -13,7 +13,7 @@ matplotlib>=3.1.1
 mca>=1.0.3
 nilsimsa>=0.3.8
 nltk>=3.2.2
-numpy>=1.16.0
+numpy>=1.20.0
 pandas>=0.25.0
 pewtils
 pycparser>=2.20
