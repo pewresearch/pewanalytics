@@ -323,8 +323,8 @@ def mutual_info_scatter_plot(
     }
 
     _, ax = plt.subplots(figsize=figsize)
-    seaborn.scatterplot(x_col, y_col, data=mutual_info, legend=False, alpha=0.0, ax=ax)
-    seaborn.set_color_codes("pastel")
+    seaborn.scatterplot(x_col, y_col, data=mutual_info, legend=False, alpha=0.0, ax=ax)  # noqa: F821
+    seaborn.set_color_codes("pastel")  # noqa: F821
 
     mutual_info["size"] = mutual_info[size_col].map(
         lambda x: scale_range(
@@ -372,6 +372,6 @@ def mutual_info_scatter_plot(
             texts, arrowprops=dict(arrowstyle="-", color="black", lw=0.5, alpha=0.5)
         )
 
-    seaborn.despine(offset=10, trim=True)
+    seaborn.despine(offset=10, trim=True)  # noqa: F821
 
     return ax
