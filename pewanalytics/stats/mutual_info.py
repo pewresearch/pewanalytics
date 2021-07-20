@@ -323,8 +323,8 @@ def mutual_info_scatter_plot(
     }
 
     _, ax = plt.subplots(figsize=figsize)
-    sns.scatterplot(x_col, y_col, data=mutual_info, legend=False, alpha=0.0, ax=ax)
-    sns.set_color_codes("pastel")
+    seaborn.scatterplot(x_col, y_col, data=mutual_info, legend=False, alpha=0.0, ax=ax)
+    seaborn.set_color_codes("pastel")
 
     mutual_info["size"] = mutual_info[size_col].map(
         lambda x: scale_range(
@@ -372,6 +372,6 @@ def mutual_info_scatter_plot(
             texts, arrowprops=dict(arrowstyle="-", color="black", lw=0.5, alpha=0.5)
         )
 
-    sns.despine(offset=10, trim=True)
+    seaborn.despine(offset=10, trim=True)
 
     return ax
