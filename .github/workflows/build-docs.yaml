@@ -23,7 +23,7 @@ jobs:
 
       - name: Install python dependencies
         run : |
-          while read requirement; do conda install --yes $requirement || true; done < requirements.txt
+          while read requirement; do mamba install "conda-forge::$requirement" || true; done < requirements.txt
           pip install -r requirements.txt
 
       - name: Build docs html
