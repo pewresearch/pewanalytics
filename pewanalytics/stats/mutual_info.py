@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 from scipy.sparse import csr_matrix
-from adjustText import adjust_text
+from adjustText import adjust_text as adjust_text_function
 
 from pewtils import is_not_null, scale_range
 
