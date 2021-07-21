@@ -2,7 +2,7 @@
 #
 
 # default way to bump versions is to increment the 'patch' section
-version := patch
+version := build
 BRANCH := $(shell git rev-parse --symbolic-full-name --abbrev-ref HEAD)
 
 # You can set these variables from the command line.
@@ -43,6 +43,9 @@ bump:
 	git pull origin $(BRANCH)
 	bumpversion --commit --tag $(version)
 	git push origin $(BRANCH) --follow-tags
+
+release:
+	make bump version=release
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
