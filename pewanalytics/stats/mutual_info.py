@@ -300,6 +300,7 @@ def mutual_info_scatter_plot(
     ``plt.savefig(FILEPATH)``
     """
 
+    import seaborn
     import matplotlib.pyplot as plt
 
     mutual_info = mutual_info.sort_values(filter_col, ascending=False)[:top_n]
