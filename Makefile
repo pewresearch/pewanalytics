@@ -1,11 +1,19 @@
-# Minimal makefile for Sphinx documentation
-#
-
-# default way to bump versions is to increment the 'patch' section
-part := build
 BRANCH := $(shell git rev-parse --symbolic-full-name --abbrev-ref HEAD)
 
-# You can set these variables from the command line.
+# by default, we'll bump the "build" part of the version, for non-releases
+PART = build
+
+# if the current version is a release and not a dev build, bump the patch part instead
+VERSION := $(shell grep -Po '(?<=current_version = )[\w\d\.]+' .bumpversion.cfg)
+ifeq (,$(findstring dev,$(VERSION)))
+	ifeq ($(PART),build)
+		PART = patch
+    endif
+endif
+
+
+# Minimal makefile for Sphinx documentation
+
 SPHINXOPTS	=
 SPHINXBUILD = sphinx-build
 SOURCEDIR   = docs_source
@@ -41,11 +49,13 @@ python_build:
 bump:
 	git checkout $(BRANCH)
 	git pull origin $(BRANCH)
-	bumpversion --commit --tag $(part)
-	git push origin $(BRANCH) --follow-tags
+	bumpversion --commit $(PART)
 
 release:
-	make bump part=release
+	git checkout $(BRANCH)
+	git pull origin $(BRANCH)
+	bumpversion --commit --tag release
+	git push origin $(BRANCH) --follow-tags
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
