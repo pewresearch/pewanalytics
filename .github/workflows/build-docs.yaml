@@ -11,7 +11,7 @@ name: build-docs
 
 jobs:
   build-docs:
-    runs-on: labs-runner
+    runs-on: pewanalytics-runner
     name: build docs
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

@@ -15,7 +15,7 @@ on:
 jobs:
   unit-tests:
     name: unit-tests
-    runs-on: labs-runner
+    runs-on: pewanalytics-runner
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
