@@ -26,7 +26,7 @@ jobs:
         run: |
           git config --global user.name "Github Actions"
           git config --global user.email "<>"
-          bump2version --commit build
+          make bump
 
       - name: Install python dependencies
         run : |
@@ -50,6 +50,6 @@ jobs:
         run: |
           twine upload --non-interactive --repository-url https://nexus.pewresearch.io/repository/python-internal/ --username deploy-user --password '${{ secrets.NEXUS_DEPLOY_PASSWORD }}' dist/*
 
-      - uses: ad-m/github-push-action@65392840bda2e774394d5cd38ca33e5918aec2d3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Sync new build commits
+        run: |
+          make sync_branch

@@ -51,6 +51,11 @@ bump:
 	git pull origin $(BRANCH)
 	bumpversion --commit $(PART)
 
+sync_branch:
+	git checkout $(BRANCH)
+	git pull origin $(BRANCH)
+	git push origin $(BRANCH)
+
 release:
 	git checkout $(BRANCH)
 	git pull origin $(BRANCH)
