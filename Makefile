@@ -46,16 +46,19 @@ python_test:
 python_build:
 	python3 setup.py sdist bdist_wheel
 
+.ONESHELL:
 bump:
 	git checkout $(BRANCH)
 	git pull origin $(BRANCH)
 	bumpversion --commit $(PART)
 
+.ONESHELL:
 sync_branch:
 	git checkout $(BRANCH)
 	git pull origin $(BRANCH)
 	git push origin $(BRANCH)
 
+.ONESHELL:
 release:
 	git checkout $(BRANCH)
 	git pull origin $(BRANCH)
