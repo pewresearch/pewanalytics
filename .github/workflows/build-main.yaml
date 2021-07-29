@@ -14,13 +14,19 @@ name: build-main
 
 jobs:
   build-main:
-    runs-on: labs-runner
+    runs-on: pewanalytics-runner
     name: build main branch package
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Bump the build version
+        run: |
+          git config --global user.name "Github Actions"
+          git config --global user.email "<>"
+          bump2version --commit build
 
       - name: Install python dependencies
         run : |
@@ -43,3 +49,7 @@ jobs:
       - name: Upload to Nexus Repository
         run: |
           twine upload --non-interactive --repository-url https://nexus.pewresearch.io/repository/python-internal/ --username deploy-user --password '${{ secrets.NEXUS_DEPLOY_PASSWORD }}' dist/*
+
+      - uses: ad-m/github-push-action@65392840bda2e774394d5cd38ca33e5918aec2d3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

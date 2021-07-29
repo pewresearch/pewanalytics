@@ -31,7 +31,6 @@ jobs:
 
       - name: Build Python package
         run: |
-          bumpversion --allow-dirty release
           make python_build
 
       - name: Upload to Nexus Repository
