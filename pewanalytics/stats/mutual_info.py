@@ -324,7 +324,9 @@ def mutual_info_scatter_plot(
     }
 
     _, ax = plt.subplots(figsize=figsize)
-    seaborn.scatterplot(x_col, y_col, data=mutual_info, legend=False, alpha=0.0, ax=ax)  # noqa: F821
+    seaborn.scatterplot(
+        x_col, y_col, data=mutual_info, legend=False, alpha=0.0, ax=ax
+    )  # noqa: F821
     seaborn.set_color_codes("pastel")  # noqa: F821
 
     mutual_info["size"] = mutual_info[size_col].map(
