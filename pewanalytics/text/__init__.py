@@ -6,11 +6,12 @@ import pandas as pd
 import numpy as np
 import scipy.sparse as sp
 
+import nltk
+
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
-
-import nltk
+from nltk.corpus import wordnet
 
 from tqdm import tqdm
 from stopit import ThreadingTimeout as Timeout
@@ -1410,3 +1411,70 @@ class TextDataFrame(object):
         matrix = pd.DataFrame(data=mat.todense(), columns=names, index=names)
 
         return matrix
+
+
+def is_probable_stopword(word):
+    """
+    Determine if a word is likely to be a stop word (like a name of a person or location) by the following rules:
+
+    1. Number of synset (words with similar meaning) is less than 3
+    2. The min_depth (number of edges between a word and the top of the hierarchy) is > 5
+    3. The number of lemma (similar to term definition in dictionary) is less than 2
+
+    If more than one of these conditions is true, then this function will return False, because the word likely has
+    one or more meanings in English and is likely to be more than just a proper name.
+
+    This function was developed through trial and error, and your mileage may vary. It's intended to
+    help you identify potential stopwords when extracting features from a database. For example, on one
+    of our projects we wanted to remove names from our text data, and pulled a list of names from our
+    database of politicians. However, some politicians have last names that are also common English words,
+    like "White" and "Black" - and in those cases, we didn't want to add those to our list of stopwords.
+    This function was useful in scanning through our list of names to identify names that we wanted to
+    "whitelist".
+
+    :param word: A word, usually a name of a person or location or something that you might want to add as a stopword
+    :type word: string
+    :return: Whether or not the word is (probably) a stopword aka a proper noun with no common English meaning
+    :rtype: bool
+
+    Usage::
+
+        >>> is_probable_stopword("Chicago")
+        True
+
+        >>> is_probable_stopword("Chicago")
+        False
+
+        >>> is_probable_stopword("Orange")
+        False
+
+        >>> is_probable_stopword("Johnny")
+        True
+
+    """
+
+    word = word.lower()
+    synsets = wordnet.synsets(word)
+    if not synsets or len(synsets) <= 1:
+        return True
+    else:
+        total_synsets = len(synsets)
+        min_depth = min([syn.min_depth() for syn in synsets])
+        total_lemmas = sum([len([l for l in syn.lemmas()]) for syn in synsets])
+        max_lemma_count = max(
+            [sum([l.count() for l in syn.lemmas()]) for syn in synsets]
+        )
+
+        score = 0
+        if total_synsets < 3:
+            score += 1
+        if min_depth >= 5:
+            score += 1
+        # if total_lemmas < 10: score += 1
+        if max_lemma_count <= 2:
+            score += 1
+
+        if score > 1:
+            return True
+        else:
+            return False
