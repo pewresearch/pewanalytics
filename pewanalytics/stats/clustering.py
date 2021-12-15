@@ -1,5 +1,4 @@
 from __future__ import print_function
-import hdbscan
 
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
@@ -83,6 +82,8 @@ def compute_hdbscan_clusters(features, min_cluster_size=100, min_samples=1, **kw
         Name: cluster, dtype: int64
 
     """
+
+    import hdbscan
 
     clusterer = hdbscan.HDBSCAN(
         min_cluster_size=min_cluster_size, min_samples=min_samples, **kwargs
