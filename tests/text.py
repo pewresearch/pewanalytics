@@ -51,6 +51,7 @@ class TextTests(unittest.TestCase):
 
     def test_filter_parts_of_speech(self):
         import nltk
+
         nltk.download("averaged_perceptron_tagger")
         from pewanalytics.text import filter_parts_of_speech
 
@@ -112,6 +113,7 @@ class TextTests(unittest.TestCase):
 
     def test_text_overlap_extractor(self):
         import nltk
+
         nltk.download("punkt")
         from pewanalytics.text import TextOverlapExtractor
 
@@ -150,6 +152,7 @@ class TextTests(unittest.TestCase):
 
     def test_text_cleaner(self):
         import nltk
+
         nltk.download("wordnet")
         nltk.download("averaged_perceptron_tagger")
         from pewanalytics.text import TextCleaner
@@ -192,6 +195,7 @@ class TextTests(unittest.TestCase):
 
     def test_tdf_search_corpus(self):
         import nltk
+
         nltk.download("stopwords")
         from pewanalytics.text import TextDataFrame
 
