@@ -456,6 +456,10 @@ def compute_scores(
         row["matthews_corrcoef"] = None
     except FloatingPointError:
         row["matthews_corrcoef"] = 1.0
+    if row["accuracy"] == 1.0:
+        # In newer versions of sklearn, perfect agreement returns zero incorrectly
+        # We'll use the accuracy score to detect perfect agreement and correct it:
+        row["matthews_corrcoef"] = 1.0
 
     try:
 
