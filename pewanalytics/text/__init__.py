@@ -1460,9 +1460,8 @@ def is_probable_stopword(word):
     else:
         total_synsets = len(synsets)
         min_depth = min([syn.min_depth() for syn in synsets])
-        total_lemmas = sum([len([l for l in syn.lemmas()]) for syn in synsets])
         max_lemma_count = max(
-            [sum([l.count() for l in syn.lemmas()]) for syn in synsets]
+            [sum([lemma.count() for lemma in syn.lemmas()]) for syn in synsets]
         )
 
         score = 0
@@ -1470,11 +1469,11 @@ def is_probable_stopword(word):
             score += 1
         if min_depth >= 5:
             score += 1
-        # if total_lemmas < 10: score += 1
         if max_lemma_count <= 2:
             score += 1
 
         if score > 1:
             return True
+
         else:
             return False
