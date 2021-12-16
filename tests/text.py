@@ -440,5 +440,20 @@ class TextTests(unittest.TestCase):
         self.assertTrue(len(mat) == len(self.df))
         self.assertTrue(mat.max().max() == 1.0)
 
+    def test_is_probable_stopword(self):
+
+        from pewanalytics.text import is_probable_stopword
+
+        for word, is_stopword in [
+            ("White", False),
+            ("Black", False),
+            ("Plains", False),
+            ("Johnny", True),
+            ("Susan", True),
+            ("Chicago", True),
+            ("Providence", False),
+        ]:
+            self.assertEqual(is_probable_stopword(word), is_stopword)
+
     def tearDown(self):
         pass
