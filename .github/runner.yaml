@@ -9,7 +9,7 @@ spec:
   template:
     spec:
       repository: pewresearch/pewanalytics_dev
-      image: 458280294434.dkr.ecr.us-east-1.amazonaws.com/labs-actions-runner@sha256:796eea91dfc248ca2f7af1703ffe24bde833914dca2f60fafb762a34dd5accba
+      image: 458280294434.dkr.ecr.us-east-1.amazonaws.com/labs-actions-runner@sha256:d277292ae2aab6957bcca64f1a96fcaf29e9078e9a6a5cc64611467921049f2f
       imagePullPolicy: Always
       serviceAccountName: labs-runner
       labels:
