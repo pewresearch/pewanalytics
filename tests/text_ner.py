@@ -18,8 +18,8 @@ class TextNERTests(unittest.TestCase):
 
         for method, num_types, num_entities in [
             ("nltk", 3, 12),
-            ("spacy", 7, 12),
-            ("all", 8, 21),
+            ("spacy", 6, 12),
+            ("all", 7, 22),
         ]:
             ner = NamedEntityExtractor(method=method)
             entities = ner.extract(self.text)
