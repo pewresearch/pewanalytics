@@ -2,6 +2,8 @@ import math
 import copy
 import scipy
 import numpy as np
+import pandas as pd
+from nltk.metrics import masi_distance, jaccard_distance
 from nltk.metrics.agreement import AnnotationTask
 from sklearn.metrics import (
     matthews_corrcoef,
@@ -12,9 +14,11 @@ from sklearn.metrics import (
     roc_auc_score,
     cohen_kappa_score,
 )
+from sklearn.preprocessing import MultiLabelBinarizer
 from statsmodels.stats.weightstats import DescrStatsW
 from statsmodels.stats.inter_rater import fleiss_kappa
 from pewtils import is_not_null
+from scipy import spatial
 
 
 def kappa_sample_size_power(
@@ -510,7 +514,7 @@ def compute_scores(
     return row
 
 
-def compute_overall_scores(coder_df, document_column, outcome_column, coder_column):
+def compute_overall_scores(coder_df, outcome_column, document_column, coder_column):
 
     """
     Computes overall inter-rater reliability scores (Krippendorf's Alpha and Fleiss' Kappa). Allows for more than two \
@@ -522,10 +526,10 @@ def compute_overall_scores(coder_df, document_column, outcome_column, coder_colu
 
     :param coder_df: A :py:class:`pandas.DataFrame` of codes
     :type coder_df: :py:class:`pandas.DataFrame`
-    :param document_column: The column that contains IDs for the documents
-    :type document_column: str
     :param outcome_column: The column that contains the codes
     :type outcome_column: str
+    :param document_column: The column that contains IDs for the documents
+    :type document_column: str
     :param coder_column: The column containing values that indicate which coder assigned the code
     :type coder_column: str
     :return: A dictionary containing the scores
@@ -545,7 +549,7 @@ def compute_overall_scores(coder_df, document_column, outcome_column, coder_colu
             {"coder": "coder2", "document": 3, "code": "0"},
         ])
 
-        >>> compute_overall_scores(df, "document", "code", "coder")
+        >>> compute_overall_scores(df, "code", "document", "coder")
         {'alpha': 0.5454545454545454, 'fleiss_kappa': 0.4545454545454544}
 
     """
@@ -572,3 +576,131 @@ def compute_overall_scores(coder_df, document_column, outcome_column, coder_colu
         kappa = None
 
     return {"alpha": alpha, "fleiss_kappa": kappa}
+
+
+def compute_overall_scores_multivariate(
+    coder_df, document_column, coder_column, outcome_columns
+):
+    """
+    Computes overall inter-rater reliability scores (Krippendorf's Alpha and Fleiss' Kappa). Allows for more than two \
+    coders, code values, AND variables. All variables and values will be converted into a matrix of dummy variables, \
+    and Alpha and Kappa will be computed using four different distance metrics:
+
+        - Discrete agreement (exact agreement across all outcome columns)
+        - Jaccard coefficient
+        - MASI distance
+        - Cosine similarity
+
+    The input data must consist of a :py:class:`pandas.DataFrame` with the following \
+    columns:
+
+        - A column with values that indicate the coder (like a name)
+        - A column with values that indicate the document (like an ID)
+        - One or more columns with values that indicate code values
+
+    This code was adapted from a very helpful StackExchange post:
+    https://stats.stackexchange.com/questions/511927/interrater-reliability-with-multi-rater-multi-label-dataset
+
+    :param coder_df: A :py:class:`pandas.DataFrame` of codes
+    :type coder_df: :py:class:`pandas.DataFrame`
+    :param document_column: The column that contains IDs for the documents
+    :type document_column: str
+    :param coder_column: The column containing values that indicate which coder assigned the code
+    :type coder_column: str
+    :param outcome_columns: The columns that contains the codes
+    :type outcome_columns: list
+    :return: A dictionary containing the scores
+    :rtype: dict
+
+    Usage::
+
+        from pewanalytics.stats.irr import compute_overall_scores_multivariate
+        import pandas as pd
+
+        coder_df = pd.DataFrame([
+            {"coder": "coder1", "document": 1, "code": "2"},
+            {"coder": "coder2", "document": 1, "code": "2"},
+            {"coder": "coder1", "document": 2, "code": "1"},
+            {"coder": "coder2", "document": 2, "code": "2"},
+            {"coder": "coder1", "document": 3, "code": "0"},
+            {"coder": "coder2", "document": 3, "code": "0"},
+        ])
+
+        >>> compute_overall_scores_multivariate(coder_df, 'document', 'coder', ["code"])
+        {'fleiss_kappa_discrete': 0.4545454545454544,
+         'fleiss_kappa_jaccard': 0.49999999999999994,
+         'fleiss_kappa_masi': 0.49999999999999994,
+         'fleiss_kappa_cosine': 0.49999999999999994,
+         'alpha_discrete': 0.5454545454545454,
+         'alpha_jaccard': 0.5454545454545454,
+         'alpha_masi': 0.5454545454545454,
+         'alpha_cosine': 0.5454545454545454}
+
+        coder_df = pd.DataFrame([
+            {"coder": "coder1", "document": 1, "code1": "2", "code2": "1"},
+            {"coder": "coder2", "document": 1, "code1": "2", "code2": "1"},
+            {"coder": "coder1", "document": 2, "code1": "1", "code2": "0"},
+            {"coder": "coder2", "document": 2, "code1": "2", "code2": "1"},
+            {"coder": "coder1", "document": 3, "code1": "0", "code2": "0"},
+            {"coder": "coder2", "document": 3, "code1": "0", "code2": "0"},
+        ])
+
+        >>> compute_overall_scores_multivariate(coder_df, 'document', 'coder', ["code1", "code2"])
+        {'fleiss_kappa_discrete': 0.4545454545454544,
+         'fleiss_kappa_jaccard': 0.49999999999999994,
+         'fleiss_kappa_masi': 0.49999999999999994,
+         'fleiss_kappa_cosine': 0.49999999999999994,
+         'alpha_discrete': 0.5454545454545454,
+         'alpha_jaccard': 0.5161290322580645,
+         'alpha_masi': 0.5361781076066792,
+         'alpha_cosine': 0.5}
+
+    """
+
+    dummies = pd.concat(
+        [pd.get_dummies(coder_df[c], prefix=c) for c in outcome_columns], axis=1
+    )
+    outcome_columns = dummies.columns
+    coder_df = pd.concat([coder_df, dummies], axis=1)
+    coder_df = coder_df.dropna(subset=outcome_columns)
+    coder_df["value"] = coder_df.apply(
+        lambda x: frozenset([col for col in outcome_columns if int(x[col]) == 1]),
+        axis=1,
+    )
+
+    discrete_task = AnnotationTask(
+        data=coder_df[[coder_column, document_column, "value"]].values
+    )
+    kappa_discrete = discrete_task.multi_kappa()
+    alpha_discrete = discrete_task.alpha()
+
+    task_data = coder_df[[coder_column, document_column, "value"]].values
+    task_data = [tuple(t) for t in task_data]
+
+    jaccard_task = AnnotationTask(data=task_data, distance=jaccard_distance)
+    masi_task = AnnotationTask(data=task_data, distance=masi_distance)
+
+    mlb = MultiLabelBinarizer()
+    task_data = [
+        (r[0][0], r[0][1], tuple(r[1]))
+        for r in zip(task_data, mlb.fit_transform([t[2] for t in task_data]))
+    ]
+    cosine_task = AnnotationTask(data=task_data, distance=spatial.distance.cosine)
+
+    kappa_jaccard = jaccard_task.multi_kappa()
+    kappa_masi = masi_task.multi_kappa()
+    kappa_cosine = cosine_task.multi_kappa()
+    alpha_jaccard = jaccard_task.alpha()
+    alpha_masi = masi_task.alpha()
+    alpha_cosine = cosine_task.alpha()
+
+    return {
+        "fleiss_kappa_discrete": kappa_discrete,
+        "fleiss_kappa_jaccard": kappa_jaccard,
+        "fleiss_kappa_masi": kappa_masi,
+        "fleiss_kappa_cosine": kappa_cosine,
+        "alpha_discrete": alpha_discrete,
+        "alpha_jaccard": alpha_jaccard,
+        "alpha_masi": alpha_masi,
+        "alpha_cosine": alpha_cosine,
+    }

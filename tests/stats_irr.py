@@ -119,7 +119,7 @@ class StatsIRRTests(unittest.TestCase):
     def test_compute_overall_scores(self):
         from pewanalytics.stats.irr import compute_overall_scores
 
-        scores = compute_overall_scores(self.dataset, "doc", "code", "coder")
+        scores = compute_overall_scores(self.dataset, "code", "doc", "coder")
         self.assertAlmostEqual(scores["alpha"], 0.64, 2)
         self.assertAlmostEqual(scores["fleiss_kappa"], 0.6, 2)
 
