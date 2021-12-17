@@ -514,7 +514,7 @@ def compute_scores(
     return row
 
 
-def compute_overall_scores(coder_df, document_column, coder_column, outcome_column):
+def compute_overall_scores(coder_df, outcome_column, document_column, coder_column):
 
     """
     Computes overall inter-rater reliability scores (Krippendorf's Alpha and Fleiss' Kappa). Allows for more than two \
@@ -526,12 +526,12 @@ def compute_overall_scores(coder_df, document_column, coder_column, outcome_colu
 
     :param coder_df: A :py:class:`pandas.DataFrame` of codes
     :type coder_df: :py:class:`pandas.DataFrame`
+    :param outcome_column: The column that contains the codes
+    :type outcome_column: str
     :param document_column: The column that contains IDs for the documents
     :type document_column: str
     :param coder_column: The column containing values that indicate which coder assigned the code
     :type coder_column: str
-    :param outcome_column: The column that contains the codes
-    :type outcome_column: str
     :return: A dictionary containing the scores
     :rtype: dict
 
@@ -549,7 +549,7 @@ def compute_overall_scores(coder_df, document_column, coder_column, outcome_colu
             {"coder": "coder2", "document": 3, "code": "0"},
         ])
 
-        >>> compute_overall_scores(df, "document", "coder", "code")
+        >>> compute_overall_scores(df, "code", "document", "coder")
         {'alpha': 0.5454545454545454, 'fleiss_kappa': 0.4545454545454544}
 
     """
