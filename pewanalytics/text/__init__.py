@@ -475,7 +475,7 @@ class TextCleaner(object):
     :param replacers: A list of tuples, each with a regex pattern followed by the string/pattern to replace them with. \
     Anything passed here will be used in addition to a set of built-in replacement patterns for common contractions.
     :param stopwords: The set of stopwords to remove (default = nltk.corpus.stopwords.words('english') combined with \
-    sklearn.feature_extraction.stop_words.ENGLISH_STOP_WORDS)
+    sklearn.feature_extraction.stop_words.ENGLISH_STOP_WORDS). If an empty list is passed, no stopwords will be used.
     :type stopwords: set
     :param strip_html: Whether or not to remove contents wrapped in HTML tags (default = False)
     :type strip_html: bool
@@ -563,7 +563,7 @@ class TextCleaner(object):
         else:
             self.processor = None
             self.process_func = None
-        if not stopwords:
+        if is_null(stopwords):
             stopwords = set.union(
                 set(nltk.corpus.stopwords.words("english")), set(ENGLISH_STOP_WORDS)
             )

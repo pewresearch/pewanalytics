@@ -188,6 +188,16 @@ class TextTests(unittest.TestCase):
                 self.doc[:100],
                 "plot teen coupl church parti drink drive accid",
             ),
+            (
+                {"stopwords": None},
+                self.doc[:100],
+                "plot teen couple church party drink drive accident",
+            ),
+            (
+                {"stopwords": []},
+                self.doc[:100],
+                "plot two teen couple church party drink and then drive they get into accident",
+            ),
         ]:
             cleaner = TextCleaner(**params)
             cleaned = cleaner.clean(text)
