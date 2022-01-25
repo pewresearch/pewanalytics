@@ -16,6 +16,7 @@ setup(
     version="1.0.7.dev1",
     description="Utilities for text processing and statistical analysis from Pew Research Center",
     long_description=readme,
+    long_description_content_type="text/markdown",
     url="https://github.com/pewresearch/pewanalytics",
     author="Pew Research Center",
     author_email="info@pewresearch.org",
