@@ -36,12 +36,13 @@ github_docs:
 	-mv _build/html /tmp/html
 	-rm -rf _build
 	-git branch -D docs
-	git fetch origin --all
+	git fetch --all
 	git checkout docs
 	-mv .git /tmp/.git
 	-rm -rf * .*
 	-mv /tmp/.git .
-	rsync -avc --remove-source-files --delete-after /tmp/html/ .
+	cp -a /tmp/html/. .
+	-rm -rf /tmp/html
 	git add -A .
 	git commit -m "latest docs"
 	git push origin docs
