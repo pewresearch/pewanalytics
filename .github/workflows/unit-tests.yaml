@@ -18,6 +18,8 @@ jobs:
     runs-on: pewanalytics-runner
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v2

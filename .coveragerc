@@ -5,7 +5,6 @@ cover_pylib = False
 source = pewanalytics
 omit =
     */site-packages/*
-    pewanalytics/internal/*
 
 [report]
 ignore_errors = True
@@ -15,4 +14,3 @@ exclude_lines =
     except
 omit =
     */site-packages/*
-    pewanalytics/internal/*

@@ -13,6 +13,8 @@ jobs:
   build-docs:
     runs-on: pewanalytics-runner
     name: build docs
+    permissions:
+      contents: write
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -26,4 +28,8 @@ jobs:
 
       - name: Build docs html
         run: |
-          make docs
+          if [[ "${{ github.repository }}" == "pewresearch/pewanalytics" ]]; then
+              make github_docs
+          else
+              make s3_docs
+          fi
