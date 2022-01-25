@@ -18,18 +18,11 @@ Or you can install from source:
  
 #### Using 64-bit Python
 
-Some of our libraries require the use of 64-bit Python. If you encounter errors during installation \
-that are related to missing libraries, you may be using 32-bit Python. We recommend that you uninstall \
-this version and switch to a 64-bit version instead. On Windows, these will be marked with `x86-64`; you \
-can find the latest 64-bit versions of Python [here](https://www.python.org/downloads).
+Some of our libraries require the use of 64-bit Python. If you encounter errors during installation that are related to missing libraries, you may be using 32-bit Python. We recommend that you uninstall this version and switch to a 64-bit version instead. On Windows, these will be marked with `x86-64`; you can find the latest 64-bit versions of Python [here](https://www.python.org/downloads).
 
 #### Installing ssdeep
 
-ssdeep is an optional dependency that can be used by the `get_hash` function in Pewtils. \
-Installation instructions for various Linux distributions can be found in the library's \
-[documentation](https://python-ssdeep.readthedocs.io/en/latest/installation.html). The ssdeep \
-Python library is not currently compatible with Windows. \
-Installing ssdeep on Mac OS may involve a few additional steps, detailed below:
+ssdeep is an optional dependency that can be used by the `get_hash` function in Pewtils. Installation instructions for various Linux distributions can be found in the library's [documentation](https://python-ssdeep.readthedocs.io/en/latest/installation.html). The ssdeep Python library is not currently compatible with Windows. Installing ssdeep on Mac OS may involve a few additional steps, detailed below:
 
 1. Install Homebrew
 2. Install xcode
