@@ -1,15 +1,11 @@
-from distutils.core import setup
-from setuptools import find_packages
-
+from setuptools import setup, find_packages
 
 with open("README.md") as README:
     readme = str(README.read())
 
-install_requires = []
 with open("requirements.txt") as reqs:
-    for line in reqs.read().split("\n"):
-        if not line.startswith("#"):
-            install_requires.append(line)
+    lines = reqs.read().split("\n")
+    install_requires = [line for line in lines if line]
 
 setup(
     name="pewanalytics",
@@ -28,22 +24,19 @@ setup(
     classifiers=[
         # https://pypi.python.org/pypi?%3Aaction=list_classifiers
         "Development Status :: 5 - Production/Stable",
+        # "Development Status :: 6 - Mature",
+        # "Development Status :: 7 - Inactive",
         "Environment :: Console",
-        "Intended Audience :: Education",
-        "Intended Audience :: Science/Research",
-        "Intended Audience :: Information Technology",
         "Intended Audience :: Developers",
+        "Intended Audience :: Education",
+        "Intended Audience :: Information Technology",
+        "Intended Audience :: Science/Research",
         "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
-        "Natural Language :: English",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
-        "Topic :: Text Processing :: Linguistic",
-        "Topic :: Scientific/Engineering :: Information Analysis",
-        "Topic :: Scientific/Engineering :: Mathematics",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Utilities",
     ],
