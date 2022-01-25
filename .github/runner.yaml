@@ -1,7 +1,7 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: pewanalytics-runner
+  name: pewanalytics-dev-runner
   namespace: github-runners
 
 spec:
@@ -36,6 +36,38 @@ spec:
             secretKeyRef:
               name: labs-runner
               key: AWS_SECRET_ACCESS_KEY
+
+    metadata:
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+
+---
+
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: pewanalytics-runner
+  namespace: github-runners
+
+spec:
+  replicas: 1
+  template:
+    spec:
+      repository: pewresearch/pewanalytics
+      image: 458280294434.dkr.ecr.us-east-1.amazonaws.com/labs-actions-runner@sha256:d277292ae2aab6957bcca64f1a96fcaf29e9078e9a6a5cc64611467921049f2f
+      imagePullPolicy: Always
+      serviceAccountName: labs-runner
+      labels:
+        - pewanalytics-runner
+      dockerEnabled: false
+      dockerdContainerResources:
+        limits:
+          cpu: "4.0"
+          memory: "8Gi"
+
+        requests:
+          cpu: "100m"
+          memory: "2Gi"
 
     metadata:
       annotations:
