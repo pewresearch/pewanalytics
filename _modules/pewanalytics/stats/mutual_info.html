@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pewanalytics.stats.mutual_info &mdash; pewanalytics 1.0.7.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> pewanalytics
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../stats.html">Statistical Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../text.html">Text Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pewanalytics</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>pewanalytics.stats.mutual_info</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pewanalytics.stats.mutual_info</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="kn">from</span> <span class="nn">adjustText</span> <span class="kn">import</span> <span class="n">adjust_text</span> <span class="k">as</span> <span class="n">adjust_text_function</span>
+
+<span class="kn">from</span> <span class="nn">pewtils</span> <span class="kn">import</span> <span class="n">is_not_null</span><span class="p">,</span> <span class="n">scale_range</span>
+
+
+<div class="viewcode-block" id="compute_mutual_info"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.mutual_info.compute_mutual_info">[docs]</a><span class="k">def</span> <span class="nf">compute_mutual_info</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">col_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes pointwise mutual information for a set of observations partitioned into two groups.</span>
+
+<span class="sd">    :param y: An array or, preferably, a :py:class:`pandas.Series`</span>
+<span class="sd">    :param x: A matrix, :py:class:`pandas.DataFrame`, or preferably a :py:class:`scipy.sparse.csr_matrix`</span>
+<span class="sd">    :param weights: (Optional) An array of weights corresponding to each observation</span>
+<span class="sd">    :param col_names: The feature names associated with the columns in matrix &#39;x&#39;</span>
+<span class="sd">    :type col_names: list</span>
+<span class="sd">    :param l: An optional Laplace smoothing parameter</span>
+<span class="sd">    :type l: int or float</span>
+<span class="sd">    :param normalize: Toggle normalization on or off (to control for feature prevalance), on by default</span>
+<span class="sd">    :type normalize: bool</span>
+<span class="sd">    :return: A :py:class:`pandas.DataFrame` of features with a variety of computed metrics including mutual information.</span>
+
+<span class="sd">    The function expects ``y`` to correspond to a list or series of values indicating which partition an observation \</span>
+<span class="sd">    belongs to. ``y`` must be a binary flag. ``x`` is a set of features (either a :py:class:`pandas.DataFrame` or \</span>
+<span class="sd">    sparse matrix) where the rows correspond to observations and the columns represent the presence of features (you \</span>
+<span class="sd">    can technically run this using non-binary features but the results will not be as readily interpretable.) The \</span>
+<span class="sd">    function returns a :py:class:`pandas.DataFrame` of metrics computed for each feature, including the following \</span>
+<span class="sd">    columns:</span>
+
+<span class="sd">    - ``MI1``: The feature&#39;s mutual information for the positive class</span>
+<span class="sd">    - ``MI0``: The feature&#39;s mutual information for the negative class</span>
+<span class="sd">    - ``total``: The total number of times a feature appeared</span>
+<span class="sd">    - ``total_pos_with_term``: The total number of times a feature appeared in positive cases</span>
+<span class="sd">    - ``total_neg_with_term``: The total number of times a feature appeared in negative cases</span>
+<span class="sd">    - ``total_pos_neg_with_term_diff``: The raw difference in the number of times a feature appeared in positive cases \</span>
+<span class="sd">    relative to negative cases</span>
+<span class="sd">    - ``pct_pos_with_term``: The proportion of positive cases that had the feature</span>
+<span class="sd">    - ``pct_neg_with_term``: The proportion of negative cases that had the feature</span>
+<span class="sd">    - ``pct_pos_neg_with_term_ratio``: A likelihood ratio indicating the degree to which a positive case was more likely \</span>
+<span class="sd">    to have the feature than a negative case</span>
+<span class="sd">    - ``pct_term_pos``: Of the cases that had a feature, the proportion that were in the positive class</span>
+<span class="sd">    - ``pct_term_neg``: Of the cases that had a feature, the proportion that were in the negative class</span>
+<span class="sd">    - ``pct_term_pos_neg_diff``: The percentage point difference between the proportion of cases with the feature that \</span>
+<span class="sd">    were positive vs. negative</span>
+<span class="sd">    - ``pct_term_pos_neg_ratio``: A likelihood ratio indicating the degree to which a feature was more likely to appear \</span>
+<span class="sd">    in a positive case relative to a negative one (may not be meaningful when classes are imbalanced)</span>
+
+<span class="sd">    .. note:: Note that ``pct_term_pos`` and ``pct_term_neg`` may not be directly comparable if classes are imbalanced, \</span>
+<span class="sd">        and in such cases a ``pct_term_pos_neg_diff`` above zero or ``pct_term_pos_neg_ratio`` above 1 may not indicate a \</span>
+<span class="sd">        true association with the positive class if positive cases outnumber negative ones.</span>
+
+<span class="sd">    .. note:: Mutual information can be a difficult metric to explain to others. We&#39;ve found that the \</span>
+<span class="sd">        ``pct_pos_neg_with_term_ratio`` can serve as a more interpretable alternative method for identifying \</span>
+<span class="sd">        meaningful differences between groups.</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.stats.mutual_info import compute_mutual_info</span>
+<span class="sd">        import nltk</span>
+<span class="sd">        import pandas as pd</span>
+<span class="sd">        from sklearn.metrics.pairwise import linear_kernel</span>
+<span class="sd">        from sklearn.feature_extraction.text import TfidfVectorizer</span>
+
+<span class="sd">        nltk.download(&quot;inaugural&quot;)</span>
+<span class="sd">        df = pd.DataFrame([</span>
+<span class="sd">            {&quot;speech&quot;: fileid, &quot;text&quot;: nltk.corpus.inaugural.raw(fileid)} for fileid in nltk.corpus.inaugural.fileids()</span>
+<span class="sd">        ])</span>
+<span class="sd">        df[&#39;year&#39;] = df[&#39;speech&#39;].map(lambda x: int(x.split(&quot;-&quot;)[0]))</span>
+<span class="sd">        df[&#39;21st_century&#39;] = df[&#39;year&#39;].map(lambda x: 1 if x &gt;= 2000 else 0)</span>
+
+<span class="sd">        vec = TfidfVectorizer(min_df=10, max_df=.9).fit(df[&#39;text&#39;])</span>
+<span class="sd">        tfidf = vec.transform(df[&#39;text&#39;])</span>
+
+<span class="sd">        # Here are the terms most distinctive of inaugural addresses in the 21st century vs. years prior</span>
+
+<span class="sd">        &gt;&gt;&gt; results = compute_mutual_info(df[&#39;21st_century&#39;], tfidf, col_names=vec.get_feature_names())</span>
+
+<span class="sd">        &gt;&gt;&gt; results.sort_values(&quot;MI1&quot;, ascending=False).index[:25]</span>
+<span class="sd">        Index([&#39;america&#39;, &#39;thank&#39;, &#39;bless&#39;, &#39;schools&#39;, &#39;ideals&#39;, &#39;americans&#39;,</span>
+<span class="sd">               &#39;meaning&#39;, &#39;you&#39;, &#39;move&#39;, &#39;across&#39;, &#39;courage&#39;, &#39;child&#39;, &#39;birth&#39;,</span>
+<span class="sd">               &#39;generation&#39;, &#39;families&#39;, &#39;build&#39;, &#39;hard&#39;, &#39;promise&#39;, &#39;choice&#39;, &#39;women&#39;,</span>
+<span class="sd">               &#39;guided&#39;, &#39;words&#39;, &#39;blood&#39;, &#39;dignity&#39;, &#39;because&#39;],</span>
+<span class="sd">              dtype=&#39;object&#39;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">is_not_null</span><span class="p">(</span><span class="n">weights</span><span class="p">):</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">y0</span>
+
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;csr_matrix&quot;</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">is_not_null</span><span class="p">(</span><span class="n">weights</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">csr_matrix</span><span class="p">(</span><span class="n">weights</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">total</span> <span class="o">-</span> <span class="n">x1</span>
+        <span class="n">x1y0</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)),</span> <span class="p">:]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">x1y1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)),</span> <span class="p">:]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">!=</span> <span class="s2">&quot;DataFrame&quot;</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">col_names</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_not_null</span><span class="p">(</span><span class="n">weights</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="p">((</span><span class="n">x</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="p">((</span><span class="n">x</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">x1y0</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">x1y1</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="n">px1y0</span> <span class="o">=</span> <span class="n">x1y0</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="n">px1y1</span> <span class="o">=</span> <span class="n">x1y1</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="n">px0y0</span> <span class="o">=</span> <span class="p">(</span><span class="n">y0</span> <span class="o">-</span> <span class="n">x1y0</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="n">px0y1</span> <span class="o">=</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">x1y1</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span>
+
+    <span class="n">px1</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="n">px0</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="n">py1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y1</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
+    <span class="n">py0</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
+
+    <span class="n">MI1</span> <span class="o">=</span> <span class="p">(</span><span class="n">px1y1</span> <span class="o">/</span> <span class="p">(</span><span class="n">px1</span> <span class="o">*</span> <span class="n">py1</span><span class="p">)</span> <span class="o">+</span> <span class="n">l</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+        <span class="n">MI1</span> <span class="o">=</span> <span class="n">MI1</span> <span class="o">/</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">px1y1</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="n">MI0</span> <span class="o">=</span> <span class="p">(</span><span class="n">px1y0</span> <span class="o">/</span> <span class="p">(</span><span class="n">px1</span> <span class="o">*</span> <span class="n">py0</span><span class="p">)</span> <span class="o">+</span> <span class="n">l</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+        <span class="n">MI0</span> <span class="o">=</span> <span class="n">MI0</span> <span class="o">/</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">px1y0</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;MI1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">MI1</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;MI0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">MI0</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x1</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;total_pos_with_term&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x1y1</span>  <span class="c1"># total_pos_mention</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;total_neg_with_term&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x1y0</span>  <span class="c1"># total_neg_mention</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;total_pos_neg_with_term_diff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;total_pos_with_term&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;total_neg_with_term&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_with_term&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">/</span> <span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="n">x0</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_pos_with_term&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x1y1</span> <span class="o">/</span> <span class="n">y1</span>  <span class="c1"># pct_pos_mention</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_neg_with_term&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x1y0</span> <span class="o">/</span> <span class="n">y0</span>  <span class="c1"># pct_neg_mention</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_pos_neg_with_term_diff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_pos_with_term&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_neg_with_term&quot;</span><span class="p">]</span>
+    <span class="p">)</span>  <span class="c1"># pct_pos_neg_mention_diff</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_pos_neg_with_term_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_pos_with_term&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_neg_with_term&quot;</span><span class="p">]</span>
+    <span class="p">)</span>  <span class="c1"># pct_pos_neg_mention_ratio</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_term_pos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x1y1</span> <span class="o">/</span> <span class="n">x1</span>  <span class="c1"># pct_mention_pos</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_term_neg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x1y0</span> <span class="o">/</span> <span class="n">x1</span>  <span class="c1"># pct_mention_neg</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_term_pos_neg_diff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_term_pos&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_term_neg&quot;</span><span class="p">]</span>
+    <span class="p">)</span>  <span class="c1"># pct_mention_pos_neg_diff</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_term_pos_neg_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_term_pos&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pct_term_neg&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">col_names</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">col_names</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="mutual_info_bar_plot"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.mutual_info.mutual_info_bar_plot">[docs]</a><span class="k">def</span> <span class="nf">mutual_info_bar_plot</span><span class="p">(</span>
+    <span class="n">mutual_info</span><span class="p">,</span>
+    <span class="n">filter_col</span><span class="o">=</span><span class="s2">&quot;MI1&quot;</span><span class="p">,</span>
+    <span class="n">top_n</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">x_col</span><span class="o">=</span><span class="s2">&quot;pct_term_pos_neg_ratio&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a mutual information table generated by :py:func:`pewanalytics.stats.mutual_info.compute_mutual_info`, \</span>
+<span class="sd">    and generates a bar plot of top features. Allows for an easy visualization of feature differences. Can \</span>
+<span class="sd">    subsequently call :py:func:`plt.show` or :py:func:`plt.savefig` to display or save the plot.</span>
+
+<span class="sd">    :param mutual_info: A mutual information table generated by \</span>
+<span class="sd">    :py:func:`pewanalytics.stats.mutual_info.compute_mutual_info`</span>
+<span class="sd">    :param filter_col: The column to use when selecting top features; sorts in descending order and picks the \</span>
+<span class="sd">    top ``top_n``</span>
+<span class="sd">    :type filter_col: str</span>
+<span class="sd">    :param top_n: The number of features to display</span>
+<span class="sd">    :type top_n: int</span>
+<span class="sd">    :param x_col: The column by which to sort the final set of top features (after they have been selected by \</span>
+<span class="sd">    ``filter_col``</span>
+<span class="sd">    :type x_col: str</span>
+<span class="sd">    :param color: The color of the bars</span>
+<span class="sd">    :type color: str</span>
+<span class="sd">    :param title: The title of the plot</span>
+<span class="sd">    :type title: str</span>
+<span class="sd">    :param width: The width of the plot</span>
+<span class="sd">    :type width: int</span>
+<span class="sd">    :return: A Matplotlib figure, which you can display via ``plt.show()`` or alternatively save to a file via \</span>
+<span class="sd">    ``plt.savefig(FILEPATH)``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span> <span class="nn">seaborn</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+    <span class="n">mutual_info</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">filter_col</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="n">top_n</span><span class="p">]</span>
+    <span class="n">mutual_info</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">x_col</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;ngram&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">buffer</span> <span class="o">=</span> <span class="mf">0.02</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">mutual_info</span><span class="p">[</span><span class="n">x_col</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">mutual_info</span><span class="p">[</span><span class="n">x_col</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mutual_info</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.35</span><span class="p">)))</span>
+    <span class="n">seaborn</span><span class="o">.</span><span class="n">set_color_codes</span><span class="p">(</span><span class="s2">&quot;pastel&quot;</span><span class="p">)</span>  <span class="c1"># noqa: F821</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">seaborn</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x_col</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;ngram&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">mutual_info</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>  <span class="c1"># noqa: F821</span>
+    <span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">trim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># noqa: F821</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mutual_info</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()):</span>
+        <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="o">=</span> <span class="n">row</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="n">x_col</span><span class="p">]</span> <span class="o">+</span> <span class="n">buffer</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;ngram&quot;</span><span class="p">],</span>
+            <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+            <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="s2">&quot;large&quot;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">g</span></div>
+
+
+<div class="viewcode-block" id="mutual_info_scatter_plot"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.mutual_info.mutual_info_scatter_plot">[docs]</a><span class="k">def</span> <span class="nf">mutual_info_scatter_plot</span><span class="p">(</span>
+    <span class="n">mutual_info</span><span class="p">,</span>
+    <span class="n">filter_col</span><span class="o">=</span><span class="s2">&quot;MI1&quot;</span><span class="p">,</span>
+    <span class="n">top_n</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">x_col</span><span class="o">=</span><span class="s2">&quot;pct_term_pos_neg_ratio&quot;</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">scale_x_even</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">y_col</span><span class="o">=</span><span class="s2">&quot;MI1&quot;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">scale_y_even</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span>
+    <span class="n">color_col</span><span class="o">=</span><span class="s2">&quot;MI1&quot;</span><span class="p">,</span>
+    <span class="n">size_col</span><span class="o">=</span><span class="s2">&quot;pct_pos_with_term&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="n">adjust_text</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Takes a mutual information table generated by :py:func:`pewanalytics.stats.mutual_info.compute_mutual_info`, \</span>
+<span class="sd">    and generates a scatter plot of top features.</span>
+<span class="sd">    The names of the features will be displayed with varying colors and sizes depending on the variables specified</span>
+<span class="sd">    in ``color_col`` and ``size_col``. Allows for an easy visualization of feature differences. Can subsequently</span>
+<span class="sd">    call :py:func:`plt.show` or :py:func:`plt.savefig` to display or save the plot.</span>
+
+<span class="sd">    :param mutual_info: A mutual information table generated by \</span>
+<span class="sd">    :py:func:`pewanalytics.stats.mutual_info.compute_mutual_info`</span>
+<span class="sd">    :param filter_col: The column to use when selecting top features; sorts in descending order and picks the top \</span>
+<span class="sd">    ``top_n``</span>
+<span class="sd">    :type filter_col: str</span>
+<span class="sd">    :param top_n: The number of features to display</span>
+<span class="sd">    :type top_n: int</span>
+<span class="sd">    :param x_col: The column to use as the x-axis</span>
+<span class="sd">    :type x_col: str</span>
+<span class="sd">    :param xlabel: Label for the x-axis</span>
+<span class="sd">    :type xlabel: str</span>
+<span class="sd">    :param scale_x_even: If True, set values to their ordered rank (allows for even spacing)</span>
+<span class="sd">    :type scale_x_even: bool</span>
+<span class="sd">    :param y_col: The column to use as the y-axis</span>
+<span class="sd">    :type y_col: str</span>
+<span class="sd">    :param ylabel: Label for the y-axis</span>
+<span class="sd">    :type ylabel: str</span>
+<span class="sd">    :param scale_y_even: If True, set values to their ordered rank (allows for even spacing)</span>
+<span class="sd">    :type scale_y_even: bool</span>
+<span class="sd">    :param color: The color for the features</span>
+<span class="sd">    :type color: str</span>
+<span class="sd">    :param color_col: The column to use when shading the features</span>
+<span class="sd">    :type color_col: str</span>
+<span class="sd">    :param size_col: The column to use to size the features</span>
+<span class="sd">    :type size_col: str</span>
+<span class="sd">    :param title: The title of the plot</span>
+<span class="sd">    :type title: str</span>
+<span class="sd">    :param figsize: The size of the plot (tuple)</span>
+<span class="sd">    :type figsize: tuple</span>
+<span class="sd">    :param adjust_text: If True, attempts to adjusts the text so it doesn&#39;t overlap</span>
+<span class="sd">    :type adjust_text: bool</span>
+<span class="sd">    :return: A Matplotlib figure, which you can display via ``plt.show()`` or alternatively save to a file via \</span>
+<span class="sd">    ``plt.savefig(FILEPATH)``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span> <span class="nn">seaborn</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+    <span class="n">mutual_info</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">filter_col</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="n">top_n</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">scale_x_even</span><span class="p">:</span>
+        <span class="n">mutual_info</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">x_col</span><span class="p">)</span>
+        <span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_rank&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x_col</span><span class="p">)]</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">x_col</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_rank&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x_col</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">scale_y_even</span><span class="p">:</span>
+        <span class="n">mutual_info</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">y_col</span><span class="p">)</span>
+        <span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_rank&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y_col</span><span class="p">)]</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">y_col</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_rank&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y_col</span><span class="p">)</span>
+
+    <span class="n">color_maps</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;grey&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Greys</span><span class="p">,</span>
+        <span class="s2">&quot;purple&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Purples</span><span class="p">,</span>
+        <span class="s2">&quot;blue&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Blues</span><span class="p">,</span>
+        <span class="s2">&quot;green&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Greens</span><span class="p">,</span>
+        <span class="s2">&quot;orange&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Oranges</span><span class="p">,</span>
+        <span class="s2">&quot;red&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Reds</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">seaborn</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span>
+        <span class="n">x_col</span><span class="p">,</span> <span class="n">y_col</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">mutual_info</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span>
+    <span class="p">)</span>  <span class="c1"># noqa: F821</span>
+    <span class="n">seaborn</span><span class="o">.</span><span class="n">set_color_codes</span><span class="p">(</span><span class="s2">&quot;pastel&quot;</span><span class="p">)</span>  <span class="c1"># noqa: F821</span>
+
+    <span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="p">[</span><span class="n">size_col</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">scale_range</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">mutual_info</span><span class="p">[</span><span class="n">size_col</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+            <span class="n">mutual_info</span><span class="p">[</span><span class="n">size_col</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+            <span class="p">(</span><span class="n">figsize</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">figsize</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="p">[</span><span class="n">color_col</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">scale_range</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">mutual_info</span><span class="p">[</span><span class="n">color_col</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">mutual_info</span><span class="p">[</span><span class="n">color_col</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">color_maps</span><span class="p">[</span><span class="n">color</span><span class="p">])</span>
+
+    <span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="p">[</span><span class="n">x_col</span><span class="p">]</span>
+    <span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mutual_info</span><span class="p">[</span><span class="n">y_col</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">((</span><span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+
+    <span class="n">texts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">mutual_info</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">texts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">],</span>
+                <span class="n">index</span><span class="p">,</span>
+                <span class="n">size</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">],</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">],</span>
+                <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;right&quot;</span>
+                <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+                <span class="k">else</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span>
+                <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span>
+                <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">mutual_info</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+                <span class="k">else</span> <span class="s2">&quot;bottom&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">adjust_text</span><span class="p">:</span>
+        <span class="n">adjust_text_function</span><span class="p">(</span>
+            <span class="n">texts</span><span class="p">,</span> <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">trim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># noqa: F821</span>
+
+    <span class="k">return</span> <span class="n">ax</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Pew Research Center.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

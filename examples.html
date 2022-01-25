@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examples &mdash; pewanalytics 1.0.7.dev1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="pewanalytics.text: Text Tools" href="text.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> pewanalytics
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="stats.html">Statistical Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text.html">Text Tools</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sampling">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inter-rater-reliability">Inter-rater reliability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cleaning-text">Cleaning text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-textdataframe-class">The TextDataFrame class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#finding-repeating-fragments">Finding repeating fragments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#finding-duplicates">Finding duplicates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mutual-information">Mutual information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#topic-modeling">Topic modeling</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pewanalytics</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Examples</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/examples.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h1>
+<section id="sampling">
+<h2>Sampling<a class="headerlink" href="#sampling" title="Permalink to this headline"></a></h2>
+<p>The <a class="reference internal" href="stats.html#module-pewanalytics.stats.sampling" title="pewanalytics.stats.sampling"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.sampling</span></code></a> module has several useful tools for extracting samples and computing sampling weights. Given a sampling frame stored in a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>, you can draw a sample using a variety of different sampling methods, and then compute sampling weights for any combination of one or more binary variables.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.stats.sampling</span> <span class="kn">import</span> <span class="n">SampleExtractor</span><span class="p">,</span> <span class="n">compute_sample_weights_from_frame</span>
+
+<span class="kn">import</span> <span class="nn">nltk</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">linear_kernel</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;inaugural&quot;</span><span class="p">)</span>
+<span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span><span class="s2">&quot;speech&quot;</span><span class="p">:</span> <span class="n">fileid</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">inaugural</span><span class="o">.</span><span class="n">raw</span><span class="p">(</span><span class="n">fileid</span><span class="p">)}</span> <span class="k">for</span> <span class="n">fileid</span> <span class="ow">in</span> <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">inaugural</span><span class="o">.</span><span class="n">fileids</span><span class="p">()</span>
+<span class="p">])</span>
+
+<span class="c1"># Let&#39;s set some flags what we&#39;ll use in sampling</span>
+<span class="n">frame</span><span class="p">[</span><span class="s1">&#39;economy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;economy&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">frame</span><span class="p">[</span><span class="s1">&#39;health&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;health&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">frame</span><span class="p">[</span><span class="s1">&#39;immigration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;immigration&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">frame</span><span class="p">[</span><span class="s1">&#39;education&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;education&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="c1"># Now we can grab a sample of speeches, stratifying by these variables</span>
+<span class="c1"># This will ensure that our sample will contain speeches that mention each term</span>
+<span class="n">stratification_variables</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;economy&quot;</span><span class="p">,</span> <span class="s2">&quot;health&quot;</span><span class="p">,</span> <span class="s2">&quot;immigration&quot;</span><span class="p">,</span> <span class="s2">&quot;education&quot;</span><span class="p">]</span>
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">SampleExtractor</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="s2">&quot;speech&quot;</span><span class="p">)</span>
+<span class="n">sample_index</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="mi">10</span><span class="p">,</span>
+    <span class="n">sampling_strategy</span><span class="o">=</span><span class="s2">&quot;stratify&quot;</span><span class="p">,</span>
+    <span class="n">stratify_by</span><span class="o">=</span><span class="n">stratification_variables</span>
+<span class="p">)</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;speech&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">sample_index</span><span class="p">)]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sample</span><span class="p">[</span><span class="n">stratification_variables</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">economy</span>        <span class="mi">5</span>
+<span class="n">health</span>         <span class="mi">3</span>
+<span class="n">immigration</span>    <span class="mi">1</span>
+<span class="n">education</span>      <span class="mi">4</span>
+<span class="n">dtype</span><span class="p">:</span> <span class="n">int64</span>
+
+<span class="c1"># Now we can get sampling weights to adjust our sample back to the population based on our stratification variables</span>
+<span class="n">sample</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_sample_weights_from_frame</span><span class="p">(</span>
+    <span class="n">frame</span><span class="p">,</span>
+    <span class="n">sample</span><span class="p">,</span>
+    <span class="n">stratification_variables</span>
+<span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sample</span>
+                <span class="n">speech</span>                                               <span class="n">text</span>  \
+<span class="mi">2</span>       <span class="mi">1797</span><span class="o">-</span><span class="n">Adams</span><span class="o">.</span><span class="n">txt</span>  <span class="n">When</span> <span class="n">it</span> <span class="n">was</span> <span class="n">first</span> <span class="n">perceived</span><span class="p">,</span> <span class="ow">in</span> <span class="n">early</span> <span class="n">times</span><span class="p">,</span> <span class="n">t</span><span class="o">...</span>
+<span class="mi">10</span>    <span class="mi">1829</span><span class="o">-</span><span class="n">Jackson</span><span class="o">.</span><span class="n">txt</span>  <span class="n">Fellow</span> <span class="n">citizens</span><span class="p">,</span> <span class="n">about</span> <span class="n">to</span> <span class="n">undertake</span> <span class="n">the</span> <span class="n">arduou</span><span class="o">...</span>
+<span class="mi">17</span>   <span class="mi">1857</span><span class="o">-</span><span class="n">Buchanan</span><span class="o">.</span><span class="n">txt</span>  <span class="n">Fellow</span> <span class="n">citizens</span><span class="p">,</span> <span class="n">I</span> <span class="n">appear</span> <span class="n">before</span> <span class="n">you</span> <span class="n">this</span> <span class="n">day</span> <span class="o">...</span>
+<span class="mi">18</span>    <span class="mi">1861</span><span class="o">-</span><span class="n">Lincoln</span><span class="o">.</span><span class="n">txt</span>  <span class="n">Fellow</span><span class="o">-</span><span class="n">Citizens</span> <span class="n">of</span> <span class="n">the</span> <span class="n">United</span> <span class="n">States</span><span class="p">:</span> <span class="n">In</span> <span class="n">compl</span><span class="o">...</span>
+<span class="mi">27</span>   <span class="mi">1897</span><span class="o">-</span><span class="n">McKinley</span><span class="o">.</span><span class="n">txt</span>  <span class="n">Fellow</span> <span class="n">citizens</span><span class="p">,</span> <span class="n">In</span> <span class="n">obedience</span> <span class="n">to</span> <span class="n">the</span> <span class="n">will</span> <span class="n">of</span> <span class="n">t</span><span class="o">...</span>
+<span class="mi">37</span>  <span class="mi">1937</span><span class="o">-</span><span class="n">Roosevelt</span><span class="o">.</span><span class="n">txt</span>  <span class="n">When</span> <span class="n">four</span> <span class="n">years</span> <span class="n">ago</span> <span class="n">we</span> <span class="n">met</span> <span class="n">to</span> <span class="n">inaugurate</span> <span class="n">a</span> <span class="n">Pre</span><span class="o">...</span>
+<span class="mi">46</span>      <span class="mi">1973</span><span class="o">-</span><span class="n">Nixon</span><span class="o">.</span><span class="n">txt</span>  <span class="n">Mr</span><span class="o">.</span> <span class="n">Vice</span> <span class="n">President</span><span class="p">,</span> <span class="n">Mr</span><span class="o">.</span> <span class="n">Speaker</span><span class="p">,</span> <span class="n">Mr</span><span class="o">.</span> <span class="n">Chief</span> <span class="n">Jus</span><span class="o">...</span>
+<span class="mi">49</span>     <span class="mi">1985</span><span class="o">-</span><span class="n">Reagan</span><span class="o">.</span><span class="n">txt</span>  <span class="n">Senator</span> <span class="n">Mathias</span><span class="p">,</span> <span class="n">Chief</span> <span class="n">Justice</span> <span class="n">Burger</span><span class="p">,</span> <span class="n">Vice</span> <span class="n">Pr</span><span class="o">...</span>
+<span class="mi">51</span>    <span class="mi">1993</span><span class="o">-</span><span class="n">Clinton</span><span class="o">.</span><span class="n">txt</span>  <span class="n">My</span> <span class="n">fellow</span> <span class="n">citizens</span><span class="p">,</span> <span class="n">today</span> <span class="n">we</span> <span class="n">celebrate</span> <span class="n">the</span> <span class="n">mys</span><span class="o">...</span>
+<span class="mi">52</span>    <span class="mi">1997</span><span class="o">-</span><span class="n">Clinton</span><span class="o">.</span><span class="n">txt</span>  <span class="n">My</span> <span class="n">fellow</span> <span class="n">citizens</span><span class="p">:</span> <span class="n">At</span> <span class="n">this</span> <span class="n">last</span> <span class="n">presidential</span> <span class="o">...</span>
+
+    <span class="n">economy</span>  <span class="n">health</span>  <span class="n">immigration</span>  <span class="n">education</span>  <span class="n">count</span>    <span class="n">weight</span>
+<span class="mi">2</span>         <span class="mi">0</span>       <span class="mi">0</span>            <span class="mi">0</span>          <span class="mi">0</span>      <span class="mi">1</span>  <span class="mf">0.919540</span>
+<span class="mi">10</span>        <span class="mi">1</span>       <span class="mi">0</span>            <span class="mi">0</span>          <span class="mi">0</span>      <span class="mi">1</span>  <span class="mf">0.948276</span>
+<span class="mi">17</span>        <span class="mi">0</span>       <span class="mi">0</span>            <span class="mi">0</span>          <span class="mi">0</span>      <span class="mi">1</span>  <span class="mf">0.919540</span>
+<span class="mi">18</span>        <span class="mi">0</span>       <span class="mi">0</span>            <span class="mi">0</span>          <span class="mi">0</span>      <span class="mi">1</span>  <span class="mf">0.919540</span>
+<span class="mi">27</span>        <span class="mi">1</span>       <span class="mi">0</span>            <span class="mi">1</span>          <span class="mi">1</span>      <span class="mi">1</span>  <span class="mf">0.689655</span>
+<span class="mi">37</span>        <span class="mi">0</span>       <span class="mi">0</span>            <span class="mi">0</span>          <span class="mi">1</span>      <span class="mi">1</span>  <span class="mf">0.862069</span>
+<span class="mi">46</span>        <span class="mi">0</span>       <span class="mi">1</span>            <span class="mi">0</span>          <span class="mi">1</span>      <span class="mi">1</span>  <span class="mf">0.172414</span>
+<span class="mi">49</span>        <span class="mi">1</span>       <span class="mi">0</span>            <span class="mi">0</span>          <span class="mi">0</span>      <span class="mi">1</span>  <span class="mf">0.948276</span>
+<span class="mi">51</span>        <span class="mi">1</span>       <span class="mi">1</span>            <span class="mi">0</span>          <span class="mi">0</span>      <span class="mi">1</span>  <span class="mf">1.206897</span>
+<span class="mi">52</span>        <span class="mi">1</span>       <span class="mi">1</span>            <span class="mi">0</span>          <span class="mi">1</span>      <span class="mi">1</span>  <span class="mf">0.862069</span>
+</pre></div>
+</div>
+</section>
+<section id="inter-rater-reliability">
+<h2>Inter-rater reliability<a class="headerlink" href="#inter-rater-reliability" title="Permalink to this headline"></a></h2>
+<p>The <a class="reference internal" href="stats.html#module-pewanalytics.stats.irr" title="pewanalytics.stats.irr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.irr</span></code></a> module has several useful functions for computing a wide variety of inter-rater reliability and model performance metrics. The <a class="reference internal" href="stats.html#pewanalytics.stats.irr.compute_scores" title="pewanalytics.stats.irr.compute_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">pewanalytics.stats.irr.compute_scores()</span></code></a> function provides a one-stop shop for assessing agreement between two classifiers - whether you’re comparing coders or machine learning models.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.stats.irr</span> <span class="kn">import</span> <span class="n">compute_scores</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Let&#39;s create a DataFrame with some fake classification decisions. We&#39;ll make one with two coders,</span>
+<span class="c1"># three documents, and three possible codes</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span><span class="s2">&quot;coder&quot;</span><span class="p">:</span> <span class="s2">&quot;coder1&quot;</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;coder&quot;</span><span class="p">:</span> <span class="s2">&quot;coder2&quot;</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;coder&quot;</span><span class="p">:</span> <span class="s2">&quot;coder1&quot;</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;coder&quot;</span><span class="p">:</span> <span class="s2">&quot;coder2&quot;</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;coder&quot;</span><span class="p">:</span> <span class="s2">&quot;coder1&quot;</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;coder&quot;</span><span class="p">:</span> <span class="s2">&quot;coder2&quot;</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">},</span>
+<span class="p">])</span>
+
+<span class="c1"># To get overall average performance metrics, we can pass the DataFrame in like so:</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">compute_scores</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;coder1&quot;</span><span class="p">,</span> <span class="s2">&quot;coder2&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">,</span> <span class="s2">&quot;coder&quot;</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;coder1&#39;</span><span class="p">:</span> <span class="s1">&#39;coder1&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;coder2&#39;</span><span class="p">:</span> <span class="s1">&#39;coder2&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+ <span class="s1">&#39;outcome_column&#39;</span><span class="p">:</span> <span class="s1">&#39;code&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;pos_label&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+ <span class="s1">&#39;coder1_mean_unweighted&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+ <span class="s1">&#39;coder1_std_unweighted&#39;</span><span class="p">:</span> <span class="mf">0.5773502691896257</span><span class="p">,</span>
+ <span class="s1">&#39;coder2_mean_unweighted&#39;</span><span class="p">:</span> <span class="mf">1.3333333333333333</span><span class="p">,</span>
+ <span class="s1">&#39;coder2_std_unweighted&#39;</span><span class="p">:</span> <span class="mf">0.6666666666666666</span><span class="p">,</span>
+ <span class="s1">&#39;alpha_unweighted&#39;</span><span class="p">:</span> <span class="mf">0.5454545454545454</span><span class="p">,</span>
+ <span class="s1">&#39;accuracy&#39;</span><span class="p">:</span> <span class="mf">0.6666666666666666</span><span class="p">,</span>
+ <span class="s1">&#39;f1&#39;</span><span class="p">:</span> <span class="mf">0.5555555555555555</span><span class="p">,</span>
+ <span class="s1">&#39;precision&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+ <span class="s1">&#39;recall&#39;</span><span class="p">:</span> <span class="mf">0.6666666666666666</span><span class="p">,</span>
+ <span class="s1">&#39;precision_recall_min&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+ <span class="s1">&#39;matthews_corrcoef&#39;</span><span class="p">:</span> <span class="mf">0.6123724356957946</span><span class="p">,</span>
+ <span class="s1">&#39;roc_auc&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+ <span class="s1">&#39;pct_agree_unweighted&#39;</span><span class="p">:</span> <span class="mf">0.6666666666666666</span><span class="p">}</span>
+
+<span class="c1"># And if we want to get the scores for a specific code/label (comparing it against all other possible codes)</span>
+<span class="c1"># Then we can specify it using the `pos_label` keyword argument:</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">compute_scores</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;coder1&quot;</span><span class="p">,</span> <span class="s2">&quot;coder2&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">,</span> <span class="s2">&quot;coder&quot;</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;coder1&#39;</span><span class="p">:</span> <span class="s1">&#39;coder1&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;coder2&#39;</span><span class="p">:</span> <span class="s1">&#39;coder2&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+ <span class="s1">&#39;outcome_column&#39;</span><span class="p">:</span> <span class="s1">&#39;code&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;pos_label&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;coder1_mean_unweighted&#39;</span><span class="p">:</span> <span class="mf">0.3333333333333333</span><span class="p">,</span>
+ <span class="s1">&#39;coder1_std_unweighted&#39;</span><span class="p">:</span> <span class="mf">0.3333333333333333</span><span class="p">,</span>
+ <span class="s1">&#39;coder2_mean_unweighted&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;coder2_std_unweighted&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;alpha_unweighted&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;cohens_kappa&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;accuracy&#39;</span><span class="p">:</span> <span class="mf">0.6666666666666666</span><span class="p">,</span>
+ <span class="s1">&#39;f1&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;precision&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;recall&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;precision_recall_min&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;matthews_corrcoef&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+ <span class="s1">&#39;roc_auc&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+ <span class="s1">&#39;pct_agree_unweighted&#39;</span><span class="p">:</span> <span class="mf">0.6666666666666666</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="cleaning-text">
+<h2>Cleaning text<a class="headerlink" href="#cleaning-text" title="Permalink to this headline"></a></h2>
+<p>When working with text data, pre-processing is an essential first task. The <code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.text</span></code> module contains a wide range of tools for working with text data, among them the <code class="xref py py-class docutils literal notranslate"><span class="pre">pewanalytics.text.TextCleaner</span></code> class that provides a wide range of pre-processing options for cleaning your text.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="kn">import</span> <span class="n">TextCleaner</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;body&gt;</span>
+<span class="s2">    Here&#39;s some example text.&lt;/br&gt;It isn&#39;t a great example, but it&#39;ll do.</span>
+<span class="s2">    Of course, there are plenty of other examples we could use though.</span>
+<span class="s2">    http://example.com</span>
+<span class="s2">    &lt;/body&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span> <span class="o">=</span> <span class="n">TextCleaner</span><span class="p">(</span><span class="n">process_method</span><span class="o">=</span><span class="s2">&quot;stem&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="s1">&#39;exampl is_not great exampl cours plenti exampl could use though&#39;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span> <span class="o">=</span> <span class="n">TextCleaner</span><span class="p">(</span><span class="n">process_method</span><span class="o">=</span><span class="s2">&quot;stem&quot;</span><span class="p">,</span> <span class="n">stopwords</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;my_custom_stopword&quot;</span><span class="p">],</span> <span class="n">strip_html</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="s1">&#39;here some exampl is_not great exampl but will cours there are plenti other exampl could use though&#39;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span> <span class="o">=</span> <span class="n">TextCleaner</span><span class="p">(</span><span class="n">process_method</span><span class="o">=</span><span class="s2">&quot;lemmatize&quot;</span><span class="p">,</span> <span class="n">strip_html</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="s1">&#39;example is_not great example course plenty example could use though&#39;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span> <span class="o">=</span> <span class="n">TextCleaner</span><span class="p">(</span><span class="n">process_method</span><span class="o">=</span><span class="s2">&quot;lemmatize&quot;</span><span class="p">,</span> <span class="n">remove_urls</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">strip_html</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="s1">&#39;example text is_not great example course plenty example could use though http example com&#39;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span> <span class="o">=</span> <span class="n">TextCleaner</span><span class="p">(</span><span class="n">process_method</span><span class="o">=</span><span class="s2">&quot;stem&quot;</span><span class="p">,</span> <span class="n">strip_html</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="s1">&#39;example text is_not great example course plenty example could use though http example com&#39;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span> <span class="o">=</span> <span class="n">TextCleaner</span><span class="p">(</span><span class="n">process_method</span><span class="o">=</span><span class="s2">&quot;stem&quot;</span><span class="p">,</span> <span class="n">filter_pos</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;JJ&quot;</span><span class="p">],</span> <span class="n">strip_html</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cleaner</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="s1">&#39;great though&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="the-textdataframe-class">
+<h2>The TextDataFrame class<a class="headerlink" href="#the-textdataframe-class" title="Permalink to this headline"></a></h2>
+<p>In some of the following examples, we’ll be making use of the <code class="xref py py-class docutils literal notranslate"><span class="pre">pewanalytics.text.TextDataFrame</span></code> class, which provides a variety of useful functions for working with a Pandas DataFrame that contains a column of text that you want to analyze. To set up a <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code>, you just need to pass a DataFrame and specify the name of the column that contains the text. The <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code> will automatically convert your corpus into a TF-IDF representation; you can pass additional keyword arguments to control this vectorization process, which get forwarded to a Scikit-Learn <code class="docutils literal notranslate"><span class="pre">TfidfVectorizer</span></code> class. In the following examples, we’ll be using a <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code> containing inaugural speeches:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="kn">import</span> <span class="n">TextDataFrame</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
+
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;inaugural&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span><span class="s2">&quot;speech&quot;</span><span class="p">:</span> <span class="n">fileid</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">inaugural</span><span class="o">.</span><span class="n">raw</span><span class="p">(</span><span class="n">fileid</span><span class="p">)}</span> <span class="k">for</span> <span class="n">fileid</span> <span class="ow">in</span> <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">inaugural</span><span class="o">.</span><span class="n">fileids</span><span class="p">()</span>
+<span class="p">])</span>
+<span class="c1"># Let&#39;s remove new line characters so we can print the output in the docstrings</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+
+<span class="c1"># And now let&#39;s create some additional variables to group our data</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;speech&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;21st_century&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">2000</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># And we&#39;ll also create some artificial duplicates in the dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="c1"># We&#39;ll use this TextDataFrame in a variety of examples below</span>
+<span class="n">tdf</span> <span class="o">=</span> <span class="n">TextDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">stop_words</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">,</span> <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="finding-repeating-fragments">
+<h2>Finding repeating fragments<a class="headerlink" href="#finding-repeating-fragments" title="Permalink to this headline"></a></h2>
+<p>When working with text, sometimes it can be useful to identify repeating segments of text that occur in multiple documents. For example, you might be interested in identifying common phraess, or perhaps you want to look for common boilerplate text that you want to clear out in order to facilitate more accurate document comparison. In these cases, Pew Analytics provides several functions that can help.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">TextOverlapExtractor</span></code> can identify overlaps between two pieces of text:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text</span> <span class="kn">import</span> <span class="n">TextOverlapExtractor</span>
+
+<span class="n">text1</span> <span class="o">=</span> <span class="s2">&quot;This is a sentence. This is another sentence. And a third sentence. And yet a fourth sentence.&quot;</span>
+<span class="n">text2</span> <span class="o">=</span> <span class="s2">&quot;This is a different sentence. This is another sentence. And a third sentence. But the fourth </span><span class="se">\</span>
+<span class="s2">sentence is different too.&quot;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">extractor</span> <span class="o">=</span> <span class="n">TextOverlapExtractor</span><span class="p">()</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">extractor</span><span class="o">.</span><span class="n">get_text_overlaps</span><span class="p">(</span><span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39; sentence. This is another sentence. And a third sentence. &#39;</span><span class="p">,</span> <span class="s1">&#39; fourth sentence&#39;</span><span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">extractor</span><span class="o">.</span><span class="n">get_text_overlaps</span><span class="p">(</span><span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39;This is another sentence.&#39;</span><span class="p">,</span> <span class="s1">&#39;And a third sentence.&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>If you want to apply this function at scale, you can make use of the <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code> to search for repeating fragments of text that occur across a large corpus. This function uses the <code class="docutils literal notranslate"><span class="pre">TextOverlapExtractor</span></code>, which tokenizes your text into complete sentences by default. In our example, there aren’t any unique sentences that recur, but we can disable tokenization to get raw overlapping segments of text like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">extract_corpus_fragments</span><span class="p">(</span><span class="n">scan_top_n_matches_per_doc</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">min_fragment_length</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">[&#39;s. Equal and exact justice &#39;,</span>
+<span class="go"> &#39;d by the General Government&#39;,</span>
+<span class="go"> &#39; of the American people, &#39;,</span>
+<span class="go"> &#39;ent of the United States &#39;,</span>
+<span class="go"> &#39; the office of President of the United States &#39;,</span>
+<span class="go"> &#39; preserve, protect, and defend the Constitution of the United States.&quot;  &#39;,</span>
+<span class="go"> &#39; to &quot;preserve, protect, and defend&#39;,</span>
+<span class="go"> &#39; of the United States are &#39;,</span>
+<span class="go"> &#39;e of my countrymen I am about to &#39;,</span>
+<span class="go"> &#39;Vice President, Mr. Chief Justice, &#39;,</span>
+<span class="go"> &#39; 200th anniversary as a nation&#39;,</span>
+<span class="go"> &#39;, and my fellow citizens: &#39;,</span>
+<span class="go"> &#39;e United States of America&#39;]</span>
+</pre></div>
+</div>
+</section>
+<section id="finding-duplicates">
+<h2>Finding duplicates<a class="headerlink" href="#finding-duplicates" title="Permalink to this headline"></a></h2>
+<p>Text corpora also often contain duplicates that we want to remove prior to analysis. To efficiently identify these duplicates, the <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code> provides a two-step function that uses TF-IDF to identify potential duplicate pairs, which are then filtered down by using more precise Levenshtein ratios:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">find_duplicates</span><span class="p">()</span>
+<span class="go">[           speech                                               text  year</span>
+<span class="go">56  2013-Obama.txt  Thank you. Thank you so much.    Vice Presiden...  2013</span>
+<span class="go">56  2013-Obama.txt  Thank you. Thank you so much.    Vice Presiden...  2013</span>
+
+<span class="go">    21st_century</span>
+<span class="go">56             1</span>
+<span class="go">56             1  ,</span>
+<span class="go">            speech                                               text  year</span>
+<span class="go">57  2017-Trump.txt  Chief Justice Roberts, President Carter, Presi...  2017</span>
+<span class="go">57  2017-Trump.txt  Chief Justice Roberts, President Carter, Presi...  2017</span>
+
+<span class="go">    21st_century</span>
+<span class="go">57             1</span>
+<span class="go">57             1  ]</span>
+</pre></div>
+</div>
+</section>
+<section id="mutual-information">
+<h2>Mutual information<a class="headerlink" href="#mutual-information" title="Permalink to this headline"></a></h2>
+<p>Pointwise mutual information can be an enormously useful tool for identifying words and phrases that distinguish one group of documents from another. The <a class="reference internal" href="stats.html#module-pewanalytics.stats.mutual_info" title="pewanalytics.stats.mutual_info"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pewanalytics.stats.mutual_info</span></code></a> module contains a <code class="docutils literal notranslate"><span class="pre">mutual_info</span></code> function for computing mutual information along with a variety of other ratios that identify features that distinguish between two different sets of observations. While you can run this function on any set of features, it’s particularly informative when working with text data. Accordingly, the <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code> has a shortcut function that allows you to easily run mutual information on your corpus. In this example, we can find the phrases that most distinguish 21st century inaugural speeches from those given in prior years:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">tdf</span><span class="o">.</span><span class="n">mutual_info</span><span class="p">(</span><span class="s2">&quot;21st_century&quot;</span><span class="p">)</span>
+
+<span class="c1"># Pointwise mutual information for our positive class is stored in the &quot;M1&quot; column</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">results</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;MI1&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="mi">25</span><span class="p">]</span>
+<span class="n">Index</span><span class="p">([</span><span class="s1">&#39;journey complete&#39;</span><span class="p">,</span> <span class="s1">&#39;jobs&#39;</span><span class="p">,</span> <span class="s1">&#39;make america&#39;</span><span class="p">,</span> <span class="s1">&#39;ve&#39;</span><span class="p">,</span> <span class="s1">&#39;obama&#39;</span><span class="p">,</span> <span class="s1">&#39;workers&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;xand&#39;</span><span class="p">,</span> <span class="s1">&#39;states america&#39;</span><span class="p">,</span> <span class="s1">&#39;america best&#39;</span><span class="p">,</span> <span class="s1">&#39;debates&#39;</span><span class="p">,</span> <span class="s1">&#39;clinton&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;president clinton&#39;</span><span class="p">,</span> <span class="s1">&#39;trillions&#39;</span><span class="p">,</span> <span class="s1">&#39;stops right&#39;</span><span class="p">,</span> <span class="s1">&#39;transferring&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;president obama&#39;</span><span class="p">,</span> <span class="s1">&#39;stops&#39;</span><span class="p">,</span> <span class="s1">&#39;protected protected&#39;</span><span class="p">,</span> <span class="s1">&#39;transferring power&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;nation capital&#39;</span><span class="p">,</span> <span class="s1">&#39;american workers&#39;</span><span class="p">,</span> <span class="s1">&#39;politicians&#39;</span><span class="p">,</span> <span class="s1">&#39;people believe&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;borders&#39;</span><span class="p">,</span> <span class="s1">&#39;victories&#39;</span><span class="p">],</span>
+       <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;object&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="topic-modeling">
+<h2>Topic modeling<a class="headerlink" href="#topic-modeling" title="Permalink to this headline"></a></h2>
+<p>Just like the <code class="docutils literal notranslate"><span class="pre">TextDataFrame</span></code>, <code class="docutils literal notranslate"><span class="pre">pewanalytics</span></code> also provides a wrapper class for training a variety of different topic models. The <a class="reference internal" href="text.html#pewanalytics.text.topics.TopicModel" title="pewanalytics.text.topics.TopicModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">pewanalytics.text.topics.TopicModel</span></code></a> class accepts a Pandas DataFrame and the name of a text column, and allows you to train and apply Gensim, Scikit-Learn, and Corex topic models using a standardized interface:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewanalytics.text.topics</span> <span class="kn">import</span> <span class="n">TopicModel</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
+
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;inaugural&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span><span class="s2">&quot;speech&quot;</span><span class="p">:</span> <span class="n">fileid</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">inaugural</span><span class="o">.</span><span class="n">raw</span><span class="p">(</span><span class="n">fileid</span><span class="p">)}</span> <span class="k">for</span> <span class="n">fileid</span> <span class="ow">in</span> <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">inaugural</span><span class="o">.</span><span class="n">fileids</span><span class="p">()</span>
+<span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">model</span> <span class="o">=</span> <span class="n">TopicModel</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;sklearn_nfm&quot;</span><span class="p">,</span> <span class="n">num_topics</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_df</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">max_df</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span> <span class="n">use_tfidf</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">Initialized</span> <span class="n">sklearn_nmf</span> <span class="n">topic</span> <span class="n">model</span> <span class="k">with</span> <span class="mi">3285</span> <span class="n">features</span>
+<span class="mi">1600</span> <span class="n">training</span> <span class="n">documents</span><span class="p">,</span> <span class="mi">400</span> <span class="n">testing</span> <span class="n">documents</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">print_topics</span><span class="p">()</span>
+<span class="mi">0</span><span class="p">:</span> <span class="n">bad</span><span class="p">,</span> <span class="n">really</span><span class="p">,</span> <span class="n">know</span><span class="p">,</span> <span class="n">don</span><span class="p">,</span> <span class="n">plot</span><span class="p">,</span> <span class="n">people</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">movies</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">scenes</span>
+<span class="mi">1</span><span class="p">:</span> <span class="n">star</span><span class="p">,</span> <span class="n">trek</span><span class="p">,</span> <span class="n">star</span> <span class="n">trek</span><span class="p">,</span> <span class="n">effects</span><span class="p">,</span> <span class="n">wars</span><span class="p">,</span> <span class="n">star</span> <span class="n">wars</span><span class="p">,</span> <span class="n">special</span><span class="p">,</span> <span class="n">special</span> <span class="n">effects</span><span class="p">,</span> <span class="n">movies</span><span class="p">,</span> <span class="n">series</span>
+<span class="mi">2</span><span class="p">:</span> <span class="n">jackie</span><span class="p">,</span> <span class="n">films</span><span class="p">,</span> <span class="n">chan</span><span class="p">,</span> <span class="n">jackie</span> <span class="n">chan</span><span class="p">,</span> <span class="n">hong</span><span class="p">,</span> <span class="n">master</span><span class="p">,</span> <span class="n">drunken</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">tarantino</span><span class="p">,</span> <span class="n">brown</span>
+<span class="mi">3</span><span class="p">:</span> <span class="n">life</span><span class="p">,</span> <span class="n">man</span><span class="p">,</span> <span class="n">best</span><span class="p">,</span> <span class="n">characters</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">love</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">little</span><span class="p">,</span> <span class="n">does</span><span class="p">,</span> <span class="n">great</span>
+<span class="mi">4</span><span class="p">:</span> <span class="n">alien</span><span class="p">,</span> <span class="n">series</span><span class="p">,</span> <span class="n">aliens</span><span class="p">,</span> <span class="n">characters</span><span class="p">,</span> <span class="n">films</span><span class="p">,</span> <span class="n">television</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">quite</span><span class="p">,</span> <span class="n">mars</span><span class="p">,</span> <span class="n">action</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">doc_topics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_document_topics</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">doc_topics</span>
+       <span class="n">topic_0</span>   <span class="n">topic_1</span>   <span class="n">topic_2</span>   <span class="n">topic_3</span>   <span class="n">topic_4</span>
+<span class="mi">0</span>     <span class="mf">0.723439</span>  <span class="mf">0.000000</span>  <span class="mf">0.000000</span>  <span class="mf">0.000000</span>  <span class="mf">0.000000</span>
+<span class="mi">1</span>     <span class="mf">0.289801</span>  <span class="mf">0.050055</span>  <span class="mf">0.000000</span>  <span class="mf">0.000000</span>  <span class="mf">0.000000</span>
+<span class="mi">2</span>     <span class="mf">0.375149</span>  <span class="mf">0.000000</span>  <span class="mf">0.030691</span>  <span class="mf">0.059088</span>  <span class="mf">0.143679</span>
+<span class="mi">3</span>     <span class="mf">0.152961</span>  <span class="mf">0.010386</span>  <span class="mf">0.000000</span>  <span class="mf">0.121412</span>  <span class="mf">0.015865</span>
+<span class="mi">4</span>     <span class="mf">0.294005</span>  <span class="mf">0.100426</span>  <span class="mf">0.000000</span>  <span class="mf">0.137630</span>  <span class="mf">0.051241</span>
+<span class="o">...</span>        <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+<span class="mi">1995</span>  <span class="mf">0.480983</span>  <span class="mf">0.070431</span>  <span class="mf">0.135178</span>  <span class="mf">0.256951</span>  <span class="mf">0.000000</span>
+<span class="mi">1996</span>  <span class="mf">0.139986</span>  <span class="mf">0.000000</span>  <span class="mf">0.000000</span>  <span class="mf">0.107430</span>  <span class="mf">0.000000</span>
+<span class="mi">1997</span>  <span class="mf">0.141545</span>  <span class="mf">0.005990</span>  <span class="mf">0.081986</span>  <span class="mf">0.387859</span>  <span class="mf">0.057025</span>
+<span class="mi">1998</span>  <span class="mf">0.029228</span>  <span class="mf">0.023342</span>  <span class="mf">0.043713</span>  <span class="mf">0.280877</span>  <span class="mf">0.107551</span>
+<span class="mi">1999</span>  <span class="mf">0.044863</span>  <span class="mf">0.000000</span>  <span class="mf">0.000000</span>  <span class="mf">0.718677</span>  <span class="mf">0.000000</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="text.html" class="btn btn-neutral float-left" title="pewanalytics.text: Text Tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Pew Research Center.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

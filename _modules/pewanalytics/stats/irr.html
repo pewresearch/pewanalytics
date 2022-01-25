@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pewanalytics.stats.irr &mdash; pewanalytics 1.0.7.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> pewanalytics
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../stats.html">Statistical Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../text.html">Text Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pewanalytics</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>pewanalytics.stats.irr</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pewanalytics.stats.irr</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">nltk.metrics</span> <span class="kn">import</span> <span class="n">masi_distance</span><span class="p">,</span> <span class="n">jaccard_distance</span>
+<span class="kn">from</span> <span class="nn">nltk.metrics.agreement</span> <span class="kn">import</span> <span class="n">AnnotationTask</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">matthews_corrcoef</span><span class="p">,</span>
+    <span class="n">accuracy_score</span><span class="p">,</span>
+    <span class="n">f1_score</span><span class="p">,</span>
+    <span class="n">precision_score</span><span class="p">,</span>
+    <span class="n">recall_score</span><span class="p">,</span>
+    <span class="n">roc_auc_score</span><span class="p">,</span>
+    <span class="n">cohen_kappa_score</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MultiLabelBinarizer</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.weightstats</span> <span class="kn">import</span> <span class="n">DescrStatsW</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.inter_rater</span> <span class="kn">import</span> <span class="n">fleiss_kappa</span>
+<span class="kn">from</span> <span class="nn">pewtils</span> <span class="kn">import</span> <span class="n">is_not_null</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">spatial</span>
+
+
+<div class="viewcode-block" id="kappa_sample_size_power"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.irr.kappa_sample_size_power">[docs]</a><span class="k">def</span> <span class="nf">kappa_sample_size_power</span><span class="p">(</span>
+    <span class="n">rate1</span><span class="p">,</span> <span class="n">rate2</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">twosided</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Python translation of the ``N.cohen.kappa`` function from the ``irr`` R package.</span>
+
+<span class="sd">    Source: https://cran.r-project.org/web/packages/irr/irr.pdf</span>
+
+<span class="sd">    :param rate1: The probability that the first rater will record a positive diagnosis</span>
+<span class="sd">    :type rate1: float</span>
+<span class="sd">    :param rate2: The probability that the second rater will record a positive diagnosis</span>
+<span class="sd">    :type rate2: float</span>
+<span class="sd">    :param k1: The true Cohen&#39;s Kappa statistic</span>
+<span class="sd">    :type k1: float</span>
+<span class="sd">    :param k0: The value of kappa under the null hypothesis</span>
+<span class="sd">    :type k0: float</span>
+<span class="sd">    :param alpha: Type I error of test</span>
+<span class="sd">    :type alpha: float</span>
+<span class="sd">    :param power: The desired power to detect the difference between true kappa and hypothetical kappa</span>
+<span class="sd">    :type power: float</span>
+<span class="sd">    :param twosided: Set this to ``True`` if the test is two-sided</span>
+<span class="sd">    :param twosided: bool</span>
+<span class="sd">    :return: Returns the required sample size</span>
+<span class="sd">    :rtype: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">twosided</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">pi_rater1</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rate1</span>
+    <span class="n">pi_rater2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rate2</span>
+    <span class="n">pie</span> <span class="o">=</span> <span class="n">rate1</span> <span class="o">*</span> <span class="n">rate2</span> <span class="o">+</span> <span class="n">pi_rater1</span> <span class="o">*</span> <span class="n">pi_rater2</span>
+    <span class="n">pi0</span> <span class="o">=</span> <span class="n">k1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pie</span><span class="p">)</span> <span class="o">+</span> <span class="n">pie</span>
+    <span class="n">pi22</span> <span class="o">=</span> <span class="p">(</span><span class="n">pi0</span> <span class="o">-</span> <span class="n">rate1</span> <span class="o">+</span> <span class="n">pi_rater2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">pi11</span> <span class="o">=</span> <span class="n">pi0</span> <span class="o">-</span> <span class="n">pi22</span>
+    <span class="n">pi12</span> <span class="o">=</span> <span class="n">rate1</span> <span class="o">-</span> <span class="n">pi11</span>
+    <span class="n">pi21</span> <span class="o">=</span> <span class="n">rate2</span> <span class="o">-</span> <span class="n">pi11</span>
+    <span class="n">pi0h</span> <span class="o">=</span> <span class="n">k0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pie</span><span class="p">)</span> <span class="o">+</span> <span class="n">pie</span>
+    <span class="n">pi22h</span> <span class="o">=</span> <span class="p">(</span><span class="n">pi0h</span> <span class="o">-</span> <span class="n">rate1</span> <span class="o">+</span> <span class="n">pi_rater2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">pi11h</span> <span class="o">=</span> <span class="n">pi0h</span> <span class="o">-</span> <span class="n">pi22h</span>
+    <span class="n">pi12h</span> <span class="o">=</span> <span class="n">rate1</span> <span class="o">-</span> <span class="n">pi11h</span>
+    <span class="n">pi21h</span> <span class="o">=</span> <span class="n">rate2</span> <span class="o">-</span> <span class="n">pi11h</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pie</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="n">pi11</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pie</span> <span class="o">-</span> <span class="p">(</span><span class="n">rate2</span> <span class="o">+</span> <span class="n">rate1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pi0</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="o">+</span> <span class="n">pi22</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pie</span> <span class="o">-</span> <span class="p">(</span><span class="n">pi_rater2</span> <span class="o">+</span> <span class="n">pi_rater1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pi0</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pi0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="o">*</span> <span class="p">(</span><span class="n">pi12</span> <span class="o">*</span> <span class="p">(</span><span class="n">rate2</span> <span class="o">+</span> <span class="n">pi_rater1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">pi21</span> <span class="o">*</span> <span class="p">(</span><span class="n">pi_rater2</span> <span class="o">+</span> <span class="n">rate1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="o">-</span> <span class="p">(</span><span class="n">pi0</span> <span class="o">*</span> <span class="n">pie</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pie</span> <span class="o">+</span> <span class="n">pi0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="p">)</span>
+    <span class="n">Qh</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pie</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="n">pi11h</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pie</span> <span class="o">-</span> <span class="p">(</span><span class="n">rate2</span> <span class="o">+</span> <span class="n">rate1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pi0h</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="o">+</span> <span class="n">pi22h</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pie</span> <span class="o">-</span> <span class="p">(</span><span class="n">pi_rater2</span> <span class="o">+</span> <span class="n">pi_rater1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pi0h</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pi0h</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="o">*</span> <span class="p">(</span><span class="n">pi12h</span> <span class="o">*</span> <span class="p">(</span><span class="n">rate2</span> <span class="o">+</span> <span class="n">pi_rater1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">pi21h</span> <span class="o">*</span> <span class="p">(</span><span class="n">pi_rater2</span> <span class="o">+</span> <span class="n">rate1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="o">-</span> <span class="p">(</span><span class="n">pi0h</span> <span class="o">*</span> <span class="n">pie</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pie</span> <span class="o">+</span> <span class="n">pi0h</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">/</span> <span class="n">d</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Qh</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">power</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="o">/</span> <span class="p">(</span><span class="n">k1</span> <span class="o">-</span> <span class="n">k0</span><span class="p">)</span>
+    <span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">N</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="kappa_sample_size_CI"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.irr.kappa_sample_size_CI">[docs]</a><span class="k">def</span> <span class="nf">kappa_sample_size_CI</span><span class="p">(</span><span class="n">kappa0</span><span class="p">,</span> <span class="n">kappaL</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">kappaU</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Helps determine the required document sample size to confirm that Cohen&#39;s Kappa between coders is at or \</span>
+<span class="sd">    above a minimum threhsold. Useful in situations where multiple coders code a set of documents for a binary outcome.</span>
+
+<span class="sd">    This function takes the observed kappa and proportion of positive cases from the sample, along with a lower-bound \</span>
+<span class="sd">    for the minimum acceptable kappa, and returns the sample size required to confirm that the coders&#39; agreement is \</span>
+<span class="sd">    truly above that minimum level of kappa with 95% certainty. If the current sample size is below the required \</span>
+<span class="sd">    sample size returned by this function, it can provide a rough estimate of how many additional documents need \</span>
+<span class="sd">    to be coded - assuming that the coders continue agreeing and observing positive cases at the same rate.</span>
+
+<span class="sd">    Translated from the ``kappaSize`` R package, ``CIBinary``: \</span>
+<span class="sd">    https://github.com/cran/kappaSize/blob/master/R/CIBinary.R</span>
+
+<span class="sd">    :param kappa0: The preliminary value of kappa</span>
+<span class="sd">    :param kappa0: float</span>
+<span class="sd">    :param kappaL: The desired expected lower bound for a two-sided 100(1 - alpha) % confidence interval for kappa. \</span>
+<span class="sd">    Alternatively, if kappaU is set to NA, the procedure produces the number of required subjects for a one-sided \</span>
+<span class="sd">    confidence interval</span>
+<span class="sd">    :type kappaL: float</span>
+<span class="sd">    :param props: The anticipated prevalence of the desired trait</span>
+<span class="sd">    :type props: float</span>
+<span class="sd">    :param kappaU: The desired expected upper confidence limit for kappa</span>
+<span class="sd">    :type kappaU: float</span>
+<span class="sd">    :param alpha: The desired type I error rate</span>
+<span class="sd">    :type alpha: float</span>
+<span class="sd">    :return: Returns the required sample size</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.stats.irr import kappa_sample_size_CI</span>
+
+<span class="sd">        observed_kappa = 0.8</span>
+<span class="sd">        desired_kappa = 0.7</span>
+<span class="sd">        observed_proportion = 0.5</span>
+
+<span class="sd">        &gt;&gt;&gt; kappa_sample_size(observed_kappa, desired_kappa, observed_proportion)</span>
+<span class="sd">        140</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">kappaU</span><span class="p">:</span>
+        <span class="n">chiCrit</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">kappaL</span> <span class="ow">and</span> <span class="n">kappaU</span><span class="p">:</span>
+        <span class="n">chiCrit</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">CalcIT</span><span class="p">(</span><span class="n">rho0</span><span class="p">,</span> <span class="n">rho1</span><span class="p">,</span> <span class="n">Pi</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">P0</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">x</span>
+
+        <span class="k">def</span> <span class="nf">P1</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">x</span>
+
+        <span class="k">def</span> <span class="nf">P2</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">p</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">x</span>
+
+        <span class="n">r1</span> <span class="o">=</span> <span class="p">((</span><span class="n">n</span> <span class="o">*</span> <span class="n">P0</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rho0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">Pi</span><span class="p">))</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">P0</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rho1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">Pi</span><span class="p">)))</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="n">n</span> <span class="o">*</span> <span class="n">P0</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rho1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">Pi</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">r2</span> <span class="o">=</span> <span class="p">((</span><span class="n">n</span> <span class="o">*</span> <span class="n">P1</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rho0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">Pi</span><span class="p">))</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">P1</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rho1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">Pi</span><span class="p">)))</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="n">n</span> <span class="o">*</span> <span class="n">P1</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rho1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">Pi</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">r3</span> <span class="o">=</span> <span class="p">((</span><span class="n">n</span> <span class="o">*</span> <span class="n">P2</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rho0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">Pi</span><span class="p">))</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">P2</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rho1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">Pi</span><span class="p">)))</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="n">n</span> <span class="o">*</span> <span class="n">P2</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rho1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">Pi</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">[</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">r3</span><span class="p">]</span> <span class="k">if</span> <span class="n">r</span><span class="p">])</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">result</span> <span class="o">-</span> <span class="mf">0.001</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">chiCrit</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">CalcIT</span><span class="p">(</span><span class="n">kappa0</span><span class="p">,</span> <span class="n">kappaL</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">n</span></div>
+
+
+<div class="viewcode-block" id="compute_scores"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.irr.compute_scores">[docs]</a><span class="k">def</span> <span class="nf">compute_scores</span><span class="p">(</span>
+    <span class="n">coder_df</span><span class="p">,</span>
+    <span class="n">coder1</span><span class="p">,</span>
+    <span class="n">coder2</span><span class="p">,</span>
+    <span class="n">outcome_column</span><span class="p">,</span>
+    <span class="n">document_column</span><span class="p">,</span>
+    <span class="n">coder_column</span><span class="p">,</span>
+    <span class="n">weight_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">pos_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes a variety of inter-rater reliability scores, including Cohen&#39;s kappa, Krippendorf&#39;s alpha, precision,</span>
+<span class="sd">    and recall. The input data must consist of a :py:class:`pandas.DataFrame` with the following columns:</span>
+
+<span class="sd">        - A column with values that indicate the coder (like a name)</span>
+<span class="sd">        - A column with values that indicate the document (like an ID)</span>
+<span class="sd">        - A column with values that indicate the code value</span>
+<span class="sd">        - (Optional) A column with document weights</span>
+
+<span class="sd">    This function will return a :py:class:`pandas.DataFrame` with agreement scores between the two specified coders.</span>
+
+<span class="sd">    :param coder_df: A :py:class:`pandas.DataFrame` of codes</span>
+<span class="sd">    :type coder_df: :py:class:`pandas.DataFrame`</span>
+<span class="sd">    :param coder1: The value in ``coder_column`` for rows corresponding to the first coder</span>
+<span class="sd">    :type coder1: str or int</span>
+<span class="sd">    :param coder2: The value in ``coder_column`` for rows corresponding to the second coder</span>
+<span class="sd">    :type coder2: str or int</span>
+<span class="sd">    :param outcome_column: The column that contains the codes</span>
+<span class="sd">    :type outcome_column: str</span>
+<span class="sd">    :param document_column: The column that contains IDs for the documents</span>
+<span class="sd">    :type document_column: str</span>
+<span class="sd">    :param coder_column: The column containing values that indicate which coder assigned the code</span>
+<span class="sd">    :type coder_column: str</span>
+<span class="sd">    :param weight_column: The column that contains sampling weights</span>
+<span class="sd">    :type weight_column: str</span>
+<span class="sd">    :param pos_label: The value indicating a positive label (optional)</span>
+<span class="sd">    :type pos_label: str or int</span>
+<span class="sd">    :return: A dictionary of scores</span>
+<span class="sd">    :rtype: dict</span>
+
+<span class="sd">    .. note:: If using a multi-class (non-binary) code, some scores may come back null or not compute as expected. \</span>
+<span class="sd">        We recommend running the function separately for each specific code value as a binary flag by providing \</span>
+<span class="sd">        each unique value to the ``pos_label`` argument. If ``pos_label`` is not provided for multi-class codes, \</span>
+<span class="sd">        this function will attempt to compute scores based on support-weighted averages.</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.stats.irr import compute_scores</span>
+<span class="sd">        import pandas as pd</span>
+
+<span class="sd">        df = pd.DataFrame([</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder1&quot;, &quot;document&quot;: 1, &quot;code&quot;: &quot;2&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder2&quot;, &quot;document&quot;: 1, &quot;code&quot;: &quot;2&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder1&quot;, &quot;document&quot;: 2, &quot;code&quot;: &quot;1&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder2&quot;, &quot;document&quot;: 2, &quot;code&quot;: &quot;2&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder1&quot;, &quot;document&quot;: 3, &quot;code&quot;: &quot;0&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder2&quot;, &quot;document&quot;: 3, &quot;code&quot;: &quot;0&quot;},</span>
+<span class="sd">        ])</span>
+
+<span class="sd">        &gt;&gt;&gt; compute_scores(df, &quot;coder1&quot;, &quot;coder2&quot;, &quot;code&quot;, &quot;document&quot;, &quot;coder&quot;)</span>
+<span class="sd">        {&#39;coder1&#39;: &#39;coder1&#39;,</span>
+<span class="sd">         &#39;coder2&#39;: &#39;coder2&#39;,</span>
+<span class="sd">         &#39;n&#39;: 3,</span>
+<span class="sd">         &#39;outcome_column&#39;: &#39;code&#39;,</span>
+<span class="sd">         &#39;pos_label&#39;: None,</span>
+<span class="sd">         &#39;coder1_mean_unweighted&#39;: 1.0,</span>
+<span class="sd">         &#39;coder1_std_unweighted&#39;: 0.5773502691896257,</span>
+<span class="sd">         &#39;coder2_mean_unweighted&#39;: 1.3333333333333333,</span>
+<span class="sd">         &#39;coder2_std_unweighted&#39;: 0.6666666666666666,</span>
+<span class="sd">         &#39;alpha_unweighted&#39;: 0.5454545454545454,</span>
+<span class="sd">         &#39;accuracy&#39;: 0.6666666666666666,</span>
+<span class="sd">         &#39;f1&#39;: 0.5555555555555555,</span>
+<span class="sd">         &#39;precision&#39;: 0.5,</span>
+<span class="sd">         &#39;recall&#39;: 0.6666666666666666,</span>
+<span class="sd">         &#39;precision_recall_min&#39;: 0.5,</span>
+<span class="sd">         &#39;matthews_corrcoef&#39;: 0.6123724356957946,</span>
+<span class="sd">         &#39;roc_auc&#39;: None,</span>
+<span class="sd">         &#39;pct_agree_unweighted&#39;: 0.6666666666666666}</span>
+
+<span class="sd">        &gt;&gt;&gt; compute_scores(df, &quot;coder1&quot;, &quot;coder2&quot;, &quot;code&quot;, &quot;document&quot;, &quot;coder&quot;, pos_label=&quot;0&quot;)</span>
+<span class="sd">         {&#39;coder1&#39;: &#39;coder1&#39;,</span>
+<span class="sd">         &#39;coder2&#39;: &#39;coder2&#39;,</span>
+<span class="sd">         &#39;n&#39;: 3,</span>
+<span class="sd">         &#39;outcome_column&#39;: &#39;code&#39;,</span>
+<span class="sd">         &#39;pos_label&#39;: &#39;0&#39;,</span>
+<span class="sd">         &#39;coder1_mean_unweighted&#39;: 0.3333333333333333,</span>
+<span class="sd">         &#39;coder1_std_unweighted&#39;: 0.3333333333333333,</span>
+<span class="sd">         &#39;coder2_mean_unweighted&#39;: 0.3333333333333333,</span>
+<span class="sd">         &#39;coder2_std_unweighted&#39;: 0.3333333333333333,</span>
+<span class="sd">         &#39;alpha_unweighted&#39;: 1.0,</span>
+<span class="sd">         &#39;cohens_kappa&#39;: 1.0,</span>
+<span class="sd">         &#39;accuracy&#39;: 1.0,</span>
+<span class="sd">         &#39;f1&#39;: 1.0,</span>
+<span class="sd">         &#39;precision&#39;: 1.0,</span>
+<span class="sd">         &#39;recall&#39;: 1.0,</span>
+<span class="sd">         &#39;precision_recall_min&#39;: 1.0,</span>
+<span class="sd">         &#39;matthews_corrcoef&#39;: 1.0,</span>
+<span class="sd">         &#39;roc_auc&#39;: 1.0,</span>
+<span class="sd">         &#39;pct_agree_unweighted&#39;: 1.0}</span>
+
+<span class="sd">        &gt;&gt;&gt; compute_scores(df, &quot;coder1&quot;, &quot;coder2&quot;, &quot;code&quot;, &quot;document&quot;, &quot;coder&quot;, pos_label=&quot;1&quot;)</span>
+<span class="sd">        {&#39;coder1&#39;: &#39;coder1&#39;,</span>
+<span class="sd">         &#39;coder2&#39;: &#39;coder2&#39;,</span>
+<span class="sd">         &#39;n&#39;: 3,</span>
+<span class="sd">         &#39;outcome_column&#39;: &#39;code&#39;,</span>
+<span class="sd">         &#39;pos_label&#39;: &#39;1&#39;,</span>
+<span class="sd">         &#39;coder1_mean_unweighted&#39;: 0.3333333333333333,</span>
+<span class="sd">         &#39;coder1_std_unweighted&#39;: 0.3333333333333333,</span>
+<span class="sd">         &#39;coder2_mean_unweighted&#39;: 0.0,</span>
+<span class="sd">         &#39;coder2_std_unweighted&#39;: 0.0,</span>
+<span class="sd">         &#39;alpha_unweighted&#39;: 0.0,</span>
+<span class="sd">         &#39;cohens_kappa&#39;: 0.0,</span>
+<span class="sd">         &#39;accuracy&#39;: 0.6666666666666666,</span>
+<span class="sd">         &#39;f1&#39;: 0.0,</span>
+<span class="sd">         &#39;precision&#39;: 0.0,</span>
+<span class="sd">         &#39;recall&#39;: 0.0,</span>
+<span class="sd">         &#39;precision_recall_min&#39;: 0.0,</span>
+<span class="sd">         &#39;matthews_corrcoef&#39;: 1.0,</span>
+<span class="sd">         &#39;roc_auc&#39;: None,</span>
+<span class="sd">         &#39;pct_agree_unweighted&#39;: 0.6666666666666666}</span>
+
+<span class="sd">        &gt;&gt;&gt; compute_scores(df, &quot;coder1&quot;, &quot;coder2&quot;, &quot;code&quot;, &quot;document&quot;, &quot;coder&quot;, pos_label=&quot;2&quot;)</span>
+<span class="sd">        {&#39;coder1&#39;: &#39;coder1&#39;,</span>
+<span class="sd">         &#39;coder2&#39;: &#39;coder2&#39;,</span>
+<span class="sd">         &#39;n&#39;: 3,</span>
+<span class="sd">         &#39;outcome_column&#39;: &#39;code&#39;,</span>
+<span class="sd">         &#39;pos_label&#39;: &#39;2&#39;,</span>
+<span class="sd">         &#39;coder1_mean_unweighted&#39;: 0.3333333333333333,</span>
+<span class="sd">         &#39;coder1_std_unweighted&#39;: 0.3333333333333333,</span>
+<span class="sd">         &#39;coder2_mean_unweighted&#39;: 0.6666666666666666,</span>
+<span class="sd">         &#39;coder2_std_unweighted&#39;: 0.3333333333333333,</span>
+<span class="sd">         &#39;alpha_unweighted&#39;: 0.4444444444444444,</span>
+<span class="sd">         &#39;cohens_kappa&#39;: 0.3999999999999999,</span>
+<span class="sd">         &#39;accuracy&#39;: 0.6666666666666666,</span>
+<span class="sd">         &#39;f1&#39;: 0.6666666666666666,</span>
+<span class="sd">         &#39;precision&#39;: 0.5,</span>
+<span class="sd">         &#39;recall&#39;: 1.0,</span>
+<span class="sd">         &#39;precision_recall_min&#39;: 0.5,</span>
+<span class="sd">         &#39;matthews_corrcoef&#39;: 0.5,</span>
+<span class="sd">         &#39;roc_auc&#39;: 0.75,</span>
+<span class="sd">         &#39;pct_agree_unweighted&#39;: 0.6666666666666666}</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">old_np_settings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="s2">&quot;raise&quot;</span><span class="p">)</span>
+
+    <span class="n">coder_df</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">coder_df</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pos_label</span><span class="p">:</span>
+        <span class="n">coder_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">coder_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">pos_label</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">coder1_df</span> <span class="o">=</span> <span class="n">coder_df</span><span class="p">[</span><span class="n">coder_df</span><span class="p">[</span><span class="n">coder_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">coder1</span><span class="p">]</span>
+    <span class="n">coder1_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">coder1_df</span><span class="p">[</span><span class="n">document_column</span><span class="p">]</span>
+    <span class="n">coder2_df</span> <span class="o">=</span> <span class="n">coder_df</span><span class="p">[</span><span class="n">coder_df</span><span class="p">[</span><span class="n">coder_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">coder2</span><span class="p">]</span>
+    <span class="n">coder2_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">coder2_df</span><span class="p">[</span><span class="n">document_column</span><span class="p">]</span>
+    <span class="n">coder1_df</span> <span class="o">=</span> <span class="n">coder1_df</span><span class="p">[</span><span class="n">coder1_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">coder2_df</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
+    <span class="n">coder2_df</span> <span class="o">=</span> <span class="n">coder2_df</span><span class="p">[</span><span class="n">coder2_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">coder1_df</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">coder1_df</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+
+    <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;coder1&quot;</span><span class="p">:</span> <span class="n">coder1</span><span class="p">,</span>
+        <span class="s2">&quot;coder2&quot;</span><span class="p">:</span> <span class="n">coder2</span><span class="p">,</span>
+        <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">coder1_df</span><span class="p">),</span>
+        <span class="s2">&quot;outcome_column&quot;</span><span class="p">:</span> <span class="n">outcome_column</span><span class="p">,</span>
+        <span class="s2">&quot;pos_label&quot;</span><span class="p">:</span> <span class="n">pos_label</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">labelsetname</span><span class="p">,</span> <span class="n">labelset</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;coder1&quot;</span><span class="p">,</span> <span class="n">coder1_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s2">&quot;coder2&quot;</span><span class="p">,</span> <span class="n">coder2_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">]),</span>
+    <span class="p">]:</span>
+
+        <span class="k">if</span> <span class="n">weight_column</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">weighted_stats</span> <span class="o">=</span> <span class="n">DescrStatsW</span><span class="p">(</span><span class="n">labelset</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">weight_column</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">weighted_stats</span><span class="p">:</span>
+                    <span class="n">row</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_mean&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">labelsetname</span><span class="p">)]</span> <span class="o">=</span> <span class="n">weighted_stats</span><span class="o">.</span><span class="n">mean</span>
+                    <span class="n">row</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_std&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">labelsetname</span><span class="p">)]</span> <span class="o">=</span> <span class="n">weighted_stats</span><span class="o">.</span><span class="n">std_mean</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">weighted_stats</span> <span class="o">=</span> <span class="n">DescrStatsW</span><span class="p">(</span>
+                        <span class="n">labelset</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">weights</span><span class="o">=</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">weight_column</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">weighted_stats</span><span class="p">:</span>
+                        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_mean&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">labelsetname</span><span class="p">)]</span> <span class="o">=</span> <span class="n">weighted_stats</span><span class="o">.</span><span class="n">mean</span>
+                        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_std&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">labelsetname</span><span class="p">)]</span> <span class="o">=</span> <span class="n">weighted_stats</span><span class="o">.</span><span class="n">std_mean</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+                    <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">unweighted_stats</span> <span class="o">=</span> <span class="n">DescrStatsW</span><span class="p">(</span><span class="n">labelset</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">labelset</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">unweighted_stats</span><span class="p">:</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_mean_unweighted&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">labelsetname</span><span class="p">)]</span> <span class="o">=</span> <span class="n">unweighted_stats</span><span class="o">.</span><span class="n">mean</span>
+                <span class="n">row</span><span class="p">[</span>
+                    <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_std_unweighted&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">labelsetname</span><span class="p">)</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="n">unweighted_stats</span><span class="o">.</span><span class="n">std_mean</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">unweighted_stats</span> <span class="o">=</span> <span class="n">DescrStatsW</span><span class="p">(</span>
+                    <span class="n">labelset</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">labelset</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">unweighted_stats</span><span class="p">:</span>
+                    <span class="n">row</span><span class="p">[</span>
+                        <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_mean_unweighted&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">labelsetname</span><span class="p">)</span>
+                    <span class="p">]</span> <span class="o">=</span> <span class="n">unweighted_stats</span><span class="o">.</span><span class="n">mean</span>
+                    <span class="n">row</span><span class="p">[</span>
+                        <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_std_unweighted&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">labelsetname</span><span class="p">)</span>
+                    <span class="p">]</span> <span class="o">=</span> <span class="n">unweighted_stats</span><span class="o">.</span><span class="n">std_mean</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+                <span class="k">pass</span>
+
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">AnnotationTask</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">coder_df</span><span class="p">[[</span><span class="n">coder_column</span><span class="p">,</span> <span class="n">document_column</span><span class="p">,</span> <span class="n">outcome_column</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">.</span><span class="n">alpha</span><span class="p">()</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ZeroDivisionError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">row</span><span class="p">[</span><span class="s2">&quot;alpha_unweighted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">alpha</span>
+
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">coder_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;cohens_kappa&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cohen_kappa_score</span><span class="p">(</span>
+                <span class="n">coder1_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+                <span class="n">coder2_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+                <span class="n">sample_weight</span><span class="o">=</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">weight_column</span><span class="p">]</span> <span class="k">if</span> <span class="n">weight_column</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FloatingPointError</span><span class="p">:</span>
+            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;cohens_kappa&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span>
+            <span class="n">coder1_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+            <span class="n">coder2_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+            <span class="n">sample_weight</span><span class="o">=</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">weight_column</span><span class="p">]</span> <span class="k">if</span> <span class="n">weight_column</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;f1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span>
+            <span class="n">coder1_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+            <span class="n">coder2_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+            <span class="n">sample_weight</span><span class="o">=</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">weight_column</span><span class="p">]</span> <span class="k">if</span> <span class="n">weight_column</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="n">average</span><span class="o">=</span><span class="s2">&quot;weighted&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pos_label</span> <span class="k">else</span> <span class="s2">&quot;binary&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;f1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;precision&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">precision_score</span><span class="p">(</span>
+            <span class="n">coder1_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+            <span class="n">coder2_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+            <span class="n">sample_weight</span><span class="o">=</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">weight_column</span><span class="p">]</span> <span class="k">if</span> <span class="n">weight_column</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="n">average</span><span class="o">=</span><span class="s2">&quot;weighted&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pos_label</span> <span class="k">else</span> <span class="s2">&quot;binary&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;precision&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;recall&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recall_score</span><span class="p">(</span>
+            <span class="n">coder1_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+            <span class="n">coder2_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+            <span class="n">sample_weight</span><span class="o">=</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">weight_column</span><span class="p">]</span> <span class="k">if</span> <span class="n">weight_column</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="n">average</span><span class="o">=</span><span class="s2">&quot;weighted&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pos_label</span> <span class="k">else</span> <span class="s2">&quot;binary&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;recall&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">is_not_null</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;precision&quot;</span><span class="p">])</span> <span class="ow">and</span> <span class="n">is_not_null</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;recall&quot;</span><span class="p">]):</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;precision_recall_min&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;precision&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;recall&quot;</span><span class="p">]])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;precision_recall_min&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;matthews_corrcoef&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">matthews_corrcoef</span><span class="p">(</span>
+            <span class="n">coder1_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+            <span class="n">coder2_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+            <span class="n">sample_weight</span><span class="o">=</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">weight_column</span><span class="p">]</span> <span class="k">if</span> <span class="n">weight_column</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;matthews_corrcoef&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">FloatingPointError</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;matthews_corrcoef&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="c1"># In newer versions of sklearn, perfect agreement returns zero incorrectly</span>
+        <span class="c1"># We&#39;ll use the accuracy score to detect perfect agreement and correct it:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;matthews_corrcoef&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">roc_auc_score</span><span class="p">(</span>
+                <span class="n">coder1_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+                <span class="n">coder2_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+                <span class="n">sample_weight</span><span class="o">=</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">weight_column</span><span class="p">]</span> <span class="k">if</span> <span class="n">weight_column</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+                <span class="n">average</span><span class="o">=</span><span class="s2">&quot;weighted&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pos_label</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">1</span>
+            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">coder2_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">1</span>
+            <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">roc_auc_score</span><span class="p">(</span>
+                    <span class="n">coder1_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+                    <span class="n">coder2_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span>
+                    <span class="n">sample_weight</span><span class="o">=</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">weight_column</span><span class="p">]</span> <span class="k">if</span> <span class="n">weight_column</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">average</span><span class="o">=</span><span class="s2">&quot;weighted&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pos_label</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">1</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">coder2_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">1</span>
+                <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">row</span><span class="p">[</span><span class="s2">&quot;pct_agree_unweighted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="mi">1</span> <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">coder1_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">],</span> <span class="n">coder2_df</span><span class="p">[</span><span class="n">outcome_column</span><span class="p">])</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span><span class="p">:</span>
+            <span class="n">row</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># For some weird reason, some of the sklearn scorers return 1-tuples sometimes</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="o">**</span><span class="n">old_np_settings</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">row</span></div>
+
+
+<div class="viewcode-block" id="compute_overall_scores"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.irr.compute_overall_scores">[docs]</a><span class="k">def</span> <span class="nf">compute_overall_scores</span><span class="p">(</span><span class="n">coder_df</span><span class="p">,</span> <span class="n">outcome_column</span><span class="p">,</span> <span class="n">document_column</span><span class="p">,</span> <span class="n">coder_column</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes overall inter-rater reliability scores (Krippendorf&#39;s Alpha and Fleiss&#39; Kappa). Allows for more than two \</span>
+<span class="sd">    coders and code values. The input data must consist of a :py:class:`pandas.DataFrame` with the following columns:</span>
+
+<span class="sd">        - A column with values that indicate the coder (like a name)</span>
+<span class="sd">        - A column with values that indicate the document (like an ID)</span>
+<span class="sd">        - A column with values that indicate the code value</span>
+
+<span class="sd">    :param coder_df: A :py:class:`pandas.DataFrame` of codes</span>
+<span class="sd">    :type coder_df: :py:class:`pandas.DataFrame`</span>
+<span class="sd">    :param outcome_column: The column that contains the codes</span>
+<span class="sd">    :type outcome_column: str</span>
+<span class="sd">    :param document_column: The column that contains IDs for the documents</span>
+<span class="sd">    :type document_column: str</span>
+<span class="sd">    :param coder_column: The column containing values that indicate which coder assigned the code</span>
+<span class="sd">    :type coder_column: str</span>
+<span class="sd">    :return: A dictionary containing the scores</span>
+<span class="sd">    :rtype: dict</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.stats.irr import compute_overall_scores</span>
+<span class="sd">        import pandas as pd</span>
+
+<span class="sd">        df = pd.DataFrame([</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder1&quot;, &quot;document&quot;: 1, &quot;code&quot;: &quot;2&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder2&quot;, &quot;document&quot;: 1, &quot;code&quot;: &quot;2&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder1&quot;, &quot;document&quot;: 2, &quot;code&quot;: &quot;1&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder2&quot;, &quot;document&quot;: 2, &quot;code&quot;: &quot;2&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder1&quot;, &quot;document&quot;: 3, &quot;code&quot;: &quot;0&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder2&quot;, &quot;document&quot;: 3, &quot;code&quot;: &quot;0&quot;},</span>
+<span class="sd">        ])</span>
+
+<span class="sd">        &gt;&gt;&gt; compute_overall_scores(df, &quot;code&quot;, &quot;document&quot;, &quot;coder&quot;)</span>
+<span class="sd">        {&#39;alpha&#39;: 0.5454545454545454, &#39;fleiss_kappa&#39;: 0.4545454545454544}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">AnnotationTask</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">coder_df</span><span class="p">[[</span><span class="n">coder_column</span><span class="p">,</span> <span class="n">document_column</span><span class="p">,</span> <span class="n">outcome_column</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">.</span><span class="n">alpha</span><span class="p">()</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ZeroDivisionError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">coder_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">document_column</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="n">complete_docs</span> <span class="o">=</span> <span class="n">grouped</span><span class="p">[</span>
+        <span class="n">grouped</span><span class="p">[</span><span class="n">coder_column</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">coder_df</span><span class="p">[</span><span class="n">coder_column</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">coder_df</span><span class="p">[</span><span class="n">coder_df</span><span class="p">[</span><span class="n">document_column</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">complete_docs</span><span class="p">)]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="n">outcome_column</span><span class="p">,</span> <span class="n">document_column</span><span class="p">])</span><span class="o">.</span><span class="n">count</span><span class="p">()[[</span><span class="n">coder_column</span><span class="p">]]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">outcome_column</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">kappa</span> <span class="o">=</span> <span class="n">fleiss_kappa</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">kappa</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="n">alpha</span><span class="p">,</span> <span class="s2">&quot;fleiss_kappa&quot;</span><span class="p">:</span> <span class="n">kappa</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="compute_overall_scores_multivariate"><a class="viewcode-back" href="../../../stats.html#pewanalytics.stats.irr.compute_overall_scores_multivariate">[docs]</a><span class="k">def</span> <span class="nf">compute_overall_scores_multivariate</span><span class="p">(</span>
+    <span class="n">coder_df</span><span class="p">,</span> <span class="n">document_column</span><span class="p">,</span> <span class="n">coder_column</span><span class="p">,</span> <span class="n">outcome_columns</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes overall inter-rater reliability scores (Krippendorf&#39;s Alpha and Fleiss&#39; Kappa). Allows for more than two \</span>
+<span class="sd">    coders, code values, AND variables. All variables and values will be converted into a matrix of dummy variables, \</span>
+<span class="sd">    and Alpha and Kappa will be computed using four different distance metrics:</span>
+
+<span class="sd">        - Discrete agreement (exact agreement across all outcome columns)</span>
+<span class="sd">        - Jaccard coefficient</span>
+<span class="sd">        - MASI distance</span>
+<span class="sd">        - Cosine similarity</span>
+
+<span class="sd">    The input data must consist of a :py:class:`pandas.DataFrame` with the following \</span>
+<span class="sd">    columns:</span>
+
+<span class="sd">        - A column with values that indicate the coder (like a name)</span>
+<span class="sd">        - A column with values that indicate the document (like an ID)</span>
+<span class="sd">        - One or more columns with values that indicate code values</span>
+
+<span class="sd">    This code was adapted from a very helpful StackExchange post:</span>
+<span class="sd">    https://stats.stackexchange.com/questions/511927/interrater-reliability-with-multi-rater-multi-label-dataset</span>
+
+<span class="sd">    :param coder_df: A :py:class:`pandas.DataFrame` of codes</span>
+<span class="sd">    :type coder_df: :py:class:`pandas.DataFrame`</span>
+<span class="sd">    :param document_column: The column that contains IDs for the documents</span>
+<span class="sd">    :type document_column: str</span>
+<span class="sd">    :param coder_column: The column containing values that indicate which coder assigned the code</span>
+<span class="sd">    :type coder_column: str</span>
+<span class="sd">    :param outcome_columns: The columns that contains the codes</span>
+<span class="sd">    :type outcome_columns: list</span>
+<span class="sd">    :return: A dictionary containing the scores</span>
+<span class="sd">    :rtype: dict</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.stats.irr import compute_overall_scores_multivariate</span>
+<span class="sd">        import pandas as pd</span>
+
+<span class="sd">        coder_df = pd.DataFrame([</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder1&quot;, &quot;document&quot;: 1, &quot;code&quot;: &quot;2&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder2&quot;, &quot;document&quot;: 1, &quot;code&quot;: &quot;2&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder1&quot;, &quot;document&quot;: 2, &quot;code&quot;: &quot;1&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder2&quot;, &quot;document&quot;: 2, &quot;code&quot;: &quot;2&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder1&quot;, &quot;document&quot;: 3, &quot;code&quot;: &quot;0&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder2&quot;, &quot;document&quot;: 3, &quot;code&quot;: &quot;0&quot;},</span>
+<span class="sd">        ])</span>
+
+<span class="sd">        &gt;&gt;&gt; compute_overall_scores_multivariate(coder_df, &#39;document&#39;, &#39;coder&#39;, [&quot;code&quot;])</span>
+<span class="sd">        {&#39;fleiss_kappa_discrete&#39;: 0.4545454545454544,</span>
+<span class="sd">         &#39;fleiss_kappa_jaccard&#39;: 0.49999999999999994,</span>
+<span class="sd">         &#39;fleiss_kappa_masi&#39;: 0.49999999999999994,</span>
+<span class="sd">         &#39;fleiss_kappa_cosine&#39;: 0.49999999999999994,</span>
+<span class="sd">         &#39;alpha_discrete&#39;: 0.5454545454545454,</span>
+<span class="sd">         &#39;alpha_jaccard&#39;: 0.5454545454545454,</span>
+<span class="sd">         &#39;alpha_masi&#39;: 0.5454545454545454,</span>
+<span class="sd">         &#39;alpha_cosine&#39;: 0.5454545454545454}</span>
+
+<span class="sd">        coder_df = pd.DataFrame([</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder1&quot;, &quot;document&quot;: 1, &quot;code1&quot;: &quot;2&quot;, &quot;code2&quot;: &quot;1&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder2&quot;, &quot;document&quot;: 1, &quot;code1&quot;: &quot;2&quot;, &quot;code2&quot;: &quot;1&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder1&quot;, &quot;document&quot;: 2, &quot;code1&quot;: &quot;1&quot;, &quot;code2&quot;: &quot;0&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder2&quot;, &quot;document&quot;: 2, &quot;code1&quot;: &quot;2&quot;, &quot;code2&quot;: &quot;1&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder1&quot;, &quot;document&quot;: 3, &quot;code1&quot;: &quot;0&quot;, &quot;code2&quot;: &quot;0&quot;},</span>
+<span class="sd">            {&quot;coder&quot;: &quot;coder2&quot;, &quot;document&quot;: 3, &quot;code1&quot;: &quot;0&quot;, &quot;code2&quot;: &quot;0&quot;},</span>
+<span class="sd">        ])</span>
+
+<span class="sd">        &gt;&gt;&gt; compute_overall_scores_multivariate(coder_df, &#39;document&#39;, &#39;coder&#39;, [&quot;code1&quot;, &quot;code2&quot;])</span>
+<span class="sd">        {&#39;fleiss_kappa_discrete&#39;: 0.4545454545454544,</span>
+<span class="sd">         &#39;fleiss_kappa_jaccard&#39;: 0.49999999999999994,</span>
+<span class="sd">         &#39;fleiss_kappa_masi&#39;: 0.49999999999999994,</span>
+<span class="sd">         &#39;fleiss_kappa_cosine&#39;: 0.49999999999999994,</span>
+<span class="sd">         &#39;alpha_discrete&#39;: 0.5454545454545454,</span>
+<span class="sd">         &#39;alpha_jaccard&#39;: 0.5161290322580645,</span>
+<span class="sd">         &#39;alpha_masi&#39;: 0.5361781076066792,</span>
+<span class="sd">         &#39;alpha_cosine&#39;: 0.5}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dummies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">coder_df</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">outcome_columns</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+    <span class="n">outcome_columns</span> <span class="o">=</span> <span class="n">dummies</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">coder_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">coder_df</span><span class="p">,</span> <span class="n">dummies</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">coder_df</span> <span class="o">=</span> <span class="n">coder_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">outcome_columns</span><span class="p">)</span>
+    <span class="n">coder_df</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coder_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">([</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">outcome_columns</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]),</span>
+        <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">discrete_task</span> <span class="o">=</span> <span class="n">AnnotationTask</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">coder_df</span><span class="p">[[</span><span class="n">coder_column</span><span class="p">,</span> <span class="n">document_column</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+    <span class="p">)</span>
+    <span class="n">kappa_discrete</span> <span class="o">=</span> <span class="n">discrete_task</span><span class="o">.</span><span class="n">multi_kappa</span><span class="p">()</span>
+    <span class="n">alpha_discrete</span> <span class="o">=</span> <span class="n">discrete_task</span><span class="o">.</span><span class="n">alpha</span><span class="p">()</span>
+
+    <span class="n">task_data</span> <span class="o">=</span> <span class="n">coder_df</span><span class="p">[[</span><span class="n">coder_column</span><span class="p">,</span> <span class="n">document_column</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">task_data</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">task_data</span><span class="p">]</span>
+
+    <span class="n">jaccard_task</span> <span class="o">=</span> <span class="n">AnnotationTask</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">task_data</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="n">jaccard_distance</span><span class="p">)</span>
+    <span class="n">masi_task</span> <span class="o">=</span> <span class="n">AnnotationTask</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">task_data</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="n">masi_distance</span><span class="p">)</span>
+
+    <span class="n">mlb</span> <span class="o">=</span> <span class="n">MultiLabelBinarizer</span><span class="p">()</span>
+    <span class="n">task_data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">task_data</span><span class="p">,</span> <span class="n">mlb</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">task_data</span><span class="p">]))</span>
+    <span class="p">]</span>
+    <span class="n">cosine_task</span> <span class="o">=</span> <span class="n">AnnotationTask</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">task_data</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">cosine</span><span class="p">)</span>
+
+    <span class="n">kappa_jaccard</span> <span class="o">=</span> <span class="n">jaccard_task</span><span class="o">.</span><span class="n">multi_kappa</span><span class="p">()</span>
+    <span class="n">kappa_masi</span> <span class="o">=</span> <span class="n">masi_task</span><span class="o">.</span><span class="n">multi_kappa</span><span class="p">()</span>
+    <span class="n">kappa_cosine</span> <span class="o">=</span> <span class="n">cosine_task</span><span class="o">.</span><span class="n">multi_kappa</span><span class="p">()</span>
+    <span class="n">alpha_jaccard</span> <span class="o">=</span> <span class="n">jaccard_task</span><span class="o">.</span><span class="n">alpha</span><span class="p">()</span>
+    <span class="n">alpha_masi</span> <span class="o">=</span> <span class="n">masi_task</span><span class="o">.</span><span class="n">alpha</span><span class="p">()</span>
+    <span class="n">alpha_cosine</span> <span class="o">=</span> <span class="n">cosine_task</span><span class="o">.</span><span class="n">alpha</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;fleiss_kappa_discrete&quot;</span><span class="p">:</span> <span class="n">kappa_discrete</span><span class="p">,</span>
+        <span class="s2">&quot;fleiss_kappa_jaccard&quot;</span><span class="p">:</span> <span class="n">kappa_jaccard</span><span class="p">,</span>
+        <span class="s2">&quot;fleiss_kappa_masi&quot;</span><span class="p">:</span> <span class="n">kappa_masi</span><span class="p">,</span>
+        <span class="s2">&quot;fleiss_kappa_cosine&quot;</span><span class="p">:</span> <span class="n">kappa_cosine</span><span class="p">,</span>
+        <span class="s2">&quot;alpha_discrete&quot;</span><span class="p">:</span> <span class="n">alpha_discrete</span><span class="p">,</span>
+        <span class="s2">&quot;alpha_jaccard&quot;</span><span class="p">:</span> <span class="n">alpha_jaccard</span><span class="p">,</span>
+        <span class="s2">&quot;alpha_masi&quot;</span><span class="p">:</span> <span class="n">alpha_masi</span><span class="p">,</span>
+        <span class="s2">&quot;alpha_cosine&quot;</span><span class="p">:</span> <span class="n">alpha_cosine</span><span class="p">,</span>
+    <span class="p">}</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Pew Research Center.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pewanalytics.text.ner &mdash; pewanalytics 1.0.7.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> pewanalytics
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../stats.html">Statistical Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../text.html">Text Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pewanalytics</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>pewanalytics.text.ner</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pewanalytics.text.ner</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">object</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
+<span class="kn">import</span> <span class="nn">spacy</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">word_tokenize</span><span class="p">,</span> <span class="n">pos_tag</span><span class="p">,</span> <span class="n">ne_chunk</span>
+<span class="kn">from</span> <span class="nn">pewtils</span> <span class="kn">import</span> <span class="n">decode_text</span>
+
+
+<div class="viewcode-block" id="NamedEntityExtractor"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.ner.NamedEntityExtractor">[docs]</a><span class="k">class</span> <span class="nc">NamedEntityExtractor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    A wrapper around NLTK and SpaCy for named entity extraction. May be expanded to include more libraries in the \</span>
+<span class="sd">    future.</span>
+
+<span class="sd">    :param method: Specify the library to use when extracting methods. Options are &#39;nltk&#39;, &#39;spacy&#39;, &#39;all&#39;. If \</span>
+<span class="sd">    &#39;all&#39; is selected, both libraries will be used and the union will be returned. (Default=&#39;spacy&#39;)</span>
+<span class="sd">    :type method: str</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewanalytics.text.ner import NamedEntityExtractor</span>
+<span class="sd">        import nltk</span>
+
+<span class="sd">        nltk.download(&quot;inaugural&quot;)</span>
+<span class="sd">        fileid = nltk.corpus.inaugural.fileids()[0]</span>
+<span class="sd">        text = nltk.corpus.inaugural.raw(fileid)</span>
+
+<span class="sd">        &gt;&gt;&gt; ner = NamedEntityExtractor(method=&quot;nltk&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; ner.extract(text)</span>
+<span class="sd">        {</span>
+<span class="sd">            &#39;ORGANIZATION&#39;: [</span>
+<span class="sd">                &#39;Parent&#39;, &#39;Invisible Hand&#39;, &#39;Great Author&#39;, &#39;House&#39;, &#39;Constitution&#39;, &#39;Senate&#39;,</span>
+<span class="sd">                &#39;Human Race&#39;, &#39;Representatives&#39;</span>
+<span class="sd">            ],</span>
+<span class="sd">            &#39;PERSON&#39;: [&#39;Almighty Being&#39;],</span>
+<span class="sd">            &#39;GPE&#39;: [&#39;Heaven&#39;, &#39;United States&#39;, &#39;American&#39;]</span>
+<span class="sd">        }</span>
+
+<span class="sd">        &gt;&gt;&gt; ner = NamedEntityExtractor(method=&quot;spacy&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; ner.extract(text)</span>
+<span class="sd">        {</span>
+<span class="sd">            &#39;ORGANIZATION&#39;: [&#39;House of Representatives&#39;, &#39;Senate&#39;, &#39;Parent of the Human Race&#39;],</span>
+<span class="sd">            &#39;DATE&#39;: [&#39;present month&#39;, &#39;every day&#39;, &#39;14th day&#39;, &#39;years&#39;],</span>
+<span class="sd">            &#39;ORDINAL&#39;: [&#39;first&#39;, &#39;fifth&#39;],</span>
+<span class="sd">            &#39;GPE&#39;: [&#39;United States&#39;],</span>
+<span class="sd">            &#39;NORP&#39;: [&#39;republican&#39;, &#39;American&#39;],</span>
+<span class="sd">            &#39;LAW&#39;: [&#39;Constitution&#39;]</span>
+<span class="sd">        }</span>
+
+<span class="sd">        &gt;&gt;&gt; ner = NamedEntityExtractor(method=&quot;all&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; ner.extract(text)</span>
+<span class="sd">        {</span>
+<span class="sd">            &#39;ORGANIZATION&#39;: [</span>
+<span class="sd">                &#39;Representatives&#39;, &#39;Great Author&#39;, &#39;House&#39;, &#39;Parent&#39;, &#39;House of Representatives&#39;,</span>
+<span class="sd">                &#39;Parent of the Human Race&#39;, &#39;Invisible Hand&#39;, &#39;Human Race&#39;, &#39;Senate&#39;, &#39;Constitution&#39;</span>
+<span class="sd">            ],</span>
+<span class="sd">            &#39;PERSON&#39;: [&#39;Almighty Being&#39;],</span>
+<span class="sd">            &#39;GPE&#39;: [&#39;Heaven&#39;, &#39;United States&#39;, &#39;American&#39;],</span>
+<span class="sd">            &#39;DATE&#39;: [&#39;every day&#39;, &#39;present month&#39;, &#39;14th day&#39;, &#39;years&#39;],</span>
+<span class="sd">            &#39;ORDINAL&#39;: [&#39;first&#39;, &#39;fifth&#39;],</span>
+<span class="sd">            &#39;NORP&#39;: [&#39;republican&#39;, &#39;American&#39;],</span>
+<span class="sd">            &#39;LAW&#39;: [&#39;Constitution&#39;]</span>
+<span class="sd">        }</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;spacy&quot;</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;nltk&quot;</span><span class="p">,</span> <span class="s2">&quot;spacy&quot;</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Available methods are: &#39;nltk&#39;, &#39;spacy&#39;, &#39;all&#39;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;ORG&quot;</span><span class="p">:</span> <span class="s2">&quot;ORGANIZATION&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PER&quot;</span><span class="p">:</span> <span class="s2">&quot;PERSON&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;LOC&quot;</span><span class="p">:</span> <span class="s2">&quot;LOCATION&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;FAC&quot;</span><span class="p">:</span> <span class="s2">&quot;FACILITY&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;VEH&quot;</span><span class="p">:</span> <span class="s2">&quot;VEHICLE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;WEA&quot;</span><span class="p">:</span> <span class="s2">&quot;WEAPON&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;GSP&quot;</span><span class="p">:</span> <span class="s2">&quot;GPE&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="NamedEntityExtractor.extract"><a class="viewcode-back" href="../../../text.html#pewanalytics.text.ner.NamedEntityExtractor.extract">[docs]</a>    <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param text: a string from which to extract named entities</span>
+<span class="sd">        :type text: str</span>
+<span class="sd">        :return: dictionary of entities organized by their category</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">decode_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="n">roots</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;nltk&quot;</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">]:</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">tree</span> <span class="o">=</span> <span class="n">ne_chunk</span><span class="p">(</span><span class="n">pos_tag</span><span class="p">(</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+            <span class="k">except</span> <span class="ne">LookupError</span><span class="p">:</span>
+                <span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;maxent_ne_chunker&quot;</span><span class="p">)</span>
+                <span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;words&quot;</span><span class="p">)</span>
+                <span class="n">tree</span> <span class="o">=</span> <span class="n">ne_chunk</span><span class="p">(</span><span class="n">pos_tag</span><span class="p">(</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)),</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">branch</span> <span class="ow">in</span> <span class="n">tree</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">branch</span><span class="p">)</span> <span class="ow">is</span> <span class="n">nltk</span><span class="o">.</span><span class="n">Tree</span><span class="p">:</span>
+                    <span class="n">leaf</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">branch</span><span class="o">.</span><span class="n">leaves</span><span class="p">())]</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">branch</span><span class="o">.</span><span class="n">label</span><span class="p">(),</span> <span class="n">branch</span><span class="o">.</span><span class="n">label</span><span class="p">())</span>
+                    <span class="n">roots</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">leaf</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;spacy&quot;</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">]:</span>
+
+            <span class="c1"># SpaCy</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="n">spacy</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
+                <span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">nlp</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">ents</span><span class="p">:</span>
+                <span class="n">entity_text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;^(</span><span class="si">{}</span><span class="s2">)\s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">&quot;english&quot;</span><span class="p">))),</span>
+                    <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">entity</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">label_</span><span class="p">,</span> <span class="n">entity</span><span class="o">.</span><span class="n">label_</span><span class="p">)</span>
+                <span class="n">roots</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entity_text</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">roots</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Pew Research Center.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
