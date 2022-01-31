@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import os
 import re
 import copy
 import pandas as pd
@@ -747,7 +748,7 @@ class TextDataFrame(object):
         corpus["match_index"] = None
         corpus["cosine_similarity"] = None
 
-        for index, row in tqdm(corpus.iterrows(), desc="Matching items to corpus"):
+        for index, row in tqdm(corpus.iterrows(), desc="Matching items to corpus", disable=os.environ.get("DISABLE_TQDM", False)):
             row = corpus.iloc[index]
             if is_null(row["match_index"]):
                 for i, sim in [
@@ -866,7 +867,7 @@ class TextDataFrame(object):
                 ][:scan_top_n_matches_per_doc]
             )
         fragments = []
-        for i, cos_similarity in tqdm(combos, desc="Extracting fragments"):
+        for i, cos_similarity in tqdm(combos, desc="Extracting fragments", disable=os.environ.get("DISABLE_TQDM", False)):
             for frag in text_overlap_extractor.get_text_overlaps(
                 self.corpus.iloc[i][self.text_column],
                 self.corpus.iloc[cos_similarity][self.text_column],
@@ -950,7 +951,7 @@ class TextDataFrame(object):
         pairs = sorted(pairs, key=lambda x: similarity_matrix[x[0]][x[1]], reverse=True)
         pairs = [p for p in pairs if p[0] > p[1]]
 
-        for i, j in tqdm(pairs, desc="Scanning pairs"):
+        for i, j in tqdm(pairs, desc="Scanning pairs", disable=os.environ.get("DISABLE_TQDM", False)):
             sim = similarity_matrix[i][j]
             ratio = get_fuzzy_ratio(text.iloc[i], text.iloc[j])
             if ratio < fuzzy_ratio_threshold and allow_partial:
