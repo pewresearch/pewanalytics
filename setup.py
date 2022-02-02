@@ -9,7 +9,7 @@ with open("requirements.txt") as reqs:
 
 setup(
     name="pewanalytics",
-    version="1.1.2.dev0",
+    version="1.1.2.dev1",
     description="Utilities for text processing and statistical analysis from Pew Research Center",
     long_description=readme,
     long_description_content_type="text/markdown",
